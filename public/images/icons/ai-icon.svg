@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="ai-gradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A020F0"/>
+      <stop offset="1" stop-color="#4B6EFF"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Neural network nodes and connections -->
+  <circle cx="24" cy="8" r="4" fill="url(#ai-gradient)" />
+  <circle cx="12" cy="18" r="4" fill="url(#ai-gradient)" />
+  <circle cx="36" cy="18" r="4" fill="url(#ai-gradient)" />
+  <circle cx="8" cy="32" r="4" fill="url(#ai-gradient)" />
+  <circle cx="24" cy="32" r="4" fill="url(#ai-gradient)" />
+  <circle cx="40" cy="32" r="4" fill="url(#ai-gradient)" />
+  <circle cx="24" cy="44" r="4" fill="url(#ai-gradient)" />
+  
+  <!-- Connections between nodes -->
+  <path d="M24 12L13.5 15.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M24 12L34.5 15.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M12 22L8.5 28.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M12 22L23 28.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M36 22L24.5 28.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M36 22L39.5 28.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M8 36L23 41.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M24 36L24 40" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  <path d="M40 36L25 41.5" stroke="url(#ai-gradient)" stroke-width="1.5" />
+  
+  <!-- Additional cross connections for more neural network feel -->
+  <path d="M12 18L36 18" stroke="url(#ai-gradient)" stroke-width="1" stroke-opacity="0.5" />
+  <path d="M8 32L40 32" stroke="url(#ai-gradient)" stroke-width="1" stroke-opacity="0.5" />
+  <path d="M12 18L40 32" stroke="url(#ai-gradient)" stroke-width="1" stroke-opacity="0.3" />
+  <path d="M36 18L8 32" stroke="url(#ai-gradient)" stroke-width="1" stroke-opacity="0.3" />
+  
+  <!-- Glowing center effect -->
+  <circle cx="24" cy="24" r="12" fill="url(#ai-gradient)" fill-opacity="0.1" />
+</svg> 

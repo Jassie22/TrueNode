@@ -1,0 +1,767 @@
+/* Button wiggle animation */
+@keyframes wiggle {
+  0%, 100% { transform: translateX(0) scale(1); }
+  25% { transform: translateX(-5px) scale(1.02); }
+  75% { transform: translateX(5px) scale(1.02); }
+}
+
+.animate-wiggle {
+  animation: wiggle 3s ease-in-out infinite;
+  box-shadow: 0 0 15px rgba(144, 58, 231, 0.8);
+  transition: box-shadow 0.3s ease;
+}
+
+.animate-wiggle:hover {
+  box-shadow: 0 0 25px rgba(144, 58, 231, 1), 0 0 40px rgba(144, 58, 231, 0.5);
+}
+
+.btn-glow {
+  box-shadow: 0 0 20px rgba(144, 58, 231, 0.6), 0 0 40px rgba(144, 58, 231, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 30px rgba(144, 58, 231, 0.9), 0 0 60px rgba(144, 58, 231, 0.5);
+  transform: translateY(-2px) scale(1.02);
+}
+
+/* Add animation for gradient background in header */
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 15s ease infinite;
+}
+
+/* Glowing border animation */
+.glowing-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #903AE7, #23B5D3, #E73AA9, #903AE7);
+  background-size: 300% 300%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: border-glow 8s linear infinite;
+  filter: blur(8px);
+}
+
+@keyframes border-glow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Add animation for the typing dots in chat */
+@keyframes typing-dot {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+.animate-typing-dot {
+  animation: typing-dot 1s infinite;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+
+/* Subtle pulse animation for icon backgrounds */
+@keyframes subtle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+/* Bounce in animation for buttons */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.6s forwards;
+}
+
+/* Slide animations for chat messages */
+@keyframes slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s forwards;
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s forwards;
+}
+
+/* Fade in up animation for various elements */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s forwards;
+}
+
+/* SEO Checklist styling */
+.seo-checklist-container {
+  background: linear-gradient(135deg, rgba(160, 32, 240, 0.1) 0%, rgba(27, 108, 242, 0.1) 100%);
+  border-radius: 1rem;
+  border: 1px solid rgba(160, 32, 240, 0.2);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.seo-checklist-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #a020f0, #1b6cf2);
+  z-index: 1;
+}
+
+.seo-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.seo-checklist-item:hover {
+  background-color: rgba(160, 32, 240, 0.1);
+  transform: translateY(-2px);
+}
+
+.seo-checklist-item .check-icon {
+  color: #a020f0;
+  margin-right: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Add custom scrollbar styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(144, 58, 231, 0.3);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(144, 58, 231, 0.5);
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 58, 231, 0.3) rgba(255, 255, 255, 0.05);
+}
+
+/* Hide scrollbar for portfolio reel while preserving functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Enhanced horizontal scrollbar for desktop devices */
+@media (min-width: 1024px) {
+  .custom-horizontal-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 40px;
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(144, 58, 231, 0.4);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(144, 58, 231, 0.6);
+  }
+}
+
+/* Responsive font size adjustments */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .text-mobile-adjust {
+    font-size: 90%;
+    line-height: 1.4;
+  }
+  
+  .heading-mobile-adjust {
+    font-size: 85%;
+    line-height: 1.2;
+  }
+}
+
+/* Improved touch handling for mobile devices */
+@media (max-width: 768px) {
+  .touch-friendly {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-padding {
+    padding: 12px !important;
+  }
+}
+
+/* 3D perspective container for portfolio cards */
+.perspective-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Network texture background for True Node */
+.network-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.network-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(144, 58, 231, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 90% 30%, rgba(35, 181, 211, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 50% 70%, rgba(231, 58, 169, 0.03) 0%, transparent 20%),
+    radial-gradient(circle at 80% 90%, rgba(144, 58, 231, 0.03) 0%, transparent 20%);
+  z-index: -1;
+}
+
+.network-bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='network' patternUnits='userSpaceOnUse' width='100' height='100' patternTransform='scale(0.5) rotate(0)'%3E%3Cpath d='M50 0 L50 100 M0 50 L100 50 M25 25 L75 75 M75 25 L25 75' stroke='rgba(144, 58, 231, 0.05)' stroke-width='0.5'/%3E%3Ccircle cx='50' cy='50' r='2' fill='rgba(144, 58, 231, 0.1)'/%3E%3Ccircle cx='0' cy='50' r='2' fill='rgba(35, 181, 211, 0.1)'/%3E%3Ccircle cx='100' cy='50' r='2' fill='rgba(35, 181, 211, 0.1)'/%3E%3Ccircle cx='50' cy='0' r='2' fill='rgba(231, 58, 169, 0.1)'/%3E%3Ccircle cx='50' cy='100' r='2' fill='rgba(231, 58, 169, 0.1)'/%3E%3Ccircle cx='25' cy='25' r='2' fill='rgba(144, 58, 231, 0.1)'/%3E%3Ccircle cx='75' cy='75' r='2' fill='rgba(144, 58, 231, 0.1)'/%3E%3Ccircle cx='75' cy='25' r='2' fill='rgba(35, 181, 211, 0.1)'/%3E%3Ccircle cx='25' cy='75' r='2' fill='rgba(35, 181, 211, 0.1)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23network)'/%3E%3C/svg%3E");
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* Light flurry texture for sections */
+.light-flurry-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.light-flurry-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Portfolio tech buttons */
+.tech-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: white;
+  background-color: rgba(144, 58, 231, 0.2);
+  border: 1px solid rgba(144, 58, 231, 0.3);
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-bottom: 0.25rem;
+}
+
+.tech-button:hover {
+  background-color: rgba(144, 58, 231, 0.4);
+  border-color: rgba(144, 58, 231, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(144, 58, 231, 0.3);
+}
+
+/* Enhanced glow effects for sections */
+.enhanced-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.enhanced-glow::before {
+  content: '';
+  position: absolute;
+  inset: -50px;
+  background: radial-gradient(circle at center, rgba(144, 58, 231, 0.4) 0%, transparent 70%);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(60px);
+}
+
+.enhanced-glow.blue-glow::before {
+  background: radial-gradient(circle at center, rgba(35, 181, 211, 0.4) 0%, transparent 70%);
+}
+
+.enhanced-glow.purple-glow::before {
+  background: radial-gradient(circle at center, rgba(144, 58, 231, 0.4) 0%, transparent 70%);
+}
+
+.enhanced-glow.magenta-glow::before {
+  background: radial-gradient(circle at center, rgba(231, 58, 169, 0.4) 0%, transparent 70%);
+}
+
+/* Animated border for contact form */
+.animated-border {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 3px; /* Slightly thicker border */
+  border-radius: inherit;
+  background: linear-gradient(90deg, #903AE7, #23B5D3, #1B6CF2, #903AE7);
+  background-size: 400% 400%;
+  animation: border-animation 6s linear infinite;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@keyframes border-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Tech reel hover styles adjustment */
+.tech-icon {
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.tech-icon:hover {
+  filter: drop-shadow(0 0 8px rgba(144, 58, 231, 0.6));
+  transform: translateY(-5px);
+  background-color: rgba(30, 30, 40, 0.7);
+  border: 1px solid rgba(144, 58, 231, 0.3);
+  box-shadow: 0 0 20px rgba(144, 58, 231, 0.2);
+}
+
+.tech-icon:hover svg {
+  filter: brightness(1.2);
+}
+
+/* Game intro section styles */
+.game-intro {
+  background: linear-gradient(135deg, rgba(144, 58, 231, 0.1), rgba(35, 181, 211, 0.1));
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(144, 58, 231, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-intro::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(144, 58, 231, 0.1) 0%,
+    transparent 70%
+  );
+  animation: rotate 10s linear infinite;
+  z-index: -1;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Moving snake border animation for enquiry form */
+@keyframes snakeBorder {
+  0% {
+    offset-distance: 0%;
+  }
+  100% {
+    offset-distance: 100%;
+  }
+}
+
+/* Enquiry form with clean border */
+.enquiry-form-gradient-border {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0 0 0 2px rgba(144, 58, 231, 0.2), 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.enquiry-form-gradient-border::before,
+.enquiry-form-gradient-border::after {
+  display: none;
+}
+
+.enquiry-form-gradient-border > div {
+  background-color: rgba(20, 20, 25, 0.85);
+  border: 1px solid rgba(144, 58, 231, 0.2);
+  border-radius: inherit;
+  z-index: 2;
+  position: relative;
+}
+
+/* Portfolio slider with snap scrolling */
+.portfolio-slider {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.portfolio-slider > div {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+@media (max-width: 640px) {
+  .tech-reel-animation {
+    animation-duration: 80s; /* Slower animation on mobile */
+  }
+}
+
+@keyframes tech-reel-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.tech-reel-animation {
+  display: flex;
+  animation: tech-reel-scroll 60s linear infinite;
+}
+
+/* Animations for stats percentage */
+@keyframes pulse-subtle {
+  0% {
+    opacity: 1;
+    text-shadow: 0 0 5px rgba(144, 58, 231, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 15px rgba(144, 58, 231, 0.8);
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 5px rgba(144, 58, 231, 0.4);
+    transform: scale(1);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+/* Add utility class for hiding scrollbars */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* SEO Reel Animations */
+@keyframes seoReelScrollBase {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); } /* Each row is duplicated, so -50% for seamless loop */
+}
+
+.seo-reel-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation-name: seoReelScrollBase;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.seo-reel-row-1 {
+  animation-duration: 90s;
+  animation-direction: normal;
+}
+
+.seo-reel-row-2 {
+  animation-duration: 110s;
+  animation-direction: normal;
+}
+
+@media (max-width: 768px) {
+  .seo-reel-row-1 {
+    animation-duration: 120s;
+  }
+  .seo-reel-row-2 {
+    animation-duration: 140s;
+  }
+}
+
+/* --- Styles for Dynamic Starry Sky Banner --- */
+.dynamic-banner {
+  position: relative;
+  width: 100%;
+  height: 350px; /* Default height, can be adjusted */
+  background-color: #000; /* Pure black background */
+  overflow: hidden; /* Clip stars and bubbles that go outside */
+  z-index: 0; /* Base layer for stars */
+}
+
+/* Pure CSS Starry Sky - Layer 1 (smaller, denser stars) */
+.dynamic-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%; /* Make wider than screen for seamless scroll */
+  height: 100%;
+  box-shadow: 
+    /* Generated 70 stars */
+    15px 300px #FFF, 75px 120px #EEE, 135px 250px #DDD, 195px 80px #CCC,
+    255px 180px #FFF, 315px 50px #EEE, 375px 290px #DDD, 435px 150px #CCC,
+    495px 20px #FFF, 555px 220px #EEE, 615px 100px #DDD, 675px 330px #CCC,
+    735px 70px #FFF, 795px 190px #EEE, 855px 280px #DDD, 915px 40px #CCC,
+    975px 160px #FFF, 1035px 310px #EEE, 1095px 90px #DDD, 1155px 240px #CCC,
+    1215px 10px #FFF, 1275px 200px #EEE, 1335px 130px #DDD, 1395px 340px #CCC,
+    1455px 60px #FFF, 1515px 170px #EEE, 1575px 300px #DDD, 1635px 20px #CCC,
+    1695px 250px #FFF, 1755px 110px #EEE, 1815px 320px #DDD, 1875px 70px #CCC,
+    50px 50px #FFF, 100px 100px #EEE, 150px 150px #DDD, 200px 200px #CCC,
+    250px 250px #FFF, 300px 300px #EEE, 350px 350px #DDD, 400px 10px #CCC,
+    450px 60px #FFF, 500px 110px #EEE, 550px 160px #DDD, 600px 210px #CCC,
+    650px 260px #FFF, 700px 310px #EEE, 750px 10px #DDD, 800px 60px #CCC,
+    850px 110px #FFF, 900px 160px #EEE, 950px 210px #DDD, 1000px 260px #CCC,
+    1050px 310px #FFF, 1100px 10px #EEE, 1150px 60px #DDD, 1200px 110px #CCC,
+    1250px 160px #FFF, 1300px 210px #EEE, 1350px 260px #DDD, 1400px 310px #CCC,
+    1450px 30px #FFF, 1500px 80px #EEE, 1550px 130px #DDD, 1600px 180px #CCC,
+    1650px 230px #FFF, 1700px 280px #EEE, 1750px 330px #DDD, 1800px 55px #CCC,
+    1850px 105px #FFF, 1900px 155px #EEE;
+  animation: animateStars 120s linear infinite; /* Slower for background stars */
+  z-index: 0;
+}
+
+/* Pure CSS Starry Sky - Layer 2 (larger, fewer stars, different speed) */
+.dynamic-banner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%; /* Make wider than screen for seamless scroll */
+  height: 100%;
+  box-shadow: 
+    /* Generated 50 stars with slight size variation */
+    25px 75px 1px #CCC, 100px 200px 1px #BBB, 175px 325px 1px #AAA,
+    250px 150px 1px #CCC, 325px 275px 1px #BBB, 400px 100px 1px #AAA,
+    475px 225px 1px #CCC, 550px 50px 1px #BBB, 625px 175px 1px #AAA,
+    700px 300px 1px #CCC, 775px 125px 1px #BBB, 850px 250px 1px #AAA,
+    925px 75px 1px #CCC, 1000px 200px 1px #BBB, 1075px 325px 1px #AAA,
+    1150px 150px 1px #CCC, 1225px 275px 1px #BBB, 1300px 100px 1px #AAA,
+    1375px 225px 1px #CCC, 1450px 50px 1px #BBB, 1525px 175px 1px #AAA,
+    1600px 300px 1px #CCC, 1675px 125px 1px #BBB, 1750px 250px 1px #AAA,
+    1825px 75px 1px #CCC, 1900px 200px 1px #BBB,
+    60px 280px 2px #FFF, 200px 90px 2px #EEE, 340px 190px 2px #DDD,
+    480px 40px 2px #FFF, 620px 250px 2px #EEE, 760px 120px 2px #DDD,
+    900px 310px 2px #FFF, 1040px 70px 2px #EEE, 1180px 180px 2px #DDD,
+    1320px 20px 2px #FFF, 1460px 270px 2px #EEE, 1600px 140px 2px #DDD,
+    1740px 330px 2px #FFF, 1880px 100px 2px #EEE, 
+    50px 150px 0px #CCC, 250px 50px 0px #BBB, 450px 250px 0px #AAA,
+    650px 100px 0px #CCC, 850px 300px 0px #BBB, 1050px 150px 0px #AAA,
+    1250px 280px 0px #CCC, 1450px 20px 0px #BBB, 1650px 220px 0px #AAA,
+    1850px 70px 0px #CCC;
+  animation: animateStars 180s linear infinite; /* Even slower for more depth */
+  z-index: 0;
+}
+
+@keyframes animateStars {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); } /* Scroll one screen width as pseudo-elements are 200% wide */
+}
+
+.bubble {
+  position: absolute;
+  background-color: rgba(100, 149, 237, 0.6); /* Semi-transparent bluish */
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: white;
+  font-size: 1em; 
+  white-space: nowrap;
+  z-index: 1; /* Bubbles above stars */
+  /* animation properties are set by JS */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2); /* Subtle shadow for depth */
+}
+
+@keyframes horizontalScroll {
+  0% { left: 100%; } /* Start off-screen (right edge of parent) */
+  100% { left: -300px; } /* Move to well off-screen left. Adjust -300px if bubbles can be very wide. */
+}
+
+/* Re-defining horizontalScroll as per user spec to use 'left' for simplicity with absolute positioning */
+@keyframes horizontalScroll {
+  0% { left: 100%; } /* Start off-screen (right edge of parent) */
+  100% { left: -300px; } /* Move to well off-screen left. Adjust -300px if bubbles can be very wide. */
+}
+
+/* Responsive adjustments for bubbles */
+@media (max-width: 768px) {
+  .dynamic-banner {
+    height: 300px; /* Slightly reduce height on smaller screens */
+  }
+  .bubble {
+    font-size: 0.875em; /* Smaller font for bubbles */
+    padding: 8px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dynamic-banner {
+    height: 250px; /* Further reduce height */
+  }
+  .bubble {
+    font-size: 0.75em;
+    padding: 6px 10px;
+  }
+  /* Consider reducing number of stars for performance on very small devices if needed, */
+  /* but this is harder to do with pure CSS box-shadow stars without JS. */
+} 

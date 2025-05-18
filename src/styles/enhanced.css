@@ -1,0 +1,169 @@
+/* Hide scrollbar for portfolio reel while preserving functionality */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Enhanced horizontal scrollbar for desktop devices */
+@media (min-width: 1024px) {
+  .custom-horizontal-scrollbar::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin: 0 40px;
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(144, 58, 231, 0.4);
+    border-radius: 10px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+  }
+  
+  .custom-horizontal-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(144, 58, 231, 0.6);
+  }
+}
+
+/* Responsive font size adjustments */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .text-mobile-adjust {
+    font-size: 90%;
+    line-height: 1.4;
+  }
+  
+  .heading-mobile-adjust {
+    font-size: 85%;
+    line-height: 1.2;
+  }
+}
+
+/* Improved touch handling for mobile devices */
+@media (max-width: 768px) {
+  .touch-friendly {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .touch-padding {
+    padding: 12px !important;
+  }
+}
+
+/* 3D perspective container for portfolio cards */
+.perspective-container {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+/* Portfolio card tilt animation */
+.card-tilt {
+  transition: transform 0.5s ease;
+  transform-style: preserve-3d;
+}
+
+.card-tilt:hover {
+  transform: rotateY(5deg) rotateX(5deg);
+}
+
+/* Improved focus styles for accessibility */
+.focus-visible:focus-visible {
+  outline: 2px solid rgba(144, 58, 231, 0.8);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Smooth scroll behavior for the entire site */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Pill badge styling for technology tags */
+.pill-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: rgba(144, 58, 231, 0.2);
+  color: white;
+  border: 1px solid rgba(144, 58, 231, 0.3);
+  transition: all 0.2s ease;
+}
+
+.pill-badge:hover {
+  background: rgba(144, 58, 231, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Glowing button effect */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-glow:hover::before {
+  opacity: 1;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid rgba(144, 58, 231, 0.3);
+  border-radius: 50%;
+  border-top-color: rgba(144, 58, 231, 1);
+  animation: spin 1s ease-in-out infinite;
+} 

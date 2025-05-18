@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <path d="M34 4H14C11.8 4 10 5.8 10 8V40C10 42.2 11.8 44 14 44H34C36.2 44 38 42.2 38 40V8C38 5.8 36.2 4 34 4ZM24 42C22.34 42 21 40.66 21 39C21 37.34 22.34 36 24 36C25.66 36 27 37.34 27 39C27 40.66 25.66 42 24 42ZM34 32H14V12H34V32Z" fill="url(#app-gradient)"/>
+  <defs>
+    <linearGradient id="app-gradient" x1="10" y1="4" x2="38" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A020F0"/>
+      <stop offset="1" stop-color="#4B6EFF"/>
+    </linearGradient>
+  </defs>
+</svg> 

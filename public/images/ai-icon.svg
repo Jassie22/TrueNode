@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Brain outline -->
+  <path d="M32 12C19.85 12 10 21.85 10 34C10 42.08 14.95 49.08 22 52.33V54C22 55.1 22.9 56 24 56H40C41.1 56 42 55.1 42 54V52.33C49.05 49.08 54 42.08 54 34C54 21.85 44.15 12 32 12Z" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Circuit paths -->
+  <path d="M32 22V42" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 32H42" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M22 22L42 42" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 22L22 42" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Nodes/connection points -->
+  <circle cx="32" cy="32" r="3" fill="#ADFF2F"/>
+  <circle cx="32" cy="22" r="2" fill="#ADFF2F"/>
+  <circle cx="32" cy="42" r="2" fill="#ADFF2F"/>
+  <circle cx="22" cy="32" r="2" fill="#ADFF2F"/>
+  <circle cx="42" cy="32" r="2" fill="#ADFF2F"/>
+  <circle cx="22" cy="22" r="2" fill="#ADFF2F"/>
+  <circle cx="42" cy="22" r="2" fill="#ADFF2F"/>
+  <circle cx="22" cy="42" r="2" fill="#ADFF2F"/>
+  <circle cx="42" cy="42" r="2" fill="#ADFF2F"/>
+  
+  <!-- Pulse effect -->
+  <circle cx="32" cy="32" r="8" stroke="#ADFF2F" stroke-width="1" opacity="0.6"/>
+  <circle cx="32" cy="32" r="16" stroke="#ADFF2F" stroke-width="1" opacity="0.3"/>
+</svg> 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <path d="M42 6H6C4.9 6 4 6.9 4 8V36C4 37.1 4.9 38 6 38H42C43.1 38 44 37.1 44 36V8C44 6.9 43.1 6 42 6ZM40 34H8V12H40V34Z" fill="url(#data-gradient)"/>
+  <path d="M14 42H34V46H14V42Z" fill="url(#data-gradient)"/>
+  <path d="M14 20H18V30H14V20ZM22 16H26V30H22V16ZM30 24H34V30H30V24Z" fill="url(#data-gradient)"/>
+  <defs>
+    <linearGradient id="data-gradient" x1="4" y1="6" x2="44" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A020F0"/>
+      <stop offset="1" stop-color="#4B6EFF"/>
+    </linearGradient>
+  </defs>
+</svg> 

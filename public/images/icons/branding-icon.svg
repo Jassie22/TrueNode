@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <path d="M40 8H8C5.8 8 4 9.8 4 12V36C4 38.2 5.8 40 8 40H40C42.2 40 44 38.2 44 36V12C44 9.8 42.2 8 40 8ZM40 36H8V12H40V36Z" fill="url(#branding-gradient)"/>
+  <path d="M19 24C21.21 24 23 22.21 23 20C23 17.79 21.21 16 19 16C16.79 16 15 17.79 15 20C15 22.21 16.79 24 19 24Z" fill="url(#branding-gradient)"/>
+  <path d="M32 16H26V24H32V16Z" fill="url(#branding-gradient)"/>
+  <path d="M19 26C15.13 26 8 27.94 8 31.8V34H30V31.8C30 27.94 22.87 26 19 26Z" fill="url(#branding-gradient)"/>
+  <path d="M32 28V34H40V28H32Z" fill="url(#branding-gradient)"/>
+  <defs>
+    <linearGradient id="branding-gradient" x1="4" y1="8" x2="44" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A020F0"/>
+      <stop offset="1" stop-color="#4B6EFF"/>
+    </linearGradient>
+  </defs>
+</svg> 

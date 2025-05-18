@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: true-node-website
+    runtime: static
+    buildCommand: npm run build
+    staticPublishPath: out
+    envVars:
+      - key: NODE_ENV
+        value: production 
+      - key: NEXT_PUBLIC_GEMINI_API_KEY
+        sync: false 
