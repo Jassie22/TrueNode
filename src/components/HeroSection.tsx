@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import CalendlyWidget from './CalendlyWidget';
+import HeroStats from './HeroStats';
 
 interface ScrollTriggerInstance {
   kill: (reset?: boolean) => void;
@@ -20,14 +21,13 @@ const HeroSection = () => {
 
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
-  const subheadingRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const ctaContainerRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const accentBlockRef = useRef<HTMLDivElement>(null);
   const attentionGrabberRef = useRef<HTMLDivElement>(null);
   let businessTextElement: HTMLDivElement | null = null;
   
-  // Text to animate
+  // Text to animate - RESTORING THESE DEFINITIONS
   const mainHeadingText = "Transform";
   const mainHeadingTextLine2 = "Your Business";
   const subHeadingText = "Custom Websites. Smart Apps. AI That Works for You.";
@@ -335,31 +335,28 @@ const HeroSection = () => {
         );
       }
       
-      // Animate CTA button alongside bullet points - faster animation
-      if (ctaRef.current) {
-        // First make the button visible (opacity 1) then animate it
-        masterTl.to(
-          ctaRef.current,
-          {
-            opacity: 1,
-            duration: 0.2
-          },
-          0.8 // Start earlier
-        );
-        
-        // Then animate it up
-        masterTl.fromTo(
-          ctaRef.current,
-          { 
-            y: 20
-          },
-          { 
-            y: 0,
-            duration: 0.4, // Faster animation
-            ease: "back.out(1.2)"
-          },
-          0.9 // Start earlier
-        );
+      // Animate CTA buttons and potentially the new stats section together or sequentially
+      if (ctaContainerRef.current) {
+        // Animate the direct children of the ctaContainerRef if they are the buttons and stats section
+        // For now, CTA buttons are animated directly, and HeroStats has its own animation
+        const ctaButtons = ctaContainerRef.current.querySelector('.cta-buttons-group'); // Add a class to group buttons
+        if (ctaButtons) {
+          masterTl.fromTo(
+            ctaButtons.children,
+            { 
+              opacity: 0,
+              y: 20 
+            },
+            {
+              opacity: 1,
+              y: 0,
+              stagger: 0.1,
+              duration: 0.5,
+              ease: 'power3.out'
+            },
+            0.9 // Delay CTA animation slightly after subtitle
+          );
+        }
       }
       
       return () => {
@@ -420,26 +417,36 @@ const HeroSection = () => {
               {/* Content will be populated by JavaScript */}
             </div>
 
-            {/* CTA BUTTON - positioned below subtitle */}
-            <div 
-              ref={ctaRef} 
-              className="relative z-30 mt-8 opacity-0 flex flex-col md:flex-row items-center justify-center md:justify-start w-full gap-8"
-            >
-              {/* Research Statistics instead of stat boxes */}
-              <div className="w-full md:w-auto md:order-last md:ml-8 flex justify-center md:justify-start opacity-0" id="stats-container">
-                <div className="max-w-md md:max-w-lg px-6 py-4 bg-black/20 backdrop-blur-lg border border-accent/20 rounded-xl md:flex items-center">
-                  <span className="text-accent font-bold md:text-xl md:mr-2 block md:inline text-center md:text-left">78%</span>
-                  <span className="text-white/80 md:text-lg text-center md:text-left block">of consumers research small businesses online before visiting</span>
-                </div>
+            {/* Container for CTAs and New Stats - Ref for potential group animation */}
+            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-6 md:mt-10">
+              {/* CTA Buttons Group */}
+              <div className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0">
+                {/* Replace the button with CalendlyWidget */}
+                <CalendlyWidget 
+                  buttonText="Book a Free Consultation"
+                  className="group relative inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-3.5 text-base sm:text-lg font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden"
+                />
+                <button 
+                  onClick={scrollToServices} 
+                  className="px-4 py-3 text-base sm:px-6 sm:py-4 sm:text-lg font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 inline-block md:order-first"
+                >
+                  Research Statistics
+                </button>
               </div>
-
-              <CalendlyWidget
-                buttonText="Schedule a FREE Consultation"
-                className="px-4 py-3 text-base sm:px-6 sm:py-4 sm:text-lg font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 inline-block md:order-first"
-              />
             </div>
-            </div>
+          </div>
         </div>
+      </div>
+
+      {/* Decorative Accent Block - kept for visual consistency */}
+      <div 
+        ref={accentBlockRef}
+        className="absolute inset-0 z-0 overflow-visible"
+      >
+        {/* Glow blobs - Made larger and moved lower */}
+        <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>
+        <div className="glow-blob absolute w-[800px] h-[800px] rounded-full bg-accent-blue/5 blur-[150px] bottom-[20%] right-[5%] opacity-50"></div>
+        <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-accent-magenta/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
       </div>
     </section>
   );

@@ -468,6 +468,35 @@ const ChatbotPopup = () => {
     try {
       console.log('Submitting form data:', data);
       
+      // Generate chat summary (not shown to user, for email only)
+      const relevantMessagesForSummary = messages.filter(msg =>
+        !(msg.role === 'assistant' &&
+         (msg.content.startsWith("Perfect! Here's what I'll send to our team:") || // Summary preview
+          msg.content.startsWith(`Thanks, ${data.name}! Your request has been submitted successfully.`) || // Post-submission confirm
+          msg.content.startsWith("I'd be happy to pass your information") || // Form start
+          msg.content.includes("Which field would you like to edit?") || // Edit prompts
+          msg.content.startsWith("What is your name?") || // Form prompts
+          (msg.content.startsWith("Thanks, ") && msg.content.includes("what's your email address?")) ||
+          msg.content.startsWith("Perfect! If you'd like, please share your phone number") ||
+          msg.content.startsWith("Thanks! Now, please tell me more about your project")
+         ))
+      );
+
+      let chatSummaryForEmail = relevantMessagesForSummary
+        .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+        .join('\n\n---\n\n'); // Use double newline and separator for readability in email
+
+      // Truncate to a reasonable length for an email
+      const MAX_SUMMARY_OUTPUT_LINES = 25; // Max raw lines to prevent overly long emails
+      const summaryLines = chatSummaryForEmail.split('\n');
+      if (summaryLines.length > MAX_SUMMARY_OUTPUT_LINES) {
+        chatSummaryForEmail = summaryLines.slice(0, MAX_SUMMARY_OUTPUT_LINES).join('\n') + "\n... [Full conversation was longer]";
+      }
+      
+      if (relevantMessagesForSummary.length === 0) {
+        chatSummaryForEmail = "User proceeded to the inquiry form with minimal prior conversation.";
+      }
+      
       // Create hidden iframe to prevent redirect
       let iframe = document.getElementById('hidden-form-iframe') as HTMLIFrameElement;
       
@@ -522,6 +551,12 @@ const ChatbotPopup = () => {
       captchaField.name = '_captcha';
       captchaField.value = 'false';
       
+      // Add chat summary field (hidden)
+      const chatSummaryField = document.createElement('input');
+      chatSummaryField.type = 'hidden';
+      chatSummaryField.name = 'chat_conversation_summary'; // This name will appear in the form submission
+      chatSummaryField.value = chatSummaryForEmail;
+      
       // Prevent redirect after submission
       const nextField = document.createElement('input');
       nextField.type = 'hidden';
@@ -533,6 +568,7 @@ const ChatbotPopup = () => {
       form.appendChild(emailField);
       form.appendChild(phoneField);
       form.appendChild(messageField);
+      form.appendChild(chatSummaryField); // Add summary field
       form.appendChild(subjectField);
       form.appendChild(templateField);
       form.appendChild(captchaField);
@@ -557,6 +593,30 @@ const ChatbotPopup = () => {
       };
       
       setMessages(prev => [...prev, confirmationMessage]);
+      
+      // Show notification banner ONLY after successful form submission
+      const notificationBanner = document.createElement('div');
+      notificationBanner.className = 'fixed top-0 left-0 right-0 bg-green-600 text-white py-3 px-4 text-center z-[10000] shadow-xl'; // Success styling
+      notificationBanner.textContent = 'Inquiry sent successfully! Our team will review it and get back to you shortly.';
+      notificationBanner.style.transform = 'translateY(-100%)';
+      notificationBanner.style.fontSize = '1rem'; // Slightly larger text
+      document.body.appendChild(notificationBanner);
+      
+      // Animate the banner sliding down
+      setTimeout(() => {
+        notificationBanner.style.transition = 'transform 0.4s ease-out';
+        notificationBanner.style.transform = 'translateY(0)';
+      }, 10);
+      
+      // Remove the notification after 4 seconds
+      setTimeout(() => {
+        notificationBanner.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+          if (document.body.contains(notificationBanner)) {
+            document.body.removeChild(notificationBanner);
+          }
+        }, 400); // Matched to transition duration
+      }, 4000); // Display for 4 seconds
       
       // Add follow-up options after a delay
       setTimeout(() => {
@@ -744,10 +804,9 @@ const ChatbotPopup = () => {
         ${conversationHistory}
         User: ${inputValue}
         You are a smart, helpful assistant for a digital solutions company called TrueNode.
-        IMPORTANT: Keep all responses extremely concise - maximum 1-2 sentences total.
+        IMPORTANT: Your tone should be friendly, approachable, and chatty. Feel free to use a bit more conversational language and aim for responses that are engaging, though still try to be reasonably concise (2-4 sentences is good).
         Your job is to help visitors understand what TrueNode offers and build interest in the company's services.
         Avoid technical jargon unless the user asks for technical details.
-        Keep your tone professional but friendly and conversational.
         
         About TrueNode:
         ${companyInfo.about}
@@ -770,11 +829,11 @@ const ChatbotPopup = () => {
         Project Approach:
         ${companyInfo.approach}
         
-        Respond helpfully and professionally in 1-2 short sentences maximum.
+        Respond helpfully and professionally. Your responses can be a bit longer now, around 2-4 sentences, to be more conversational.
         
         IMPORTANT: 
         1. Never include "Assistant:" prefix in your responses
-        2. Never directly tell the user to make a request or submit their information. Instead, be conversational and only hint at the possibility of discussing their specific project if relevant to their question.
+        2. Be conversational. You can gently guide users towards making an inquiry if their messages indicate a clear need for your services, but do so naturally after addressing their immediate questions.
         3. If the user is asking about costs, pricing, specific project details, or showing interest in services, focus on answering their question first and avoid pushing them to make a formal request.
         
         Your response:
