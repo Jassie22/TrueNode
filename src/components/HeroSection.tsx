@@ -418,7 +418,7 @@ const HeroSection = () => {
             </div>
 
             {/* Container for CTAs and New Stats - Ref for potential group animation */}
-            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-start gap-8 mt-8 md:mt-12">
+            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-between gap-8 mt-8 md:mt-12">
               {/* CTA Buttons Group */}
               <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0">
                 <CalendlyWidget 
@@ -429,7 +429,7 @@ const HeroSection = () => {
 
               {/* Conditionally render HeroStats: not on mobile for now, adjust desktop positioning */}
               {!isMobile && (
-                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-6 md:mt-0 opacity-0"> {/* Adjusted margins and initial opacity */}
+                <div id="hero-stats-wrapper" className="w-full md:w-auto md:absolute md:right-0 md:top-32 md:pl-8 lg:pl-12 mt-6 md:mt-0 opacity-0"> {/* Adjusted top position to move stats lower */}
                    <HeroStats />
                 </div>
               )}

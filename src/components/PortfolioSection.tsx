@@ -284,19 +284,37 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: project.id * 0.1 }}
-              layout
+              layout="position"
             >
-              {selectedProject === project.id ? (
-                <ExpandedDesktopCard 
-                  project={project} 
-                  onClose={() => setSelectedProject(null)} 
-                />
-              ) : (
-                <DesktopProjectCard 
-                  project={project} 
-                  onClick={() => setSelectedProject(project.id)} 
-                />
-              )}
+              <AnimatePresence mode="wait">
+                {selectedProject === project.id ? (
+                  <motion.div
+                    key="expanded"
+                    initial={{ opacity: 0, width: "350px" }}
+                    animate={{ opacity: 1, width: "750px" }}
+                    exit={{ opacity: 0, width: "350px" }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                  >
+                    <ExpandedDesktopCard 
+                      project={project} 
+                      onClose={() => setSelectedProject(null)} 
+                    />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="collapsed"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <DesktopProjectCard 
+                      project={project} 
+                      onClick={() => setSelectedProject(project.id)} 
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           ))}
         </div>
@@ -321,6 +339,9 @@ const DesktopProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) =>
       tabIndex={0}
       onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && onClick()}
       aria-label={`View details for ${project.title}`}
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
       {/* Project Image (portrait orientation) */}
       <div className="relative w-full aspect-[2/3]">
@@ -362,17 +383,13 @@ interface ExpandedCardProps {
 // Desktop Expanded Project Card Component
 const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
   const textContentVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, x: 20 },
     visible: (i: number = 0) => ({
       opacity: 1,
-      y: 0,
-      transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
+      x: 0,
+      transition: { delay: i * 0.1, duration: 0.3, ease: "easeOut" },
     }),
-    exit: (i: number = 0) => ({
-      opacity: 0,
-      y: 20,
-      transition: { delay: i * 0.05, duration: 0.3, ease: "easeIn" },
-    }),
+    exit: { opacity: 0, x: -20, transition: { duration: 0.2 } }
   };
 
   const listVariants = {
@@ -392,39 +409,45 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
         staggerDirection: -1,
       },
     },
-     exit: {
+    exit: {
       opacity: 0,
       transition: { duration: 0.2 }
     }
   };
 
   const listItemVariants = {
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
-    hidden: { opacity: 0, y: 20, transition: { duration: 0.2, ease: "easeIn" } },
-    exit: { opacity: 0, y: 20, transition: { duration: 0.2, ease: "easeIn" } },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
+    hidden: { opacity: 0, x: 20, transition: { duration: 0.2, ease: "easeIn" } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.2, ease: "easeIn" } }
   };
 
   return (
     <motion.div 
       className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg flex flex-row h-full"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      exit={{ opacity: 0 }}
-      layout
+      initial={{ opacity: 0, width: "350px" }}
+      animate={{ opacity: 1, width: "750px" }}
+      exit={{ opacity: 0, width: "350px" }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       {/* Left Section - Image */}
-      <div className="relative w-[350px] flex-shrink-0 h-full">
+      <motion.div 
+        className="relative w-[350px] flex-shrink-0 h-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="relative h-full flex items-center justify-center bg-gray-900">
           <Image
             src={project.image}
             alt={project.title}
             fill
-            className="object-contain py-4"
+            className="object-cover"
             sizes="(max-width: 768px) 100vw, 350px"
+            priority
           />
         </div>
-      </div>
+      </motion.div>
       
       {/* Right Section - Content */}
       <motion.div 
