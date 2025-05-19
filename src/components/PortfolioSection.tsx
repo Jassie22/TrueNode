@@ -361,13 +361,56 @@ interface ExpandedCardProps {
 
 // Desktop Expanded Project Card Component
 const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
+  const textContentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number = 0) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
+    }),
+    exit: (i: number = 0) => ({
+      opacity: 0,
+      y: 20,
+      transition: { delay: i * 0.05, duration: 0.3, ease: "easeIn" },
+    }),
+  };
+
+  const listVariants = {
+    visible: {
+      opacity: 1,
+      transition: {
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+    hidden: {
+      opacity: 0,
+      transition: {
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+      },
+    },
+     exit: {
+      opacity: 0,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const listItemVariants = {
+    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } },
+    hidden: { opacity: 0, y: 20, transition: { duration: 0.2, ease: "easeIn" } },
+    exit: { opacity: 0, y: 20, transition: { duration: 0.2, ease: "easeIn" } },
+  };
+
   return (
     <motion.div 
       className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg flex flex-row h-full"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      exit={{ opacity: 0, scale: 0.95 }}
+      exit={{ opacity: 0 }}
       layout
     >
       {/* Left Section - Image */}
@@ -380,14 +423,17 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
             className="object-contain py-4"
             sizes="(max-width: 768px) 100vw, 350px"
           />
-          
-          {/* Close button moved to top right corner of entire card */}
         </div>
       </div>
       
       {/* Right Section - Content */}
-      <div className="flex-grow p-6 overflow-y-auto max-w-md relative">
-        {/* Close button moved to top right corner of entire card */}
+      <motion.div 
+        className="flex-grow p-6 overflow-y-auto max-w-md relative"
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        variants={listVariants}
+      >
         <button
           onClick={(e: React.MouseEvent) => {
             e.stopPropagation();
@@ -401,42 +447,42 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
           </svg>
         </button>
       
-        <h3 className="text-2xl font-bold text-white mb-1">{project.title}</h3>
-        <span className="inline-block bg-accent/30 text-accent-light text-sm px-2 py-1 rounded mb-4">
+        <motion.h3 custom={0} variants={textContentVariants} className="text-2xl font-bold text-white mb-1">{project.title}</motion.h3>
+        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-accent/30 text-accent-light text-sm px-2 py-1 rounded mb-4">
           {project.category}
-        </span>
+        </motion.span>
         
-        <p className="text-white/90 mb-6">
+        <motion.p custom={2} variants={textContentVariants} className="text-white/90 mb-6">
           {project.description}
-        </p>
+        </motion.p>
         
         {/* Features Section */}
-        <div className="mb-6">
-          <h4 className="text-lg font-semibold text-white mb-3">Key Features</h4>
-          <ul className="space-y-2">
+        <motion.div custom={3} variants={textContentVariants} className="mb-6">
+          <motion.h4 variants={listItemVariants} className="text-lg font-semibold text-white mb-3">Key Features</motion.h4>
+          <motion.ul variants={listVariants} className="space-y-2">
             {project.features.map((feature, index) => (
-              <li key={index} className="flex items-start text-white/80">
+              <motion.li key={index} variants={listItemVariants} className="flex items-start text-white/80">
                 <svg className="h-5 w-5 text-accent mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>{feature}</span>
-              </li>
+              </motion.li>
             ))}
-          </ul>
-        </div>
+          </motion.ul>
+        </motion.div>
         
         {/* Technologies Section */}
-        <div>
-          <h4 className="text-lg font-semibold text-white mb-3">Technologies Used</h4>
-          <div className="flex flex-wrap gap-2">
+        <motion.div custom={4} variants={textContentVariants}>
+          <motion.h4 variants={listItemVariants} className="text-lg font-semibold text-white mb-3">Technologies Used</motion.h4>
+          <motion.div variants={listVariants} className="flex flex-wrap gap-2">
             {project.technologies.map((tech, index) => (
-              <span key={index} className="bg-accent/10 text-accent-light border border-accent/30 px-3 py-1 rounded-md text-sm">
+              <motion.span key={index} variants={listItemVariants} className="bg-accent/10 text-accent-light border border-accent/30 px-3 py-1 rounded-md text-sm">
                 {tech}
-              </span>
+              </motion.span>
             ))}
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </motion.div>
   );
 };

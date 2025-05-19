@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -133,59 +134,52 @@ const AnimatedCounter = ({ target }: { target: number }) => {
   useEffect(() => {
     countRef.current = target;
     let startTime: number;
-    let animationFrame: number;
+    let animationFrameId: number; // Renamed for clarity
     
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const elapsed = currentTime - startTime;
       const duration = 2000;
       const progress = Math.min(elapsed / duration, 1);
-      
       const easeOut = 1 - Math.pow(1 - progress, 3);
       setCount(Math.floor(easeOut * countRef.current));
       
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
       }
     };
-    
-    animationFrame = requestAnimationFrame(animate);
-    
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
   }, [target]);
   
   return <span className="text-accent">{count}</span>;
 };
 
-// Star component (can be kept for background, or removed if not needed for new design)
-// For now, I'll keep it as it might be used for the banner background.
-const Star = () => {
+// Enhanced Star component for constellation effect
+const Star = ({ isBrightNode }: { isBrightNode?: boolean }) => {
   const starRef = useRef<HTMLDivElement>(null);
-  
   useEffect(() => {
     if (!starRef.current) return;
-    
     const star = starRef.current;
-    const animationDuration = 2 + Math.random() * 3; // 2-5 seconds
-    const delay = Math.random() * 4; // 0-4 seconds delay
-    
+    const animationDuration = 3 + Math.random() * 4; // Slower, more subtle twinkle
+    const delay = Math.random() * 5;
     star.style.animation = `twinkle ${animationDuration}s ease-in-out ${delay}s infinite`;
   }, []);
-  
+
+  const size = isBrightNode ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 1; // Adjusted sizes
+  const opacity = isBrightNode ? 0.6 + Math.random() * 0.4 : 0.15 + Math.random() * 0.25; // Adjusted opacities
+
   return (
     <div
       ref={starRef}
-      className="absolute w-1 h-1 bg-white opacity-30"
+      className="absolute bg-white rounded-full" // Rounded-full for softer stars
       style={{
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
-        clipPath: 'polygon(50% 0%, 65% 35%, 100% 35%, 70% 57%, 80% 100%, 50% 75%, 20% 100%, 30% 57%, 0% 35%, 35% 35%)',
-        width: `${2 + Math.random() * 2}px`,
-        height: `${2 + Math.random() * 2}px`,
+        // Removed clip-path for simple round stars, can be re-added if specific shape is crucial
+        width: `${size}px`,
+        height: `${size}px`,
+        opacity: opacity,
       }}
     />
   );
@@ -195,22 +189,18 @@ const Star = () => {
 interface SeoLaneProps {
   items: string[];
   animationDuration?: string;
-  laneRef: React.RefObject<HTMLDivElement>; // For GSAP animation
+  laneRef: React.RefObject<HTMLDivElement>;
 }
 
 const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) => {
-  const duplicatedItems = [...items, ...items]; // Duplicate for seamless scroll
-
+  const duplicatedItems = [...items, ...items];
   return (
-    <div ref={laneRef} className="overflow-hidden whitespace-nowrap opacity-0 pl-2" style={{ transform: 'translateX(100%)' }}> {/* Initial state for GSAP */}
-      <div 
-        className="flex animate-scroll-left" // Always scrolls left
-        style={{ animationDuration: animationDuration }}
-      >
+    <div ref={laneRef} className="overflow-hidden whitespace-nowrap opacity-0 pl-2" style={{ transform: 'translateX(100%)' }}>
+      <div className="flex animate-scroll-left" style={{ animationDuration }}>
         {duplicatedItems.map((item, index) => (
           <span 
             key={index} 
-            className="text-white bg-purple-600 mx-2 px-4 py-2 rounded-lg shadow-md text-sm"
+            className="text-white bg-purple-600/70 backdrop-blur-sm mx-3 sm:mx-4 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-lg text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis text-center min-w-[150px] sm:min-w-[200px]"
           >
             {item}
           </span>
@@ -228,24 +218,32 @@ const GoogleReadySection = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
   const bannerRef = useRef<HTMLDivElement>(null); // This might be repurposed for lanes container
   const starsContainerRef = useRef<HTMLDivElement>(null);
+  const lanesContainerRef = useRef<HTMLDivElement>(null); // Ref for the direct parent of lanes
   
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // Refs for each of the 5 lanes
-  const lane1Ref = useRef<HTMLDivElement>(null);
-  const lane2Ref = useRef<HTMLDivElement>(null);
-  const lane3Ref = useRef<HTMLDivElement>(null);
-  const lane4Ref = useRef<HTMLDivElement>(null);
-  const lane5Ref = useRef<HTMLDivElement>(null);
+  const numLanes = isMobile ? 3 : 5;
 
-  const laneRefs = [lane1Ref, lane2Ref, lane3Ref, lane4Ref, lane5Ref];
+  const laneRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]).current;
+  if (laneRefs.length !== numLanes) {
+    laneRefs.length = 0; // Clear array before re-populating
+    for (let i = 0; i < numLanes; i++) {
+      laneRefs.push(React.createRef<HTMLDivElement>());
+    }
+  }
   
-  // Prepare items for each lane (randomized)
-  // Ensure enough items for a good visual, e.g., 25 items per lane
-  const itemsPerLane = 25;
-  const laneItems = laneRefs.map(() => getRandomItems(allChecklistItems, itemsPerLane));
-  // Different animation durations for variety
-  const laneAnimationDurations = ['70s', '80s', '65s', '90s', '75s'];
+  const itemsPerLane = isMobile ? 15 : 20;
+  const laneItems = React.useMemo(() => 
+    Array.from({ length: numLanes }).map(() => getRandomItems(allChecklistItems, itemsPerLane)), 
+    [numLanes, itemsPerLane] // Add numLanes to dependency array
+  );
+
+  const baseAnimationDurations = ['35s', '45s', '30s', '50s', '40s'];
+  const laneAnimationDurations = React.useMemo(() => 
+    baseAnimationDurations.slice(0, numLanes), 
+    [numLanes] // Add numLanes to dependency array
+  );
 
   // Generate stars safely
   const generateStars = useCallback(() => {
@@ -257,7 +255,7 @@ const GoogleReadySection = () => {
     container.innerHTML = '';
     
     // Create new stars
-    const starCount = 100; // Increased star count for full width
+    const starCount = isMobile ? 30 : 60; // Increased star count for full width
     for (let i = 0; i < starCount; i++) {
       const starElement = document.createElement('div');
       starElement.className = 'star';
@@ -273,7 +271,7 @@ const GoogleReadySection = () => {
       `;
       container.appendChild(starElement);
     }
-  }, []);
+  }, [isMobile]);
   
   // Initialize GSAP animations
   useEffect(() => {
@@ -329,16 +327,14 @@ const GoogleReadySection = () => {
     }
     
     // Staggered Lane Entry Animation
-    // Order: 2nd, 4th, 3rd, 1st, 5th
-    const orderedLaneRefs = [lane2Ref, lane4Ref, lane3Ref, lane1Ref, lane5Ref];
-    orderedLaneRefs.forEach((laneRef, index) => {
+    laneRefs.forEach((laneRef) => {
       if (laneRef.current) {
         tl.to(laneRef.current, {
           x: 0,
           opacity: 1,
-          duration: 3.2,
+          duration: 1.2, // Adjusted duration
           ease: 'power3.out'
-        }, ">-2.5");
+        }, "+=0.3"); // Stagger by 0.3s after the previous animation in the timeline
       }
     });
     
@@ -366,12 +362,13 @@ const GoogleReadySection = () => {
   useEffect(() => {
     const handleResize = () => {
       // setBubbleConfig(getBubbleConfig()); // Removed bubble config
-      generateStars();
+      // No need to regenerate stars on resize for isMobile logic, isMobile state handles starCount
+      // generateStars(); // This might be too frequent, relying on isVisible and initial load
     };
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [generateStars]);
+  }, []); // Removed generateStars from dependencies
   
   // Generate stars on mount and when visible
   useEffect(() => {
@@ -380,17 +377,21 @@ const GoogleReadySection = () => {
     }
   }, [isVisible, generateStars]);
 
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const grainEffectUrl = "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E";
 
   return (
     <>
       <style jsx global>{`
         @keyframes twinkle {
-          0%, 100% { opacity: 0.1; }
-          20% { opacity: 1; }
-          40% { opacity: 0.3; }
-          60% { opacity: 0.8; }
-          80% { opacity: 0.2; }
+          0%, 100% { opacity: var(--opacity-start, 0.1); }
+          50% { opacity: var(--opacity-end, 1); }
         }
         
         .star {
@@ -480,8 +481,12 @@ const GoogleReadySection = () => {
             className="absolute inset-0 z-0 opacity-40"
           ></div>
           
-          <div className="relative z-10 flex flex-col space-y-3">
-            {laneRefs.map((ref, index) => (
+          <div 
+            ref={lanesContainerRef} // bannerRef was used here, but lanesContainerRef is more appropriate for the direct parent of lanes. Let's assume bannerRef is for the background section and lanesContainerRef for the lanes themselves.
+                                     // The user's provided code uses bannerRef for the "Full-width banner for lanes" which contains starsContainerRef and the lanes. So this is correct.
+                                     // The actual lanes are mapped inside a div within this banner.
+            className="relative z-10 flex flex-col space-y-3">
+            {laneRefs.map((ref, index) => ( // This will now map 3 or 5 lanes
               <SeoLane 
                 key={index}
                 laneRef={ref}

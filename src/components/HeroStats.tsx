@@ -26,9 +26,9 @@ const statsData: StatItem[] = [
     id: 'aiChatbots',
     value: '67%',
     description: 'higher conversion rates with AI chatbots & 30% lower service costs.',
-    mainColor: 'text-fuchsia-300',
-    gradientFrom: 'from-fuchsia-600',
-    gradientTo: 'to-pink-700',
+    mainColor: 'text-[#23B5D3]',
+    gradientFrom: 'from-sky-500',
+    gradientTo: 'to-cyan-500',
   },
   {
     id: 'mobileOptimized',
@@ -73,7 +73,9 @@ const HeroStats = () => {
 
         statsData.forEach((stat) => {
           const statEl = individualStatRefs.current[stat.id];
-          if (statEl) {
+          const valueEl = statEl?.querySelector('.stat-value'); // Add a class to the value element
+
+          if (statEl && valueEl) {
             gsap.fromTo(
               statEl,
               { opacity: 0, scale: 0.8, y: 30 },
@@ -87,6 +89,28 @@ const HeroStats = () => {
                   trigger: statEl,
                   start: 'top bottom-=150px',
                   toggleActions: 'play none none none',
+                  onEnter: () => {
+                    // Number count-up animation
+                    const targetValue = parseFloat(stat.value.replace(/[^\d.-]/g, ''));
+                    const isPercentage = stat.value.includes('%');
+                    const isMultiplier = stat.value.toLowerCase().includes('x');
+                    
+                    let counter = { val: 0 };
+                    gsap.to(counter, {
+                      val: targetValue,
+                      duration: 1.5,
+                      ease: 'power2.out',
+                      onUpdate: () => {
+                        if (isPercentage) {
+                          valueEl.textContent = Math.ceil(counter.val) + '%';
+                        } else if (isMultiplier) {
+                          valueEl.textContent = counter.val.toFixed(0) + 'x'; // Assuming integer for '2x' type
+                        } else {
+                          valueEl.textContent = Math.ceil(counter.val).toString();
+                        }
+                      },
+                    });
+                  }
                 },
               }
             );
@@ -95,51 +119,68 @@ const HeroStats = () => {
       }
     }
   }, []);
+
+  // Effect for auto-sliding on mobile
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) { // Only on mobile (md breakpoint)
+      const interval = setInterval(() => {
+        setActiveIndex(prevIndex => {
+          const nextIndex = (prevIndex + 1) % statsData.length;
+          // No direct scrollIntoView here for carousel, transform will handle it.
+          return nextIndex;
+        });
+      }, 6000); // Change stat every 6 seconds
+
+      return () => clearInterval(interval); 
+    }
+  }, []);
   
   return (
-    <div ref={statsContainerRef} className="w-full max-w-5xl mx-auto mt-12 md:mt-16 px-4">
-      {/* Desktop: Horizontal row */}
-      <div className="hidden md:flex flex-row justify-center items-stretch gap-4 lg:gap-6">
+    <div ref={statsContainerRef} className="w-full md:max-w-xs lg:max-w-sm mx-auto px-4 md:mx-0 md:px-0">
+      {/* Desktop: Vertical List - no boxes, more compact */}
+      <div className="hidden md:flex flex-col items-start gap-2 lg:gap-3">
         {statsData.map((stat) => (
           <div
             key={stat.id}
             ref={setStatRef(stat.id)}
-            className={`flex-1 p-5 lg:p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} transition-all duration-300 hover:shadow-2xl hover:scale-105 transform min-w-[220px] max-w-[320px]`}
+            className={`transition-all duration-300 transform w-full`}
           >
-            <div className={`text-4xl lg:text-5xl font-bold ${stat.mainColor} mb-2 text-shadow-sm`}>{stat.value}</div>
-            <p className="text-sm lg:text-base text-white/90 leading-relaxed">{stat.description}</p>
+            <div className={`stat-value text-3xl lg:text-4xl font-bold ${stat.mainColor} mb-0.5 text-shadow-sm`}>{stat.value}</div>
+            <p className="text-xs lg:text-sm text-white/80 leading-snug">{stat.description}</p>
           </div>
         ))}
       </div>
 
-      {/* Mobile: Vertical stack */}
-      <div className="md:hidden space-y-6">
-        {statsData.map((stat, mobileIndex) => (
-          <div
-            key={stat.id}
-            ref={setStatRef(stat.id)}
-            className={`p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} transition-all duration-300 active:scale-95`}
-            onClick={() => {
-                const statElement = individualStatRefs.current[stat.id];
-                if (statElement && mobileIndex !== activeIndex) {
-                    setActiveIndex(mobileIndex);
-                }
-            }}
-          >
-            <div className={`text-3xl font-bold ${stat.mainColor} mb-2 text-shadow-sm`}>{stat.value}</div>
-            <p className="text-base text-white/90 leading-relaxed">{stat.description}</p>
-          </div>
-        ))}
+      {/* Mobile: Horizontal Carousel */}
+      <div className="md:hidden w-full overflow-hidden relative">
+        <div 
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ 
+            transform: `translateX(-${activeIndex * 100}%)`,
+            willChange: 'transform' // Hint for browser performance
+          }}
+        >
+          {statsData.map((stat, mobileIndex) => (
+            <div
+              key={stat.id}
+              className={`p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} w-full flex-shrink-0`}
+              id={`stat-card-${stat.id}`}
+              onClick={() => {
+                  setActiveIndex(mobileIndex);
+              }}
+            >
+              <div className={`text-3xl font-bold ${stat.mainColor} mb-2 text-shadow-sm`}>{stat.value}</div>
+              <p className="text-base text-white/90 leading-relaxed">{stat.description}</p>
+            </div>
+          ))}
+        </div>
+        {/* Dots for Carousel Navigation */}
         <div className="flex justify-center space-x-2 pt-4">
           {statsData.map((stat, index) => (
             <button
               key={`dot-${stat.id}`}
               onClick={() => {
-                const statElement = individualStatRefs.current[stat.id];
-                if (statElement) {
-                  statElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                  setActiveIndex(index);
-                }
+                setActiveIndex(index);
               }}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 activeIndex === index ? `bg-white scale-125 shadow-md ring-2 ${stat.mainColor.replace("text-", "ring-").replace(/-\d+$/, '-500')}` : 'bg-white/30 hover:bg-white/60'

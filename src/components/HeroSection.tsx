@@ -11,14 +11,6 @@ interface ScrollTriggerInstance {
 }
 
 const HeroSection = () => {
-  // Add a function to scroll to services section
-  const scrollToServices = () => {
-    const servicesSection = document.getElementById('services');
-    if (servicesSection) {
-      servicesSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
   const ctaContainerRef = useRef<HTMLDivElement>(null);
@@ -27,12 +19,19 @@ const HeroSection = () => {
   const attentionGrabberRef = useRef<HTMLDivElement>(null);
   let businessTextElement: HTMLDivElement | null = null;
   
+  const [isMobile, setIsMobile] = useState(false);
+
   // Text to animate - RESTORING THESE DEFINITIONS
   const mainHeadingText = "Transform";
   const mainHeadingTextLine2 = "Your Business";
   const subHeadingText = "Custom Websites. Smart Apps. AI That Works for You.";
   
   useEffect(() => {
+    // Mobile check effect
+    const checkMobile = () => setIsMobile(window.innerWidth < 768); // md breakpoint
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
     if (typeof window === 'undefined') return;
     
     try {
@@ -168,14 +167,6 @@ const HeroSection = () => {
         
         // Add subtitle text with highlighted words as clickable links, broken into two lines
         subtitleContainer.innerHTML = 'Custom <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Websites</span>. Smart <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">You</span>.';
-        
-        // After DOM is set up, add click event listeners to the blue text
-        setTimeout(() => {
-          const blueTextElements = subtitleContainer.querySelectorAll('span');
-          blueTextElements.forEach(el => {
-            el.addEventListener('click', scrollToServices);
-          });
-        }, 100);
         
         // Add subtitle to DOM
         headingRef.current.appendChild(subtitleContainer);
@@ -337,12 +328,12 @@ const HeroSection = () => {
       
       // Animate CTA buttons and potentially the new stats section together or sequentially
       if (ctaContainerRef.current) {
-        // Animate the direct children of the ctaContainerRef if they are the buttons and stats section
-        // For now, CTA buttons are animated directly, and HeroStats has its own animation
-        const ctaButtons = ctaContainerRef.current.querySelector('.cta-buttons-group'); // Add a class to group buttons
-        if (ctaButtons) {
+        const ctaGroup = document.getElementById('hero-cta-group');
+        const statsWrapper = document.getElementById('hero-stats-wrapper');
+
+        if (ctaGroup) {
           masterTl.fromTo(
-            ctaButtons.children,
+            ctaGroup, // Animate the group itself for opacity
             { 
               opacity: 0,
               y: 20 
@@ -350,12 +341,19 @@ const HeroSection = () => {
             {
               opacity: 1,
               y: 0,
-              stagger: 0.1,
               duration: 0.5,
               ease: 'power3.out'
             },
-            0.9 // Delay CTA animation slightly after subtitle
+            1.4 // Delay CTA animation slightly after subtitle
           );
+        }
+        if (statsWrapper) { 
+            masterTl.fromTo(
+                statsWrapper,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+                1.5 // Stagger slightly after CTA buttons
+            );
         }
       }
       
@@ -367,6 +365,8 @@ const HeroSection = () => {
             }
           });
         }
+        masterTl.kill();
+        window.removeEventListener('resize', checkMobile);
       };
     } catch (error) {
       console.warn('Error in HeroSection animations:', error);
@@ -395,11 +395,11 @@ const HeroSection = () => {
         ref={attentionGrabberRef}
         className="absolute top-[15%] left-0 right-0 h-32 pointer-events-none z-10 flex justify-center items-center overflow-visible"
       >
-        <div className="attention-element w-36 h-36 bg-accent/10 rounded-full absolute" style={{ left: '10%' }}></div>
-        <div className="attention-element w-28 h-28 bg-accent-blue/20 rounded-full absolute" style={{ left: '25%' }}></div>
-        <div className="attention-element w-24 h-24 border-2 border-accent/40 rounded-full absolute" style={{ left: '55%' }}></div>
-        <div className="attention-element w-32 h-32 bg-accent-magenta/15 rounded-full absolute" style={{ left: '75%' }}></div>
-        <div className="attention-element w-16 h-16 bg-white/10 rounded-full absolute" style={{ left: '40%', top: '70%' }}></div>
+        <div className="attention-element w-16 h-16 sm:w-36 sm:h-36 bg-accent/10 rounded-full absolute" style={{ left: '10%' }}></div>
+        <div className="attention-element w-14 h-14 sm:w-28 sm:h-28 bg-accent-blue/20 rounded-full absolute" style={{ left: '25%' }}></div>
+        <div className="attention-element w-12 h-12 sm:w-24 sm:h-24 border-2 border-accent/40 rounded-full absolute" style={{ left: '55%' }}></div>
+        <div className="attention-element w-16 h-16 sm:w-32 sm:h-32 bg-accent-magenta/15 rounded-full absolute" style={{ left: '75%' }}></div>
+        <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute" style={{ left: '40%', top: '70%' }}></div>
       </div>
       
       <div className="container mx-auto px-6 relative z-10">
@@ -418,21 +418,21 @@ const HeroSection = () => {
             </div>
 
             {/* Container for CTAs and New Stats - Ref for potential group animation */}
-            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-8 mt-6 md:mt-10">
+            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-start gap-8 mt-8 md:mt-12">
               {/* CTA Buttons Group */}
-              <div className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0">
-                {/* Replace the button with CalendlyWidget */}
+              <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0">
                 <CalendlyWidget 
                   buttonText="Book a Free Consultation"
-                  className="group relative inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-3.5 text-base sm:text-lg font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden"
+                  className="group relative inline-flex items-center justify-center px-7 py-3 sm:px-9 sm:py-3.5 text-base sm:text-lg font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-[calc(100%+10%)] sm:w-auto"
                 />
-                <button 
-                  onClick={scrollToServices} 
-                  className="px-4 py-3 text-base sm:px-6 sm:py-4 sm:text-lg font-bold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 inline-block md:order-first"
-                >
-                  Research Statistics
-                </button>
               </div>
+
+              {/* Conditionally render HeroStats: not on mobile for now, adjust desktop positioning */}
+              {!isMobile && (
+                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-6 md:mt-0 opacity-0"> {/* Adjusted margins and initial opacity */}
+                   <HeroStats />
+                </div>
+              )}
             </div>
           </div>
         </div>
