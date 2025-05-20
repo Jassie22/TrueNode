@@ -290,6 +290,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                 {selectedProject === project.id ? (
                   <motion.div
                     key="expanded"
+                    className="h-[525px]"
                     initial={{ opacity: 0, width: "350px" }}
                     animate={{ opacity: 1, width: "750px" }}
                     exit={{ opacity: 0, width: "350px" }}
@@ -303,6 +304,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                 ) : (
                   <motion.div
                     key="collapsed"
+                    className="h-[525px]"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}

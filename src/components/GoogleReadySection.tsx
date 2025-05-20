@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -127,32 +127,24 @@ const getRandomItems = (arr: string[], count: number): string[] => {
 };
 
 // Counter component
-const AnimatedCounter = ({ target }: { target: number }) => {
-  const [count, setCount] = useState(0);
-  const countRef = useRef(target);
-  
+const AnimatedCounter: React.FC<{ target: number }> = ({ target }) => {
+  const countRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    countRef.current = target;
-    let startTime: number;
-    let animationFrameId: number; // Renamed for clarity
-    
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const elapsed = currentTime - startTime;
-      const duration = 2000;
-      const progress = Math.min(elapsed / duration, 1);
-      const easeOut = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(easeOut * countRef.current));
-      
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate);
-      }
-    };
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
+    if (countRef.current) {
+      gsap.to(countRef.current, {
+        textContent: target,
+        duration: 2,
+        ease: 'power1.inOut',
+        snap: { textContent: 1 },
+        scrollTrigger: {
+          trigger: countRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        },
+      });
+    }
   }, [target]);
-  
-  return <span className="text-accent">{count}</span>;
+  return <span ref={countRef}>0</span>;
 };
 
 // Enhanced Star component for constellation effect
@@ -220,42 +212,32 @@ const GoogleReadySection = () => {
   const starsContainerRef = useRef<HTMLDivElement>(null);
   const lanesContainerRef = useRef<HTMLDivElement>(null); // Ref for the direct parent of lanes
   
-  const [isVisible, setIsVisible] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
-  const numLanes = isMobile ? 3 : 5;
+  const numLanes = hasMounted && isMobile ? 3 : 5;
 
-  const laneRefs = useRef<Array<React.RefObject<HTMLDivElement>>>([]).current;
-  if (laneRefs.length !== numLanes) {
-    laneRefs.length = 0; // Clear array before re-populating
+  const itemsPerLane = hasMounted && isMobile ? 15 : 20;
+
+  const laneData = useMemo(() => {
+    const lanes = [];
+    const baseDurations = ['35s', '45s', '30s', '50s', '40s'];
     for (let i = 0; i < numLanes; i++) {
-      laneRefs.push(React.createRef<HTMLDivElement>());
+      lanes.push({
+        id: `lane-${i}`,
+        items: getRandomItems(allChecklistItems, itemsPerLane),
+        duration: baseDurations[i % baseDurations.length],
+        ref: React.createRef<HTMLDivElement>()
+      });
     }
-  }
-  
-  const itemsPerLane = isMobile ? 15 : 20;
-  const laneItems = React.useMemo(() => 
-    Array.from({ length: numLanes }).map(() => getRandomItems(allChecklistItems, itemsPerLane)), 
-    [numLanes, itemsPerLane] // Add numLanes to dependency array
-  );
+    return lanes;
+  }, [numLanes, itemsPerLane]); // Dependencies ensure this recalculates when numLanes changes post-mount
 
-  const baseAnimationDurations = ['35s', '45s', '30s', '50s', '40s'];
-  const laneAnimationDurations = React.useMemo(() => 
-    baseAnimationDurations.slice(0, numLanes), 
-    [numLanes] // Add numLanes to dependency array
-  );
-
-  // Generate stars safely
   const generateStars = useCallback(() => {
     if (!starsContainerRef.current) return;
-    
     const container = starsContainerRef.current;
-    
-    // Clear existing stars
     container.innerHTML = '';
-    
-    // Create new stars
-    const starCount = isMobile ? 30 : 60; // Increased star count for full width
+    const starCount = hasMounted && isMobile ? 30 : 60;
     for (let i = 0; i < starCount; i++) {
       const starElement = document.createElement('div');
       starElement.className = 'star';
@@ -271,7 +253,7 @@ const GoogleReadySection = () => {
       `;
       container.appendChild(starElement);
     }
-  }, [isMobile]);
+  }, [isMobile, hasMounted]);
   
   // Initialize GSAP animations
   useEffect(() => {
@@ -326,37 +308,24 @@ const GoogleReadySection = () => {
       );
     }
     
-    // Staggered Lane Entry Animation
-    laneRefs.forEach((laneRef) => {
-      if (laneRef.current) {
-        tl.to(laneRef.current, {
-          x: 0,
-          opacity: 1,
-          duration: 1.2, // Adjusted duration
-          ease: 'power3.out'
-        }, "+=0.3"); // Stagger by 0.3s after the previous animation in the timeline
-      }
-    });
+    if(hasMounted) { // Only animate lanes after mount and laneData is stable
+      laneData.forEach((lane) => {
+        if (lane.ref.current) {
+          tl.to(lane.ref.current, {
+            x: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'power3.out'
+          }, "+=0.3");
+        }
+      });
+    }
     
     return () => {
       ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
-      tl.kill(); // Kill the main timeline as well
+      tl.kill();
     };
-  }, []);
-  
-  // Setup intersection observer
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.1, rootMargin: '100px' }
-    );
-    
-    observer.observe(sectionRef.current);
-    
-    return () => observer.disconnect();
-  }, []);
+  }, [hasMounted, laneData]);
   
   // Handle window resize for stars (can be adapted for lanes if needed)
   useEffect(() => {
@@ -372,12 +341,13 @@ const GoogleReadySection = () => {
   
   // Generate stars on mount and when visible
   useEffect(() => {
-    if (isVisible) {
+    if (hasMounted) {
       generateStars();
     }
-  }, [isVisible, generateStars]);
+  }, [hasMounted, generateStars]);
 
   useEffect(() => {
+    setHasMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -481,20 +451,30 @@ const GoogleReadySection = () => {
             className="absolute inset-0 z-0 opacity-40"
           ></div>
           
-          <div 
-            ref={lanesContainerRef} // bannerRef was used here, but lanesContainerRef is more appropriate for the direct parent of lanes. Let's assume bannerRef is for the background section and lanesContainerRef for the lanes themselves.
+          {hasMounted && (
+            <div 
+              ref={lanesContainerRef} // bannerRef was used here, but lanesContainerRef is more appropriate for the direct parent of lanes. Let's assume bannerRef is for the background section and lanesContainerRef for the lanes themselves.
                                      // The user's provided code uses bannerRef for the "Full-width banner for lanes" which contains starsContainerRef and the lanes. So this is correct.
                                      // The actual lanes are mapped inside a div within this banner.
-            className="relative z-10 flex flex-col space-y-3">
-            {laneRefs.map((ref, index) => ( // This will now map 3 or 5 lanes
-              <SeoLane 
-                key={index}
-                laneRef={ref}
-                items={laneItems[index]} 
-                animationDuration={laneAnimationDurations[index]}
-              />
-            ))}
-          </div>
+              className="relative z-10 flex flex-col space-y-3">
+              {laneData.map((lane) => (
+                <SeoLane 
+                  key={lane.id}
+                  laneRef={lane.ref}
+                  items={lane.items} 
+                  animationDuration={lane.duration}
+                />
+              ))}
+            </div>
+          )}
+          {!hasMounted && (
+            // Placeholder for SSR or initial client render to match structure (5 lanes)
+            <div className="relative z-10 flex flex-col space-y-3">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={`placeholder-lane-${i}`} className="h-10"></div> // Simple placeholder with height
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>
