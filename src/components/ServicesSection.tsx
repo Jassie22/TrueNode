@@ -207,6 +207,7 @@ const ServicesSection = () => {
         );
         
         // Animate service cards with faster staggered entrance
+        /* // REMOVING THIS FADE-IN ANIMATION FOR SERVICE CARDS
         if (serviceContainerRef.current) {
           const serviceCards = serviceContainerRef.current.querySelectorAll('.service-card');
           masterTl.fromTo(
@@ -224,6 +225,7 @@ const ServicesSection = () => {
             0.1
           );
         }
+        */
         
       } catch (error) {
         console.warn('Error in ServicesSection animations:', error);
@@ -272,7 +274,7 @@ const ServicesSection = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="pt-24 pb-20 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion fade-in-section section-overlap-top"
+      className="pt-24 pb-20 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion section-overlap-top"
     >
       {/* SVG wave divider at the top */}
       <div className="absolute top-0 left-0 w-full overflow-hidden z-0 pointer-events-none">

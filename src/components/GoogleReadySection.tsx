@@ -424,7 +424,7 @@ const GoogleReadySection = () => {
                 className="text-6xl md:text-7xl font-bold text-accent mr-3"
                 style={{ textShadow: '0 0 40px rgba(147, 51, 234, 0.8)' }}
               >
-                <AnimatedCounter target={allChecklistItems.length} />
+                <AnimatedCounter target={96} />
               </span>
               <span className="text-xl md:text-2xl text-white/80 font-light">
                 insights &amp; techniques

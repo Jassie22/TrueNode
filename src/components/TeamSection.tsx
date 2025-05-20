@@ -363,10 +363,11 @@ const TeamSection = () => {
               Our <span className="text-accent">Team</span>
             </h2>
             
-            <div className="overflow-hidden">
+            <div className="overflow-hidden relative z-30">
               <p 
                 ref={descriptionRef}
-                className="text-lg md:text-xl text-white/80 font-light leading-relaxed"
+                className="text-lg md:text-xl text-white font-light leading-relaxed relative z-10"
+                style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8)' }}
               >
                 Meet the minds behind True Node – blending technical expertise with creative vision.
               </p>

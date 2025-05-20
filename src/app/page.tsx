@@ -38,7 +38,7 @@ export default function Home() {
       </div>
       
       <div className="relative z-10" id="team">
-        <div className="gradient-blur team-glow performance-optimized"></div>
+        <div className="gradient-blur team-glow performance-optimized absolute inset-0 -z-10"></div>
         <TeamSection />
       </div>
       
@@ -47,7 +47,7 @@ export default function Home() {
       </div>
       
       <div className="relative z-10" id="contact">
-        <div className="gradient-blur contact-glow performance-optimized"></div>
+        <div className="gradient-blur contact-glow performance-optimized absolute inset-0 -z-10"></div>
         <ContactSection />
       </div>
       

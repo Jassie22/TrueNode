@@ -192,6 +192,34 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
   const [dragStartX, setDragStartX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   
+  // Scroll to center the selected project card
+  useEffect(() => {
+    if (selectedProject !== null && carouselRef.current) {
+      const selectedIdx = projects.findIndex(p => p.id === selectedProject);
+      if (selectedIdx === -1) return;
+
+      const cardWidthCollapsed = 350; // Width of collapsed card
+      const cardWidthExpanded = 750; // Width of expanded card
+      const spacing = 24; // from space-x-6
+
+      // Calculate the offset of the selected card from the left of the carousel
+      let offsetLeft = 0;
+      for (let i = 0; i < selectedIdx; i++) {
+        offsetLeft += cardWidthCollapsed + spacing;
+      }
+      // If there are cards before the selected one, add initial padding (px-4 -> 16px)
+      // This initial padding is outside the map, so we can consider it part of the container's scroll properties.
+      // The important part is the relative positioning of cards.
+
+      const targetScrollLeft = offsetLeft - (carouselRef.current.clientWidth / 2) + (cardWidthExpanded / 2);
+
+      carouselRef.current.scrollTo({
+        left: Math.max(0, targetScrollLeft), // Ensure scrollLeft is not negative
+        behavior: 'smooth'
+      });
+    }
+  }, [selectedProject, projects]);
+
   // Handle scroll wheel navigation
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     if (carouselRef.current) {
@@ -334,7 +362,7 @@ interface ProjectCardProps {
 const DesktopProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
     <motion.div 
-      className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg cursor-pointer h-full group"
+      className="bg-gray-900 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg cursor-pointer h-full group"
       whileHover={{ scale: 1.03, y: -5 }}
       onClick={onClick}
       role="button"
@@ -425,7 +453,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
 
   return (
     <motion.div 
-      className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg flex flex-row h-full"
+      className="bg-gray-900 rounded-xl overflow-hidden border border-white/20 shadow-2xl flex flex-row h-full"
       initial={{ opacity: 0, width: "350px" }}
       animate={{ opacity: 1, width: "750px" }}
       exit={{ opacity: 0, width: "350px" }}
@@ -453,7 +481,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
       
       {/* Right Section - Content */}
       <motion.div 
-        className="flex-grow p-6 overflow-y-auto max-w-md relative"
+        className="flex-grow p-6 max-w-md relative"
         initial="hidden"
         animate="visible"
         exit="exit"
@@ -464,7 +492,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
             e.stopPropagation();
             onClose();
           }}
-          className="absolute top-4 right-4 p-2 bg-black/60 hover:bg-black text-white rounded-full transition-colors z-10"
+          className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/30 text-black rounded-full transition-colors z-10"
           aria-label="Close details"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -472,22 +500,22 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
           </svg>
         </button>
       
-        <motion.h3 custom={0} variants={textContentVariants} className="text-2xl font-bold text-white mb-1">{project.title}</motion.h3>
-        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-accent/30 text-accent-light text-sm px-2 py-1 rounded mb-4">
+        <motion.h3 custom={0} variants={textContentVariants} className="text-xl font-bold text-white mb-1">{project.title}</motion.h3>
+        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-white/20 text-white text-xs px-2 py-1 rounded mb-3">
           {project.category}
         </motion.span>
         
-        <motion.p custom={2} variants={textContentVariants} className="text-white/90 mb-6">
+        <motion.p custom={2} variants={textContentVariants} className="text-sm text-gray-300 mb-4 leading-relaxed">
           {project.description}
         </motion.p>
         
         {/* Features Section */}
-        <motion.div custom={3} variants={textContentVariants} className="mb-6">
-          <motion.h4 variants={listItemVariants} className="text-lg font-semibold text-white mb-3">Key Features</motion.h4>
-          <motion.ul variants={listVariants} className="space-y-2">
+        <motion.div custom={3} variants={textContentVariants} className="mb-4">
+          <motion.h4 variants={listItemVariants} className="text-base font-semibold text-white mb-2">Key Features</motion.h4>
+          <motion.ul variants={listVariants} className="space-y-1.5">
             {project.features.map((feature, index) => (
-              <motion.li key={index} variants={listItemVariants} className="flex items-start text-white/80">
-                <svg className="h-5 w-5 text-accent mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+              <motion.li key={index} variants={listItemVariants} className="flex items-start text-xs text-gray-300 leading-snug">
+                <svg className="h-4 w-4 text-accent-light mr-1.5 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>{feature}</span>
@@ -498,10 +526,10 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
         
         {/* Technologies Section */}
         <motion.div custom={4} variants={textContentVariants}>
-          <motion.h4 variants={listItemVariants} className="text-lg font-semibold text-white mb-3">Technologies Used</motion.h4>
-          <motion.div variants={listVariants} className="flex flex-wrap gap-2">
+          <motion.h4 variants={listItemVariants} className="text-base font-semibold text-white mb-2">Technologies Used</motion.h4>
+          <motion.div variants={listVariants} className="flex flex-wrap gap-1.5">
             {project.technologies.map((tech, index) => (
-              <motion.span key={index} variants={listItemVariants} className="bg-accent/10 text-accent-light border border-accent/30 px-3 py-1 rounded-md text-sm">
+              <motion.span key={index} variants={listItemVariants} className="bg-white/10 text-gray-200 border border-white/20 px-2 py-0.5 rounded-md text-xs">
                 {tech}
               </motion.span>
             ))}
@@ -640,7 +668,7 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
 const MobileProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
     <motion.div 
-      className="bg-black/50 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg"
+      className="bg-gray-900 backdrop-blur-sm rounded-xl overflow-hidden border border-white/10 shadow-lg"
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
     >
@@ -726,13 +754,13 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
             </div>
             
             {/* Project Details */}
-            <div className="bg-black/70 backdrop-blur-sm p-6 rounded-b-xl">
+            <div className="bg-gray-900 p-6 rounded-b-xl shadow-xl">
               <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-              <span className="inline-block bg-accent/30 text-accent-light text-sm px-3 py-1 rounded mb-4">
+              <span className="inline-block bg-white/20 text-white text-sm px-3 py-1 rounded mb-4">
                 {project.category}
               </span>
             
-              <p className="text-white/90 mb-6">
+              <p className="text-gray-200 mb-6">
                 {project.description}
               </p>
             
@@ -741,8 +769,8 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
                 <h4 className="text-xl font-semibold text-white mb-4">Key Features</h4>
                 <ul className="space-y-3">
                   {project.features.map((feature, index) => (
-                    <li key={index} className="flex items-start text-white/80">
-                      <svg className="h-6 w-6 text-accent mr-3 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                    <li key={index} className="flex items-start text-gray-200">
+                      <svg className="h-6 w-6 text-accent-light mr-3 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       <span className="text-lg">{feature}</span>
@@ -756,7 +784,7 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
                 <h4 className="text-xl font-semibold text-white mb-4">Technologies Used</h4>
                 <div className="flex flex-wrap gap-3">
                   {project.technologies.map((tech, index) => (
-                    <span key={index} className="bg-accent/10 text-accent-light border border-accent/30 px-4 py-2 rounded-md text-lg font-medium">
+                    <span key={index} className="bg-white/10 text-gray-100 border border-white/20 px-4 py-2 rounded-md text-lg font-medium">
                       {tech}
                     </span>
                   ))}

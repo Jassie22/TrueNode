@@ -8,8 +8,15 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasMounted) return; // Don't run scroll listener until mounted
+
     const handleScroll = () => {
       if (window.scrollY > 50) {
         setScrolled(true);
@@ -18,19 +25,26 @@ const Navbar = () => {
       }
       
       // Determine active section based on scroll position
-      const sections = ['home', 'services', 'portfolio', 'contact'];
-      for (const section of sections.reverse()) { // Check from bottom to top
-        const element = document.getElementById(section);
-        if (element && window.scrollY >= element.offsetTop - 200) {
-          setActiveSection(section);
+      const sections = ['home', 'services', 'portfolio', 'contact']; // Ensure 'home' corresponds to an actual ID or handle appropriately
+      let currentSection = 'home'; // Default
+      for (const sectionId of sections.reverse()) { 
+        const element = document.getElementById(sectionId);
+        if (element && window.scrollY >= element.offsetTop - 200) { // Adjust offset as needed
+          currentSection = sectionId;
           break;
         }
       }
+      // If scrolled to the very top, ensure 'home' is active
+      if (window.scrollY < 100 && document.getElementById('home')) { // Assuming 'home' is the hero section or similar
+         currentSection = 'home';
+      }
+      setActiveSection(currentSection);
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Call once on mount to set initial state correctly
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [hasMounted]);
   
   // Handle smooth scrolling to sections
   const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
@@ -71,14 +85,16 @@ const Navbar = () => {
   return (
     <nav 
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled 
+        hasMounted && scrolled 
           ? 'py-3 bg-black/50 backdrop-blur-md' 
           : 'py-4 bg-transparent'
       }`}
       style={{
-        boxShadow: scrolled 
+        boxShadow: hasMounted && scrolled 
           ? '0 4px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(144, 58, 231, 0.15)' 
-          : 'none'
+          : 'none',
+        // Ensure initial state is non-transparent if it might start scrolled (e.g. page refresh)
+        // but this should be handled by handleScroll() call in useEffect
       }}
       aria-label="Main navigation"
     >

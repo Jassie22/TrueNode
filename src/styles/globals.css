@@ -606,8 +606,13 @@ section::before {
   .section-overlap-top {
     position: relative;
     z-index: 2;
-    margin-top: -5rem;
     padding-top: 7rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-overlap-top {
+      margin-top: -5rem;
+    }
   }
 
   .section-overlap-bottom {
