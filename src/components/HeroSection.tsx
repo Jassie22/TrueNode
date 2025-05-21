@@ -97,7 +97,7 @@ const HeroSection = () => {
           headingRef.current.innerHTML = ''; // Clear any SSR content before building
           
           const firstLineContainer = document.createElement('h1');
-          firstLineContainer.className = 'text-[16vw] sm:text-[17vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-4 relative overflow-visible text-center md:text-left';
+          firstLineContainer.className = 'text-[20vw] sm:text-[17vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-4 relative overflow-visible text-center md:text-left';
           
           const secondLineContainer = document.createElement('div');
           secondLineContainer.className = 'text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-6 text-center md:text-left';
@@ -108,7 +108,7 @@ const HeroSection = () => {
           mainHeadingText.split('').forEach((letter, letterIndex) => {
             const letterSpan = document.createElement('span');
             letterSpan.textContent = letter;
-            letterSpan.className = 'inline-block opacity-0 transform translate-y-full';
+            letterSpan.className = isMobile ? 'inline-block' : 'inline-block opacity-0 transform translate-y-full';
             letterSpan.dataset.index = letterIndex.toString();
             letterSpan.setAttribute('aria-hidden', 'true');
             firstLineSpans.push(letterSpan);
@@ -118,19 +118,20 @@ const HeroSection = () => {
           const secondLineSpans = [];
           mainHeadingTextLine2.split(' ').forEach((word, wordIndex) => {
             const wordSpan = document.createElement('span');
-            if (wordIndex === 0) {
-              wordSpan.className = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500';
-              if (isMobile) {
-                wordSpan.classList.add('text-accent');
-              }
-            } else {
-              wordSpan.className = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500';
-              if (isMobile) {
-                wordSpan.classList.add('text-accent');
-              }
-            }
             wordSpan.textContent = word;
             wordSpan.setAttribute('aria-hidden', 'true');
+            let initialClasses = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500';
+
+            if (isMobile) {
+              if (word.toLowerCase() === 'your') {
+                initialClasses += ' text-white'; 
+              } else {
+                initialClasses += ' text-accent';
+              }
+            } else {
+              initialClasses += ' text-white';
+            }
+            wordSpan.className = initialClasses;
             secondLineSpans.push(wordSpan);
             secondLineContainer.appendChild(wordSpan);
           });
@@ -150,6 +151,7 @@ const HeroSection = () => {
           
           if (!isMobile) { // Desktop: animate "Transform" letter by letter
             const firstLineLetters = firstLineContainer.querySelectorAll('span');
+            gsap.set(firstLineLetters, { opacity: 0, y: '100%' }); 
             masterTl.to(
               firstLineLetters,
               { y: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: "power4.out" },

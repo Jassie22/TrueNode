@@ -98,9 +98,9 @@ const MemoryGame = () => {
       setGameTime(Math.floor((Date.now() - startTime) / 1000));
     }, 1000);
 
-    // Ensure fullscreen state is reset if game is restarted from complete state
-    if (isFullscreen && document.exitFullscreen) {
-      // document.exitFullscreen(); // Optionally exit fullscreen on restart
+    // Optional: Exit fullscreen if game is restarted from complete/playing state while fullscreen
+    if (isFullscreen && typeof document.exitFullscreen === 'function') {
+      // document.exitFullscreen(); // Uncomment to enable exiting fullscreen on restart
     }
   };
 
