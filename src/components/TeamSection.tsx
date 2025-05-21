@@ -80,6 +80,7 @@ const TeamSection = () => {
     if (typeof window !== 'undefined') {
       try {
         // Animate background blobs
+        let blobAnimations: gsap.core.Tween[] = []; // Store blob animations
         if (backgroundRef.current) {
           const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
           
@@ -90,7 +91,7 @@ const TeamSection = () => {
               scale: 0.8 + Math.random() * 0.4
             });
             
-            gsap.to(blob, {
+            const anim = gsap.to(blob, {
               x: `+=${Math.random() * 100 - 50}`,
               y: `+=${Math.random() * 100 - 50}`,
               scale: 0.9 + Math.random() * 0.3,
@@ -101,7 +102,19 @@ const TeamSection = () => {
               ease: "sine.inOut",
               delay: index * 1.5
             });
+            blobAnimations.push(anim); // Add to array
           });
+        }
+        
+        // Immediately set initial animation states for title, description, and cards
+        if (titleRef.current) {
+          gsap.set(titleRef.current, { y: 40, opacity: 0 });
+        }
+        if (descriptionRef.current) {
+          gsap.set(descriptionRef.current, { y: 30, opacity: 0 });
+        }
+        if (teamMemberRefs.current && teamMemberRefs.current.length > 0) {
+          gsap.set(teamMemberRefs.current, { y: 60, opacity: 0, scale: 0.9 });
         }
         
         // Create animation timeline
@@ -147,6 +160,29 @@ const TeamSection = () => {
           },
           '-=0.4'
         );
+        
+        // Cleanup function
+        return () => {
+          tl.kill(); // Kill the main timeline
+          blobAnimations.forEach(anim => anim.kill()); // Kill individual blob animations
+          teamMemberRefs.current.forEach(memberRef => {
+            if (memberRef) gsap.killTweensOf(memberRef); // Kill tweens on team member cards
+          });
+          if (slideContainerRef.current) {
+            gsap.killTweensOf(slideContainerRef.current); // Kill tweens on the mobile slide container
+          }
+          // Kill all ScrollTriggers created by this component
+          // This is a more robust way to ensure all related ScrollTriggers are removed
+          ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => {
+            if (trigger.trigger === sectionRef.current || 
+                (titleRef.current && trigger.trigger === titleRef.current) ||
+                (descriptionRef.current && trigger.trigger === descriptionRef.current) ||
+                teamMemberRefs.current.some(ref => ref === trigger.trigger)
+            ) {
+              trigger.kill();
+            }
+          });
+        };
         
       } catch (error) {
         console.warn('Error in TeamSection animations:', error);

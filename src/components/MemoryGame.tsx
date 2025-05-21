@@ -27,7 +27,6 @@ const MemoryGame = () => {
   const [gameStartTime, setGameStartTime] = useState<number>(0);
   const [gameTime, setGameTime] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [showInstructions, setShowInstructions] = useState<boolean>(false);
 
   // Card emojis for matching pairs
   const cardContents = ['🚀', '🌟', '🎮', '💻', '🤖', '🦄', '🎨', '🔮'];
@@ -160,7 +159,7 @@ const MemoryGame = () => {
         }, 800);
       }
     }
-  }, [flippedCards, cards]);
+  }, [flippedCards, cards, gameState]);
 
   // Check for game completion
   useEffect(() => {
@@ -201,7 +200,7 @@ const MemoryGame = () => {
         setBestTime(currentBestTime);
       }
     }
-  }, [matchedPairs, cardContents.length, gameState, moves, gameTime]);
+  }, [matchedPairs, cardContents.length, gameState, moves, gameTime, calculateScore]);
 
   // Load best score and time on component mount
   useEffect(() => {
@@ -233,197 +232,86 @@ const MemoryGame = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Toggle instructions
-  const toggleInstructions = () => {
-    setShowInstructions(prev => !prev);
-  };
-
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center bg-gradient-to-b from-black/50 to-black/30 rounded-lg overflow-hidden p-2">
+    <div className="flex flex-col h-full w-full items-center justify-center bg-gradient-to-b from-black/50 to-black/30 rounded-lg overflow-hidden p-2 text-white">
       {gameState === GameState.Welcome && (
-        <div className="text-center p-6 max-w-xs mx-auto">
-          <div className="mb-6">
-            <h3 className="text-2xl font-bold text-white mb-3">Bored while waiting?</h3>
-            <p className="text-white/70 mb-4">Want to play a quick memory game?</p>
+        <div className="text-center p-4 max-w-xs mx-auto">
+          <div className="mb-4">
+            <h3 className="text-xl font-bold text-white mb-2">Memory Game!</h3>
+            <p className="text-white/70 text-sm mb-3">Match all the pairs of cards.</p>
             
-            {/* Instructions Button */}
+            {/* Instructions displayed directly without the bordered box */}
+            <div className="text-xs text-white/60 mb-4">
+              <p className="font-medium mb-1 text-white/80">How to Play:</p> {/* Slightly increased visibility for title */}
+              <ul className="list-disc list-inside text-left space-y-0.5 pl-2"> {/* Added small padding for list items */}
+                <li>Click a card to flip it.</li>
+                <li>Flip another card to find a match.</li>
+                <li>If they match, they stay flipped.</li>
+                <li>If not, they flip back.</li>
+                <li>Match all pairs to win!</li>
+              </ul>
+            </div>
+
             <button 
-              onClick={toggleInstructions}
-              className="text-white/60 hover:text-white text-sm mb-4 underline"
+              onClick={initializeGame}
+              className="w-full py-2.5 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
             >
-              {showInstructions ? "Hide Instructions" : "How to Play"}
+              Start Game
             </button>
-            
-            {/* Game Instructions - Made to fill the game box instead of fullscreen */}
-            {showInstructions && (
-              <div className="absolute inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-                <div className="bg-bg-darker p-6 rounded-xl border border-accent/20 max-w-md w-full">
-                  <div className="flex justify-between items-center mb-4">
-                    <h4 className="font-bold text-xl text-white">Game Instructions</h4>
-                    <button 
-                      onClick={toggleInstructions}
-                      className="p-1.5 bg-black/30 rounded-full text-white/70 hover:text-white"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </button>
-                  </div>
-                  <ul className="list-disc pl-5 space-y-3 text-white/90">
-                    <li>Match pairs of identical icons as quickly as possible</li>
-                    <li>Click cards to flip them over</li>
-                    <li>Remember the locations to make matches efficiently</li>
-                    <li>The game is scored based on speed and number of moves</li>
-                    <li>Fewer moves and faster completion = higher score</li>
-                  </ul>
-                  <button 
-                    onClick={toggleInstructions}
-                    className="mt-6 w-full py-2.5 bg-accent hover:bg-accent-hover text-white rounded-lg"
-                  >
-                    Got it
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
-          <button 
-            onClick={initializeGame}
-            className="px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg shadow-lg transition-all duration-300 transform hover:scale-105 w-full"
-          >
-            Let's Play!
-          </button>
           {(bestScore !== null || bestTime !== null) && (
-            <div className="mt-4 text-sm text-white/60 flex flex-col space-y-1">
-              {bestScore !== null && (
-                <p>Best score: {bestScore} moves</p>
-              )}
-              {bestTime !== null && (
-                <p>Best time: {formatTime(bestTime)}</p>
-              )}
+            <div className="mt-4 text-xs text-white/50 border-t border-white/10 pt-3">
+              {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
+              {bestScore !== null && <p>Best Moves: {bestScore}</p>}
             </div>
           )}
         </div>
       )}
-
+      
       {gameState === GameState.Playing && (
-        <div className="w-full max-w-md mx-auto p-2">
-          <div className="flex justify-between items-center mb-4">
-            <div className="text-white">
-              <span className="text-xs text-white/60">Moves:</span>
-              <span className="ml-1 font-bold">{moves}</span>
-            </div>
-            <div className="text-white">
-              <span className="text-xs text-white/60">Time:</span>
-              <span className="ml-1 font-bold">{formatTime(gameTime)}</span>
-            </div>
-            <button 
-              onClick={() => setGameState(GameState.Welcome)}
-              className="text-white/60 hover:text-white text-xs px-2 py-1 rounded-md bg-white/10 hover:bg-white/20 transition-colors"
-            >
-              Restart
-            </button>
-          </div>
-          
-          <div className="grid grid-cols-4 gap-2 w-full">
+        <>
+          <div className="grid grid-cols-4 gap-2 mb-3 p-2 bg-black/20 rounded-lg border border-white/10 max-w-[240px] mx-auto">
             {cards.map(card => (
-              <div 
-                key={card.id} 
+              <div
+                key={card.id}
                 onClick={() => handleCardClick(card.id)}
-                className={`relative aspect-square cursor-pointer transition-all duration-300 transform ${
-                  card.flipped || card.matched 
-                    ? 'rotate-y-180' 
-                    : ''
-                } ${
-                  card.matched ? 'opacity-70' : ''
-                }`}
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-md flex items-center justify-center text-2xl sm:text-3xl cursor-pointer transition-all duration-300 preserve-3d shadow-md ${card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'} ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''}`}
               >
-                <div className={`absolute inset-0 flex items-center justify-center rounded-md border border-white/10 ${
-                  card.flipped || card.matched 
-                    ? 'bg-accent/20 border-accent/30' 
-                    : 'bg-zinc-800/80 hover:bg-zinc-700/80'
-                } transition-all duration-300 transform perspective-500 ${
-                  card.flipped || card.matched ? 'rotate-y-180' : ''
-                }`}>
-                  {(card.flipped || card.matched) && (
-                    <span className="text-4xl">{card.content}</span>
-                  )}
+                <div className={`transition-opacity duration-200 ${card.flipped || card.matched ? 'opacity-100' : 'opacity-0'} backface-hidden rotate-y-180`}>
+                  {card.content}
                 </div>
               </div>
             ))}
           </div>
-          
-          {/* Quick instructions during game */}
-          <div className="mt-4 text-xs text-white/50 text-center">
-            <p>Match all pairs with the fewest moves to get a high score!</p>
+          <div className="flex justify-between items-center w-full max-w-[240px] mx-auto text-sm px-1">
+            <p className="text-white/80">Moves: <span className="font-bold text-accent-light">{moves}</span></p>
+            <p className="text-white/80">Time: <span className="font-bold text-accent-light">{formatTime(gameTime)}</span></p>
           </div>
-        </div>
+        </>
       )}
 
       {gameState === GameState.Complete && (
-        <div className="text-center p-6 max-w-xs mx-auto">
-          <div className="w-20 h-20 bg-accent/20 rounded-full mx-auto flex items-center justify-center mb-4">
-            <span className="text-4xl">🎉</span>
+        <div className="text-center p-4">
+          <h3 className="text-2xl font-bold text-accent-light mb-2">You Won!</h3>
+          <div className="mb-4 space-y-1 text-white/90">
+            <p>Your Score: <span className="font-semibold text-lg text-white">{score}</span></p>
+            <p>Moves: <span className="font-semibold text-white">{moves}</span></p>
+            <p>Time: <span className="font-semibold text-white">{formatTime(gameTime)}</span></p>
           </div>
-          <h3 className="text-2xl font-bold text-white mb-3">Well done!</h3>
-          <p className="text-white/70 mb-2">You completed the game in:</p>
-          <div className="flex justify-center gap-4 mb-4">
-            <div className="bg-accent/20 px-3 py-2 rounded-md">
-              <p className="text-xs text-white/60">Moves</p>
-              <p className="text-xl font-bold text-white">{moves}</p>
-            </div>
-            <div className="bg-accent/20 px-3 py-2 rounded-md">
-              <p className="text-xs text-white/60">Time</p>
-              <p className="text-xl font-bold text-white">{formatTime(gameTime)}</p>
-            </div>
-          </div>
-          
-          {/* Score display */}
-          <div className="bg-accent/30 px-4 py-3 rounded-lg mb-6">
-            <p className="text-xs text-white/70 mb-1">Your Score</p>
-            <p className="text-3xl font-bold text-white">{score}</p>
-          </div>
-          
-          {bestScore !== null && bestScore === moves && (
-            <div className="mb-4 py-2 px-4 bg-accent/30 rounded-lg text-sm text-white/90">
-              🏆 New personal best moves!
+          {(bestTime !== null || bestScore !== null) && (
+            <div className="mb-4 text-xs text-white/60 border-t border-white/10 pt-2">
+              {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
+              {bestScore !== null && <p>Best Moves: {bestScore}</p>}
             </div>
           )}
-          
-          {bestTime !== null && bestTime === gameTime && (
-            <div className="mb-4 py-2 px-4 bg-accent/30 rounded-lg text-sm text-white/90">
-              ⏱️ New personal best time!
-            </div>
-          )}
-          
           <button 
             onClick={initializeGame}
-            className="px-6 py-3 bg-accent hover:bg-accent-hover text-white rounded-lg shadow-lg transition-all duration-300 mb-2 w-full"
+            className="w-full py-2.5 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
           >
             Play Again
           </button>
-          <button 
-            onClick={() => setGameState(GameState.Welcome)}
-            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-lg transition-colors text-sm w-full"
-          >
-            Back to Start
-          </button>
         </div>
       )}
-
-      {/* Custom styles */}
-      <style jsx>{`
-        @keyframes rotate-y-180 {
-          from { transform: rotateY(0deg); }
-          to { transform: rotateY(180deg); }
-        }
-        .rotate-y-180 {
-          transform: rotateY(180deg);
-        }
-        .perspective-500 {
-          perspective: 500px;
-          transform-style: preserve-3d;
-        }
-      `}</style>
     </div>
   );
 };

@@ -5,128 +5,128 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// SEO Checklist data for bubble text
+// SEO Checklist data
 const seoChecklist = {
   technical: [
-    "Mobile-friendly responsive design",
-    "Fast page loading speed (< 3 seconds)",
+    "Mobile-friendly design",
+    "Fast page speed (< 3s)",
     "HTTPS secure website",
-    "XML sitemap implementation",
+    "XML sitemap impl.",
     "Robots.txt configuration",
-    "Schema markup for rich snippets",
+    "Schema for rich snippets",
     "Browser compatibility",
-    "Core Web Vitals optimization",
-    "Largest Contentful Paint (LCP) optimization",
-    "Cumulative Layout Shift (CLS) minimization",
-    "First Input Delay (FID) reduction",
-    "Structured data implementation",
-    "Website architecture optimization",
+    "Core Web Vitals optim.",
+    "LCP optimization",
+    "CLS minimization",
+    "FID reduction",
+    "Structured data impl.",
+    "Site architecture optim.",
     "Internal linking structure",
-    "URL structure optimization",
-    "301 redirects for changed URLs",
-    "404 error page customization",
+    "URL structure optim.",
+    "301 redirects for URLs",
+    "404 error page custom.",
     "Image optimization",
-    "Lazy loading implementation",
-    "CSS and JavaScript minification",
+    "Lazy loading impl.",
+    "CSS/JS minification",
     "Gzip compression",
-    "Browser caching configuration",
+    "Browser caching config.",
     "CDN implementation",
-    "Server response time optimization",
-    "Accelerated Mobile Pages (AMP)",
-    "Progressive Web App capabilities",
-    "Cross-device compatibility",
-    "JavaScript rendering issues",
+    "Server response optim.",
+    "AMP implementation",
+    "PWA capabilities",
+    "Cross-device compatible",
+    "JS rendering issues",
     "Pagination implementation",
-    "Canonicalization issues",
+    "Canonical tag issues",
     "Robots meta tags",
-    "Hreflang implementation for international sites",
-    "Secure DNS configuration",
-    "SSL certificate implementation",
+    "Hreflang for intl. sites",
+    "Secure DNS config.",
+    "SSL certificate impl.",
     "Site architecture depth",
     "Web font optimization",
-    "Website database optimization"
+    "DB optimization"
   ],
   content: [
-    "Keyword research and strategy",
-    "Keyword mapping for key pages",
-    "Unique, high-quality content",
-    "SEO-optimized page titles",
-    "Compelling meta descriptions",
-    "Proper header tags (H1, H2, H3)",
+    "Keyword research/strategy",
+    "Keyword mapping",
+    "Unique, quality content",
+    "SEO page titles",
+    "Compelling meta desc.",
+    "Proper header tags (H1-H3)",
     "Keyword-rich URLs",
     "Optimized image alt text",
-    "Internal linking strategy",
-    "Content length optimization",
+    "Internal linking strat.",
+    "Content length optim.",
     "Regular content updates",
-    "Blog strategy implementation",
-    "Topic clusters development",
+    "Blog strategy impl.",
+    "Topic cluster dev.",
     "Content gaps analysis",
-    "Featured snippets optimization",
-    "Natural language processing optimization",
-    "FAQ section implementation",
-    "Long-tail keyword targeting",
+    "Featured snippets optim.",
+    "NLP optimization",
+    "FAQ section impl.",
+    "Long-tail keyword target.",
     "Geographic targeting",
-    "Semantic search optimization"
+    "Semantic search optim."
   ],
   user: [
-    "Clear call-to-action buttons",
-    "Intuitive navigation menu",
+    "Clear CTAs",
+    "Intuitive navigation",
     "Readable typography",
     "Proper color contrast",
     "Logical page structure",
     "Page scroll depth analysis",
-    "Mobile navigation optimization",
-    "Trust signals implementation",
-    "Social proof integration",
-    "Accessibility compliance (WCAG)",
-    "User journey mapping",
+    "Mobile nav optim.",
+    "Trust signals impl.",
+    "Social proof integr.",
+    "WCAG compliance",
+    "User journey map",
     "Conversion path analysis",
-    "User flow optimization",
+    "User flow optim.",
     "Form optimization",
-    "Site search functionality",
+    "Site search function",
     "Navigation breadcrumbs"
   ],
   analytics: [
-    "Google Analytics implementation",
-    "Google Search Console setup",
+    "Google Analytics impl.",
+    "Search Console setup",
     "Conversion tracking",
     "Goal setup in analytics",
-    "Event tracking configuration",
+    "Event tracking config.",
     "Regular SEO audits",
-    "Keyword position tracking",
-    "Backlink profile monitoring",
+    "Keyword position track.",
+    "Backlink profile monitor.",
     "Competitor analysis",
     "Traffic source analysis",
     "Session duration analysis",
-    "Bounce rate optimization",
+    "Bounce rate optim.",
     "Exit page analysis",
     "User behavior analysis",
-    "Heatmap implementation",
-    "A/B testing framework",
+    "Heatmap impl.",
+    "A/B testing setup",
     "Custom dashboard setup",
     "Funnel visualization",
-    "Organic traffic monitoring",
+    "Organic traffic monitor.",
     "Search visibility trends",
-    "Click-through rate analysis",
-    "Return on investment measurement",
+    "CTR analysis",
+    "ROI measurement",
     "Attribution modeling"
   ]
 };
 
-const allChecklistItems = [
-  ...seoChecklist.technical,
-  ...seoChecklist.content,
-  ...seoChecklist.user,
-  ...seoChecklist.analytics,
-];
+const allUniqueChecklistItems = Array.from(
+  new Set([
+    ...seoChecklist.technical,
+    ...seoChecklist.content,
+    ...seoChecklist.user,
+    ...seoChecklist.analytics,
+  ])
+);
 
-// Helper function to get N random items from an array
 const getRandomItems = (arr: string[], count: number): string[] => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
 
-// Counter component
 const AnimatedCounter: React.FC<{ target: number }> = ({ target }) => {
   const countRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
@@ -147,28 +147,26 @@ const AnimatedCounter: React.FC<{ target: number }> = ({ target }) => {
   return <span ref={countRef}>0</span>;
 };
 
-// Enhanced Star component for constellation effect
 const Star = ({ isBrightNode }: { isBrightNode?: boolean }) => {
   const starRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!starRef.current) return;
     const star = starRef.current;
-    const animationDuration = 3 + Math.random() * 4; // Slower, more subtle twinkle
+    const animationDuration = 3 + Math.random() * 4;
     const delay = Math.random() * 5;
     star.style.animation = `twinkle ${animationDuration}s ease-in-out ${delay}s infinite`;
   }, []);
 
-  const size = isBrightNode ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 1; // Adjusted sizes
-  const opacity = isBrightNode ? 0.6 + Math.random() * 0.4 : 0.15 + Math.random() * 0.25; // Adjusted opacities
+  const size = isBrightNode ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 1;
+  const opacity = isBrightNode ? 0.6 + Math.random() * 0.4 : 0.15 + Math.random() * 0.25;
 
   return (
     <div
       ref={starRef}
-      className="absolute bg-white rounded-full" // Rounded-full for softer stars
+      className="absolute bg-white rounded-full"
       style={{
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
-        // Removed clip-path for simple round stars, can be re-added if specific shape is crucial
         width: `${size}px`,
         height: `${size}px`,
         opacity: opacity,
@@ -177,7 +175,6 @@ const Star = ({ isBrightNode }: { isBrightNode?: boolean }) => {
   );
 };
 
-// Refactored SeoLane component
 interface SeoLaneProps {
   items: string[];
   animationDuration?: string;
@@ -185,14 +182,14 @@ interface SeoLaneProps {
 }
 
 const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) => {
-  const duplicatedItems = [...items, ...items];
+  const duplicatedItems = [...items, ...items]; // Duplicate for seamless scroll
   return (
     <div ref={laneRef} className="overflow-hidden whitespace-nowrap opacity-0 pl-2" style={{ transform: 'translateX(100%)' }}>
       <div className="flex animate-scroll-left" style={{ animationDuration }}>
         {duplicatedItems.map((item, index) => (
           <span 
-            key={index} 
-            className="text-white bg-purple-600/70 backdrop-blur-sm mx-3 sm:mx-4 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg shadow-lg text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis text-center min-w-[150px] sm:min-w-[200px]"
+            key={`${item}-${index}`} // Ensure unique key for duplicated items
+            className="text-white bg-purple-600/80 backdrop-blur-sm mx-2 sm:mx-3 px-4 py-2 rounded-lg shadow-lg text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis text-center min-w-[180px] sm:min-w-[220px] border border-purple-500/30 transition-all hover:bg-purple-500/90 hover:shadow-purple-500/30 hover:scale-105"
           >
             {item}
           </span>
@@ -202,60 +199,62 @@ const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) =>
   );
 };
 
-// Main component
 const GoogleReadySection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
-  const bannerRef = useRef<HTMLDivElement>(null); // This might be repurposed for lanes container
+  const bannerRef = useRef<HTMLDivElement>(null);
   const starsContainerRef = useRef<HTMLDivElement>(null);
-  const lanesContainerRef = useRef<HTMLDivElement>(null); // Ref for the direct parent of lanes
+  const lanesContainerRef = useRef<HTMLDivElement>(null);
   
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
-  const numLanes = hasMounted && isMobile ? 3 : 5;
-
-  const itemsPerLane = hasMounted && isMobile ? 15 : 20;
+  const numLanes = hasMounted && isMobile ? 4 : 6; // Adjusted number of lanes
+  const itemsPerLane = hasMounted && isMobile ? 12 : 18; // Adjusted items per lane
 
   const laneData = useMemo(() => {
     const lanes = [];
-    const baseDurations = ['35s', '45s', '30s', '50s', '40s'];
+    // Slightly adjusted durations for more variation and potentially slower, more readable speeds
+    const baseDurations = ['40s', '55s', '45s', '60s', '50s', '65s']; 
     for (let i = 0; i < numLanes; i++) {
       lanes.push({
         id: `lane-${i}`,
-        items: getRandomItems(allChecklistItems, itemsPerLane),
+        items: getRandomItems(allUniqueChecklistItems, itemsPerLane),
         duration: baseDurations[i % baseDurations.length],
         ref: React.createRef<HTMLDivElement>()
       });
     }
     return lanes;
-  }, [numLanes, itemsPerLane]); // Dependencies ensure this recalculates when numLanes changes post-mount
+  }, [numLanes, itemsPerLane]);
 
   const generateStars = useCallback(() => {
     if (!starsContainerRef.current) return;
     const container = starsContainerRef.current;
     container.innerHTML = '';
-    const starCount = hasMounted && isMobile ? 30 : 60;
+    const starCount = hasMounted && isMobile ? 35 : 70; // Adjusted star count
+    const fragment = document.createDocumentFragment();
     for (let i = 0; i < starCount; i++) {
-      const starElement = document.createElement('div');
-      starElement.className = 'star';
-      starElement.style.cssText = `
-        position: absolute;
-        left: ${Math.random() * 100}%;
-        top: ${Math.random() * 100}%;
-        width: ${1 + Math.random() * 2}px; 
-        height: ${1 + Math.random() * 2}px;
-        background: white;
-        clip-path: polygon(50% 0%, 65% 35%, 100% 35%, 70% 57%, 80% 100%, 50% 75%, 20% 100%, 30% 57%, 0% 35%, 35% 35%);
-        animation: twinkle ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 5}s infinite;
-      `;
-      container.appendChild(starElement);
-    }
+        const isBright = Math.random() < 0.1;
+        const starEl = document.createElement('div');
+        Object.assign(starEl.style, {
+          position: 'absolute',
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          width: `${isBright ? (2 + Math.random() * 1) : (0.5 + Math.random() * 1)}px`,
+          height: `${isBright ? (2 + Math.random() * 1) : (0.5 + Math.random() * 1)}px`,
+          background: 'white',
+          borderRadius: '50%',
+          opacity: `${isBright ? (0.5 + Math.random() * 0.4) : (0.1 + Math.random() * 0.2)}`,
+          animation: `twinkle ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 5}s infinite`
+        });
+        starEl.classList.add('star'); // Ensure class is added for global styles if any
+        fragment.appendChild(starEl);
+      }
+      container.appendChild(fragment);
   }, [isMobile, hasMounted]);
   
-  // Initialize GSAP animations
   useEffect(() => {
     if (typeof window === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
@@ -308,43 +307,43 @@ const GoogleReadySection = () => {
       );
     }
     
-    if(hasMounted) { // Only animate lanes after mount and laneData is stable
-      laneData.forEach((lane) => {
-        if (lane.ref.current) {
-          tl.to(lane.ref.current, {
-            x: 0,
-            opacity: 1,
-            duration: 1.2,
-            ease: 'power3.out'
-          }, "+=0.3");
+    if(hasMounted && lanesContainerRef.current) { 
+      gsap.fromTo(lanesContainerRef.current.children, 
+        { x: '50%', opacity: 0 }, 
+        { 
+          x: '0%', 
+          opacity: 1, 
+          duration: 1,
+          stagger: 0.15, // Stagger entrance of each lane
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: lanesContainerRef.current,
+            start: 'top 85%', // Start animation a bit earlier
+            toggleActions: 'play none none none'
+          }
         }
-      });
+      );
     }
     
     return () => {
       ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
       tl.kill();
     };
-  }, [hasMounted, laneData]);
+  }, [hasMounted, laneData]); // laneData dependency is important here
   
-  // Handle window resize for stars (can be adapted for lanes if needed)
   useEffect(() => {
     const handleResize = () => {
-      // setBubbleConfig(getBubbleConfig()); // Removed bubble config
-      // No need to regenerate stars on resize for isMobile logic, isMobile state handles starCount
-      // generateStars(); // This might be too frequent, relying on isVisible and initial load
+      // No need to explicitly call generateStars, isMobile state change will trigger it.
     };
-    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Removed generateStars from dependencies
+  }, []);
   
-  // Generate stars on mount and when visible
   useEffect(() => {
     if (hasMounted) {
       generateStars();
     }
-  }, [hasMounted, generateStars]);
+  }, [hasMounted, generateStars]); // generateStars is a dependency now
 
   useEffect(() => {
     setHasMounted(true);
@@ -360,74 +359,65 @@ const GoogleReadySection = () => {
     <>
       <style jsx global>{`
         @keyframes twinkle {
-          0%, 100% { opacity: var(--opacity-start, 0.1); }
-          50% { opacity: var(--opacity-end, 1); }
+          0%, 100% { opacity: var(--star-opacity-start, 0.1); } /* Changed var name for clarity */
+          50% { opacity: var(--star-opacity-end, 0.8); }
         }
         
-        .star {
+        .star { /* For direct DOM manipulation of stars */
           will-change: opacity;
         }
 
         @keyframes scroll-left {
           0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        @keyframes scroll-right {
-          0% { transform: translateX(-50%); }
-          100% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); } /* Each row has duplicated items, so -50% is one full scroll */
         }
 
         .animate-scroll-left {
           animation: scroll-left linear infinite;
         }
-        .animate-scroll-right {
-          animation: scroll-right linear infinite;
-        }
+        /* Removed .animate-scroll-right as it wasn't used */
       `}</style>
       
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className="relative bg-transparent overflow-hidden pt-16 pb-8"
+        className="relative bg-transparent overflow-hidden pt-20 pb-12" // Increased top padding, adjusted bottom
       >
-        {/* Animated background with blobs */}
         <div 
           ref={backgroundRef}
           className="absolute inset-0 z-0 overflow-hidden"
         >
-          <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[120px] top-[-20%] right-[-10%] opacity-30"></div>
-          <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-[100px] bottom-[-20%] left-[20%] opacity-25"></div>
-          <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-pink-500/5 blur-[80px] top-[50%] left-[-10%] opacity-20"></div>
+          <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-[150px] top-[-25%] right-[-15%] opacity-40"></div>
+          <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[130px] bottom-[-25%] left-[15%] opacity-35"></div>
+          <div className="glow-blob absolute w-[450px] h-[450px] rounded-full bg-pink-500/10 blur-[100px] top-[50%] left-[-15%] opacity-30"></div>
         </div>
         
-        {/* Grain effect */}
         <div 
-          className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
+          className="absolute inset-0 z-0 opacity-[0.025] pointer-events-none"
           style={{
             backgroundImage: `url('${grainEffectUrl}')`,
           }}
         ></div>
         
-        {/* Title and description */}
-        <div className="relative z-10 max-w-5xl mx-auto px-6 sm:px-10 md:px-14 text-center mb-12">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-16">
           <div className="max-w-4xl mx-auto">
             <h2
               ref={titleRef}
-              className="text-4xl md:text-5xl font-bold mb-6 text-white"
-              style={{ textShadow: '0 0 30px rgba(147, 51, 234, 0.6)' }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
+              style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
             >
-              Our <span className="text-accent">SEO</span> Approach
+              Our <span className="text-accent">SEO</span> Checklist
             </h2>
             
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex items-center justify-center mb-10">
               <span 
-                className="text-6xl md:text-7xl font-bold text-accent mr-3"
-                style={{ textShadow: '0 0 40px rgba(147, 51, 234, 0.8)' }}
+                className="text-6xl md:text-7xl font-bold text-accent mr-4"
+                style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
               >
-                <AnimatedCounter target={96} />
+                <AnimatedCounter target={allUniqueChecklistItems.length} />
               </span>
               <span className="text-xl md:text-2xl text-white/80 font-light">
-                insights &amp; techniques
+                meticulous considerations
               </span>
             </div>
             
@@ -435,44 +425,69 @@ const GoogleReadySection = () => {
               ref={descriptionRef}
               className="text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto"
             >
-              Explore the depth of SEO with our continuously showcased checklist points. 
-              Each lane highlights a key aspect of our comprehensive strategy.
+              Witness the breadth of our SEO strategy. Each scrolling lane below unveils a different facet of our comprehensive approach to digital excellence.
             </p>
           </div>
         </div>
         
-        {/* Full-width banner for lanes */}
         <div 
-          ref={bannerRef}
-          className="relative w-full pt-4 pb-8 bg-black/50 overflow-hidden"
+          ref={bannerRef} // This div wraps the stars and the lanes section
+          className="relative w-full" // Removed padding/bg here, will apply conditionally
         >
-          <div 
-            ref={starsContainerRef}
-            className="absolute inset-0 z-0 opacity-40"
-          ></div>
-          
-          {hasMounted && (
+          {hasMounted && !isMobile && (
+            <div className="desktop-lanes-container relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
+              <div 
+                ref={starsContainerRef}
+                className="absolute inset-0 z-0 opacity-50"
+              ></div>
+              <div 
+                ref={lanesContainerRef} 
+                className="relative z-10 flex flex-col space-y-4 sm:space-y-5">
+                {laneData.map((lane) => (
+                  <SeoLane 
+                    key={lane.id}
+                    laneRef={lane.ref}
+                    items={lane.items} 
+                    animationDuration={lane.duration}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {hasMounted && isMobile && (
+            <div className="mobile-summary-box relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gradient-to-br from-bg-darker to-bg-dark backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Our Comprehensive SEO Checklist
+              </h3>
+              <p className="text-white/80 mb-6 text-sm">
+                Unlock your website's full potential. Our {allUniqueChecklistItems.length}-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
+              </p>
+              <a 
+                href="#contact" // Assuming a contact section ID
+                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
+              >
+                Get Your Free SEO Analysis
+              </a>
+            </div>
+          )}
+
+          {!hasMounted && !isMobile && ( // Placeholder for desktop before mount
             <div 
-              ref={lanesContainerRef} // bannerRef was used here, but lanesContainerRef is more appropriate for the direct parent of lanes. Let's assume bannerRef is for the background section and lanesContainerRef for the lanes themselves.
-                                     // The user's provided code uses bannerRef for the "Full-width banner for lanes" which contains starsContainerRef and the lanes. So this is correct.
-                                     // The actual lanes are mapped inside a div within this banner.
-              className="relative z-10 flex flex-col space-y-3">
-              {laneData.map((lane) => (
-                <SeoLane 
-                  key={lane.id}
-                  laneRef={lane.ref}
-                  items={lane.items} 
-                  animationDuration={lane.duration}
-                />
+              className="relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-4 sm:space-y-5"
+            >
+              {Array.from({ length: numLanes }).map((_, i) => (
+                <div key={`placeholder-lane-${i}`} className="h-12 bg-purple-500/5 rounded-lg mx-4 opacity-50"></div> 
               ))}
             </div>
           )}
-          {!hasMounted && (
-            // Placeholder for SSR or initial client render to match structure (5 lanes)
-            <div className="relative z-10 flex flex-col space-y-3">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={`placeholder-lane-${i}`} className="h-10"></div> // Simple placeholder with height
-              ))}
+          {!hasMounted && isMobile && ( // Placeholder for mobile before mount
+            <div className="relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gradient-to-br from-bg-darker to-bg-dark rounded-xl shadow-xl border border-purple-500/30 text-center opacity-50">
+               <div className="h-8 bg-purple-500/10 rounded w-3/4 mx-auto mb-4"></div>
+               <div className="h-4 bg-purple-500/10 rounded w-full mx-auto mb-2"></div>
+               <div className="h-4 bg-purple-500/10 rounded w-full mx-auto mb-2"></div>
+               <div className="h-4 bg-purple-500/10 rounded w-5/6 mx-auto mb-6"></div>
+               <div className="h-12 bg-accent/20 rounded w-1/2 mx-auto"></div>
             </div>
           )}
         </div>

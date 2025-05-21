@@ -140,14 +140,6 @@ export default function RootLayout({
         </Suspense>
         
         {/* GSAP scripts */}
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" 
-          strategy="beforeInteractive"
-        />
-        <Script 
-          src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" 
-          strategy="afterInteractive"
-        />
         
         {/* Calendly script */}
         <Script 
