@@ -16,6 +16,10 @@ enum GameState {
 }
 
 const MemoryGame = () => {
+  const gameWrapperRef = useRef<HTMLDivElement>(null); // Ref for the main game wrapper
+  const cardGridRef = useRef<HTMLDivElement>(null); // Ref for the card grid
+  const [isMobile, setIsMobile] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
@@ -93,6 +97,11 @@ const MemoryGame = () => {
     timerRef.current = setInterval(() => {
       setGameTime(Math.floor((Date.now() - startTime) / 1000));
     }, 1000);
+
+    // Ensure fullscreen state is reset if game is restarted from complete state
+    if (isFullscreen && document.exitFullscreen) {
+      // document.exitFullscreen(); // Optionally exit fullscreen on restart
+    }
   };
 
   // Handle card click
@@ -214,11 +223,21 @@ const MemoryGame = () => {
       setBestTime(parseInt(storedBestTime));
     }
     
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
     return () => {
-      // Cleanup timer on unmount
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      window.removeEventListener('resize', checkMobile);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
 
@@ -232,8 +251,37 @@ const MemoryGame = () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const toggleFullscreen = () => {
+    if (!gameWrapperRef.current) return;
+
+    if (!document.fullscreenElement) {
+      gameWrapperRef.current.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
-    <div className="flex flex-col h-full w-full items-center justify-center bg-gradient-to-b from-black/50 to-black/30 rounded-lg overflow-hidden p-2 text-white">
+    <div ref={gameWrapperRef} className={`flex flex-col h-full w-full items-center justify-center bg-gradient-to-b from-black/50 to-black/30 rounded-lg overflow-hidden p-2 text-white relative ${isFullscreen && isMobile ? 'fixed inset-0 z-50 !rounded-none' : ''}`}>
+      {isMobile && gameState !== GameState.Welcome && (
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-2 right-2 z-50 p-2 bg-black/40 hover:bg-black/60 rounded-full text-white"
+          aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+        >
+          {isFullscreen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m7-5h4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m7 5h4m0 0v4m0-4l-5-5" />
+            </svg>
+          )}
+        </button>
+      )}
       {gameState === GameState.Welcome && (
         <div className="text-center p-4 max-w-xs mx-auto">
           <div className="mb-4">
@@ -270,12 +318,19 @@ const MemoryGame = () => {
       
       {gameState === GameState.Playing && (
         <>
-          <div className="grid grid-cols-4 gap-2 mb-3 p-2 bg-black/20 rounded-lg border border-white/10 max-w-[240px] mx-auto">
+          <div 
+            ref={cardGridRef} 
+            className={`grid grid-cols-4 gap-2 mb-3 p-2 bg-black/20 rounded-lg border border-white/10 max-w-[240px] mx-auto ${
+              isFullscreen && isMobile ? '!max-w-full !gap-3 sm:!gap-4 landscape:!gap-2 landscape:max-w-[300px] portrait:p-4' : ''
+            }`}
+          >
             {cards.map(card => (
               <div
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-md flex items-center justify-center text-2xl sm:text-3xl cursor-pointer transition-all duration-300 preserve-3d shadow-md ${card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'} ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''}`}
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-md flex items-center justify-center text-2xl sm:text-3xl cursor-pointer transition-all duration-300 preserve-3d shadow-md ${card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'} ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''} ${
+                  isFullscreen && isMobile ? '!w-16 !h-16 sm:!w-20 sm:!h-20 landscape:!w-12 landscape:!h-12 landscape:text-2xl !text-4xl' : ''
+                }`}
               >
                 <div className={`transition-opacity duration-200 ${card.flipped || card.matched ? 'opacity-100' : 'opacity-0'} backface-hidden rotate-y-180`}>
                   {card.content}
@@ -287,6 +342,12 @@ const MemoryGame = () => {
             <p className="text-white/80">Moves: <span className="font-bold text-accent-light">{moves}</span></p>
             <p className="text-white/80">Time: <span className="font-bold text-accent-light">{formatTime(gameTime)}</span></p>
           </div>
+          <button 
+            onClick={initializeGame} 
+            className="mt-4 py-2 px-5 bg-red-500/70 hover:bg-red-400/70 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm w-full max-w-[240px] mx-auto"
+          >
+            Restart Game
+          </button>
         </>
       )}
 

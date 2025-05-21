@@ -184,7 +184,11 @@ interface SeoLaneProps {
 const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) => {
   const duplicatedItems = [...items, ...items]; // Duplicate for seamless scroll
   return (
-    <div ref={laneRef} className="overflow-hidden whitespace-nowrap opacity-0 pl-2" style={{ transform: 'translateX(100%)' }}>
+    <div 
+      ref={laneRef} 
+      className="overflow-hidden whitespace-nowrap opacity-0 pl-2" 
+      style={{ transform: 'translateX(100%)', willChange: 'transform, opacity' }}
+    >
       <div className="flex animate-scroll-left" style={{ animationDuration }}>
         {duplicatedItems.map((item, index) => (
           <span 
@@ -381,7 +385,7 @@ const GoogleReadySection = () => {
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className="relative bg-transparent overflow-hidden pt-20 pb-12" // Increased top padding, adjusted bottom
+        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'}`} // Conditional top padding, further reduced for mobile
       >
         <div 
           ref={backgroundRef}
@@ -456,7 +460,7 @@ const GoogleReadySection = () => {
           )}
 
           {hasMounted && isMobile && (
-            <div className="mobile-summary-box relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gray-800 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
+            <div className="mobile-summary-box relative z-10 mx-auto mt-0 mb-4 p-6 max-w-md bg-gray-800 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
               <h3 className="text-2xl font-bold text-white mb-3">
                 Our Comprehensive SEO Checklist
               </h3>

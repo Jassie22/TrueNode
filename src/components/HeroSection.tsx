@@ -119,9 +119,15 @@ const HeroSection = () => {
           mainHeadingTextLine2.split(' ').forEach((word, wordIndex) => {
             const wordSpan = document.createElement('span');
             if (wordIndex === 0) {
-              wordSpan.className = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500 text-accent';
+              wordSpan.className = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500';
+              if (isMobile) {
+                wordSpan.classList.add('text-accent');
+              }
             } else {
               wordSpan.className = 'inline-block mr-[1vw] opacity-0 transform translate-y-full transition-all duration-500';
+              if (isMobile) {
+                wordSpan.classList.add('text-accent');
+              }
             }
             wordSpan.textContent = word;
             wordSpan.setAttribute('aria-hidden', 'true');
@@ -138,16 +144,33 @@ const HeroSection = () => {
           headingRef.current.appendChild(srHeading);
           
           const subtitleContainer = document.createElement('div');
-          subtitleContainer.className = 'text-[5vw] sm:text-[4vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-none tracking-normal relative overflow-visible mt-2 text-white/90 opacity-0 max-w-[90%] sm:max-w-[80%] mb-8 text-center md:text-left mx-auto md:mx-0';
+          subtitleContainer.className = `text-[5vw] sm:text-[4vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-none tracking-normal relative overflow-visible mt-2 text-white/90 opacity-0 max-w-[90%] sm:max-w-[80%] mb-8 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
           subtitleContainer.innerHTML = 'Custom <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Websites</span>. Smart <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">You</span>.';
           headingRef.current.appendChild(subtitleContainer);
           
-          const firstLineLetters = firstLineContainer.querySelectorAll('span');
-          masterTl.to(
-            firstLineLetters,
-            { y: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: "power4.out" },
-            0 // Start immediately relative to this 'if (hasMounted)' block in timeline
-          );
+          if (!isMobile) { // Desktop: animate "Transform" letter by letter
+            const firstLineLetters = firstLineContainer.querySelectorAll('span');
+            masterTl.to(
+              firstLineLetters,
+              { y: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: "power4.out" },
+              0 
+            );
+            firstLineLetters.forEach((letter) => {
+              letter.addEventListener('mouseenter', () => {
+                gsap.to(letter, { y: -20, color: '#B24CF0', duration: 0.2, ease: 'power2.out' });
+              });
+              letter.addEventListener('mouseleave', () => {
+                gsap.to(letter, { y: 0, color: 'white', duration: 0.2, ease: 'power2.inOut' });
+              });
+            });
+          } else { // Mobile: animate "Transform" as a block and ensure it is visible
+            firstLineContainer.classList.add('opacity-0', 'transform', 'translate-y-full');
+            masterTl.to(
+              firstLineContainer, 
+              { y: 0, opacity: 1, duration: 0.6, ease: "power4.out" },
+              0
+            );
+          }
           
           const secondLineWords = secondLineContainer.querySelectorAll('span');
           masterTl.to(
@@ -175,25 +198,18 @@ const HeroSection = () => {
             x: 100, ease: "none"
           });
 
-          firstLineLetters.forEach((letter) => {
-            letter.addEventListener('mouseenter', () => {
-              gsap.to(letter, { y: -20, color: '#B24CF0', duration: 0.2, ease: 'power2.out' });
-            });
-            letter.addEventListener('mouseleave', () => {
-              gsap.to(letter, { y: 0, color: 'white', duration: 0.2, ease: 'power2.inOut' });
-            });
-          });
-
-          if (businessTextElement) {
+          if (businessTextElement && !isMobile) { // Hover effects only on desktop
             const businessWords = businessTextElement.querySelectorAll('span');
             businessWords.forEach(word => {
                 word.addEventListener('mouseenter', () => {
-                    if (word.textContent?.toLowerCase() !== 'your') { // Keep "Your" as accent color, make "Business" accent too
+                    const currentWordText = word.textContent?.toLowerCase();
+                    if (currentWordText === 'your' || currentWordText === 'business') { 
                         gsap.to(word, { color: '#903ae7', scale: 1.1, duration: 0.3, ease: 'back.out(1.7)' });
                     }
                 });
                 word.addEventListener('mouseleave', () => {
-                    if (word.textContent?.toLowerCase() !== 'your') {
+                    const currentWordText = word.textContent?.toLowerCase();
+                    if (currentWordText === 'your' || currentWordText === 'business') { 
                         gsap.to(word, { color: 'white', scale: 1, duration: 0.3, ease: 'back.in(1.7)' });
                     }
                 });
