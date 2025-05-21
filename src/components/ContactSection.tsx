@@ -102,54 +102,58 @@ const ContactSection = () => {
             gsap.set(formContentRef.current, { y: 40, opacity: 0 });
           }
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 75%',
-              end: 'center center',
-              toggleActions: 'play none none none'
-            }
-          });
-
-          if (backgroundRef.current) {
-            const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
-            blobs.forEach((blob, index) => {
-              gsap.set(blob, {
-                x: Math.random() * 300 - 150,
-                y: Math.random() * 300 - 150,
-                scale: 0.8 + Math.random() * 0.4
-              });
-              gsap.to(blob, {
-                x: `+=${Math.random() * 100 - 50}`,
-                y: `+=${Math.random() * 100 - 50}`,
-                scale: 0.9 + Math.random() * 0.3,
-                opacity: 0.5 + Math.random() * 0.3,
-                duration: 8 + index * 2,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-                delay: index * 1.5
-              });
+          const animationTimeout = setTimeout(() => {
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: sectionRef.current,
+                start: 'top 75%',
+                end: 'center center',
+                toggleActions: 'play none none none'
+              }
             });
-          }
 
-          tl.fromTo(
-            titleRef.current,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-          );
-          tl.fromTo(
-            descriptionRef.current,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 0.7, duration: 0.5 },
-            '-=0.3'
-          );
-          tl.fromTo(
-            formContentRef.current,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-            '-=0.3'
-          );
+            if (backgroundRef.current) {
+              const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
+              blobs.forEach((blob, index) => {
+                gsap.set(blob, {
+                  x: Math.random() * 300 - 150,
+                  y: Math.random() * 300 - 150,
+                  scale: 0.8 + Math.random() * 0.4
+                });
+                gsap.to(blob, {
+                  x: `+=${Math.random() * 100 - 50}`,
+                  y: `+=${Math.random() * 100 - 50}`,
+                  scale: 0.9 + Math.random() * 0.3,
+                  opacity: 0.5 + Math.random() * 0.3,
+                  duration: 8 + index * 2,
+                  repeat: -1,
+                  yoyo: true,
+                  ease: "sine.inOut",
+                  delay: index * 1.5
+                });
+              });
+            }
+
+            tl.fromTo(
+              titleRef.current,
+              { y: 40, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+            );
+            tl.fromTo(
+              descriptionRef.current,
+              { y: 30, opacity: 0 },
+              { y: 0, opacity: 0.7, duration: 0.5 },
+              '-=0.3'
+            );
+            tl.fromTo(
+              formContentRef.current,
+              { y: 40, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
+              '-=0.3'
+            );
+            ScrollTrigger.refresh();
+          }, 100);
+
         }, sectionRef);
 
         return () => {

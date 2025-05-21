@@ -117,53 +117,57 @@ const TeamSection = () => {
           gsap.set(teamMemberRefs.current, { y: 60, opacity: 0, scale: 0.9 });
         }
         
-        // Create animation timeline
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top 75%',
-            end: 'center center',
-            toggleActions: 'play none none reverse'
-          }
-        });
-        
-        // Animate title
-        tl.fromTo(
-          titleRef.current,
-          { y: 40, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
-        );
-        
-        // Animate description
-        tl.fromTo(
-          descriptionRef.current,
-          { y: 30, opacity: 0 },
-          { y: 0, opacity: 0.7, duration: 0.8 },
-          '-=0.5'
-        );
-        
-        // Animate team member cards with staggered entrance
-        tl.fromTo(
-          teamMemberRefs.current,
-          { 
-            y: 60, 
-            opacity: 0,
-            scale: 0.9
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            stagger: 0.15,
-            ease: 'back.out(1.2)'
-          },
-          '-=0.4'
-        );
+        const animationTimeout = setTimeout(() => { // Added setTimeout
+          // Create animation timeline
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 75%',
+              end: 'center center',
+              toggleActions: 'play none none reverse'
+            }
+          });
+          
+          // Animate title
+          tl.fromTo(
+            titleRef.current,
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
+          );
+          
+          // Animate description
+          tl.fromTo(
+            descriptionRef.current,
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 0.7, duration: 0.8 },
+            '-=0.5'
+          );
+          
+          // Animate team member cards with staggered entrance
+          tl.fromTo(
+            teamMemberRefs.current,
+            { 
+              y: 60, 
+              opacity: 0,
+              scale: 0.9
+            },
+            {
+              y: 0,
+              opacity: 1,
+              scale: 1,
+              duration: 0.8,
+              stagger: 0.15,
+              ease: 'back.out(1.2)'
+            },
+            '-=0.4'
+          );
+          ScrollTrigger.refresh(); // Explicitly refresh ScrollTrigger
+        }, 100); // 100ms delay, can be adjusted
         
         // Cleanup function
         return () => {
-          tl.kill(); // Kill the main timeline
+          clearTimeout(animationTimeout); // Clear timeout
+          // tl.kill(); // tl might not be defined here if timeout doesn't run, handled by ScrollTrigger.getAll()
           blobAnimations.forEach(anim => anim.kill()); // Kill individual blob animations
           teamMemberRefs.current.forEach(memberRef => {
             if (memberRef) gsap.killTweensOf(memberRef); // Kill tweens on team member cards

@@ -456,7 +456,7 @@ const GoogleReadySection = () => {
           )}
 
           {hasMounted && isMobile && (
-            <div className="mobile-summary-box relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gradient-to-br from-bg-darker to-bg-dark backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
+            <div className="mobile-summary-box relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gray-800 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
               <h3 className="text-2xl font-bold text-white mb-3">
                 Our Comprehensive SEO Checklist
               </h3>
@@ -465,7 +465,7 @@ const GoogleReadySection = () => {
               </p>
               <a 
                 href="#contact" // Assuming a contact section ID
-                className="inline-block py-3 px-8 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 hover:from-purple-700 hover:via-pink-600 hover:to-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
+                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
               >
                 Get Your Free SEO Analysis
               </a>
