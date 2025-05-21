@@ -83,6 +83,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cdn.fontshare.com" />
         <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" />
         <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
         
@@ -221,6 +223,19 @@ export default function RootLayout({
         </Script>
         
         {children}
+
+        <Script id="scrolltrigger-refresh">
+          {`
+            window.addEventListener('load', () => {
+              setTimeout(() => {
+                if (window.gsap && window.gsap.ScrollTrigger) {
+                  console.log('Attempting ScrollTrigger.refresh()');
+                  window.gsap.ScrollTrigger.refresh();
+                }
+              }, 1000); // Delay to allow layout to settle
+            });
+          `}
+        </Script>
       </body>
     </html>
   );

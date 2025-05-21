@@ -399,7 +399,7 @@ const GoogleReadySection = () => {
           }}
         ></div>
         
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-16">
+        <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-16 ${hasMounted && isMobile ? 'hidden' : ''}`}>
           <div className="max-w-4xl mx-auto">
             <h2
               ref={titleRef}
@@ -409,7 +409,7 @@ const GoogleReadySection = () => {
               Our <span className="text-accent">SEO</span> Checklist
             </h2>
             
-            <div className="flex items-center justify-center mb-10">
+            <div className={`flex items-center justify-center mb-10 ${hasMounted && isMobile ? 'hidden' : ''}`}>
               <span 
                 className="text-6xl md:text-7xl font-bold text-accent mr-4"
                 style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
@@ -423,7 +423,7 @@ const GoogleReadySection = () => {
             
             <p
               ref={descriptionRef}
-              className="text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto"
+              className={`text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto ${hasMounted && isMobile ? 'hidden' : ''}`}
             >
               Witness the breadth of our SEO strategy. Each scrolling lane below unveils a different facet of our comprehensive approach to digital excellence.
             </p>
@@ -465,7 +465,7 @@ const GoogleReadySection = () => {
               </p>
               <a 
                 href="#contact" // Assuming a contact section ID
-                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
+                className="inline-block py-3 px-8 bg-gradient-to-r from-purple-600 via-pink-500 to-blue-500 hover:from-purple-700 hover:via-pink-600 hover:to-blue-600 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
               >
                 Get Your Free SEO Analysis
               </a>
