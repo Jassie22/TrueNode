@@ -25,6 +25,7 @@ const MemoryGame = () => {
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
   const [moves, setMoves] = useState<number>(0);
   const [gameState, setGameState] = useState<GameState>(GameState.Welcome);
+  const [showInstructionsScreen, setShowInstructionsScreen] = useState(false);
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [bestTime, setBestTime] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -85,6 +86,7 @@ const MemoryGame = () => {
     setGameTime(0);
     setScore(0);
     setGameState(GameState.Playing);
+    setShowInstructionsScreen(false);
     
     // Set start time and start timer
     const startTime = Date.now();
@@ -263,72 +265,109 @@ const MemoryGame = () => {
     }
   };
 
+  const initializeGameAndResetWelcome = () => {
+    initializeGame();
+    setShowInstructionsScreen(false);
+  };
+
+  const handleBackToMenu = () => {
+    setGameState(GameState.Welcome);
+    setShowInstructionsScreen(false);
+  };
+
   return (
-    <div ref={gameWrapperRef} className={`flex flex-col h-full w-full items-center justify-center bg-gradient-to-b from-black/50 to-black/30 rounded-lg overflow-hidden p-2 text-white relative ${isFullscreen && isMobile ? 'fixed inset-0 z-50 !rounded-none' : ''}`}>
+    <div 
+      ref={gameWrapperRef}
+      className={`relative flex flex-col items-center justify-center p-4 rounded-lg shadow-xl bg-gradient-to-br from-bg-darker/80 to-bg-dark/90 backdrop-blur-md border border-white/10 w-full transition-all duration-300 ease-in-out ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none' : 'max-w-md mx-auto min-h-[380px]'} ${ gameState === GameState.Playing || gameState === GameState.Complete ? 'sm:p-6' : 'sm:p-4'}`}
+    >
+      {/* Fullscreen toggle button - only on mobile and not on any welcome screen variant */}
       {isMobile && gameState !== GameState.Welcome && (
-        <button
+        <button 
           onClick={toggleFullscreen}
-          className="absolute top-2 right-2 z-50 p-2 bg-black/40 hover:bg-black/60 rounded-full text-white"
-          aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+          className="absolute top-2 right-2 p-1.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
+          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         >
           {isFullscreen ? (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m7-5h4m0 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m7 5h4m0 0v4m0-4l-5-5" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
             </svg>
           )}
         </button>
       )}
-      {gameState === GameState.Welcome && (
-        <div className="text-center p-4 max-w-xs mx-auto">
-          <div className="mb-4">
-            <h3 className="text-xl font-bold text-white mb-2">Memory Game!</h3>
-            <p className="text-white/70 text-sm mb-3">Match all the pairs of cards.</p>
-            
-            {/* Instructions displayed directly without the bordered box */}
-            <div className="text-xs text-white/60 mb-4">
-              <p className="font-medium mb-1 text-white/80">How to Play:</p> {/* Slightly increased visibility for title */}
-              <ul className="list-disc list-inside text-left space-y-0.5 pl-2"> {/* Added small padding for list items */}
-                <li>Click a card to flip it.</li>
-                <li>Flip another card to find a match.</li>
-                <li>If they match, they stay flipped.</li>
-                <li>If not, they flip back.</li>
-                <li>Match all pairs to win!</li>
-              </ul>
-            </div>
 
-            <button 
-              onClick={initializeGame}
-              className="w-full py-2.5 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
-            >
-              Start Game
-            </button>
-          </div>
-          {(bestScore !== null || bestTime !== null) && (
-            <div className="mt-4 text-xs text-white/50 border-t border-white/10 pt-3">
-              {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
-              {bestScore !== null && <p>Best Moves: {bestScore}</p>}
+      {gameState === GameState.Welcome && (
+        <>
+          {!showInstructionsScreen ? (
+            <div className="text-center text-white animate-fadeIn">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-accent">Bored? Play a game!</h2>
+              <button 
+                onClick={() => setShowInstructionsScreen(true)}
+                className="shiny-button px-6 py-2.5 bg-accent text-white font-semibold rounded-lg shadow-lg transition-all duration-300 text-md focus:outline-none focus:ring-2 focus:ring-accent-dark focus:ring-opacity-50"
+              >
+                View Instructions
+              </button>
+            </div>
+          ) : (
+            <div className="text-center text-white animate-fadeIn">
+              <h3 className="text-xl font-bold mb-3 text-white">How to Play</h3>
+              <ul className="text-sm text-white/80 mb-4 space-y-1.5 text-left max-w-xs mx-auto px-2">
+                <li className="flex items-start">
+                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span>Click on cards to flip them over.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span>Find and match pairs of identical cards.</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span>Match all pairs to win the game!</span>
+                </li>
+              </ul>
+              {(bestScore !== null || bestTime !== null) && (
+                <div className="my-3 text-white/70 text-xs">
+                  {bestScore !== null && <p>Best Score (Moves): {bestScore}</p>}
+                  {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
+                </div>
+              )}
+              <button 
+                onClick={initializeGame} 
+                className="px-7 py-2.5 bg-accent hover:bg-accent text-white font-semibold rounded-lg shadow-lg transition-all duration-200 text-md focus:outline-none focus:ring-2 focus:ring-accent-dark focus:ring-opacity-50 mb-2.5"
+              >
+                Start Game
+              </button>
+              <button 
+                onClick={() => setShowInstructionsScreen(false)}
+                className="px-5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors text-xs"
+              >
+                Back
+              </button>
             </div>
           )}
-        </div>
+        </>
       )}
-      
+
       {gameState === GameState.Playing && (
         <>
+          <div className="flex justify-between items-center w-full max-w-xs mx-auto text-sm px-1 mb-3">
+            <p className="text-white/80">Moves: <span className="font-bold text-accent-light">{moves}</span></p>
+            <p className="text-white/80">Time: <span className="font-bold text-accent-light">{formatTime(gameTime)}</span></p>
+          </div>
           <div 
             ref={cardGridRef} 
-            className={`grid grid-cols-4 gap-2 mb-3 p-2 bg-black/20 rounded-lg border border-white/10 max-w-[240px] mx-auto ${
-              isFullscreen && isMobile ? '!max-w-full !gap-3 sm:!gap-4 landscape:!gap-2 landscape:max-w-[300px] portrait:p-4' : ''
+            className={`grid grid-cols-4 gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-black/20 rounded-lg border border-white/10 w-full max-w-xs mx-auto ${
+              isFullscreen && isMobile ? '!max-w-full !gap-3 sm:!gap-4 landscape:!gap-2 landscape:max-w-[300px] portrait:p-4' : 'sm:max-w-sm'
             }`}
           >
             {cards.map(card => (
               <div
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-md flex items-center justify-center text-2xl sm:text-3xl cursor-pointer transition-all duration-300 preserve-3d shadow-md ${card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'} ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''} ${
+                className={`aspect-square rounded-md flex items-center justify-center text-3xl sm:text-4xl cursor-pointer transition-all duration-300 preserve-3d shadow-md ${card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'} ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''} ${
                   isFullscreen && isMobile ? '!w-16 !h-16 sm:!w-20 sm:!h-20 landscape:!w-12 landscape:!h-12 landscape:text-2xl !text-4xl' : ''
                 }`}
               >
@@ -338,15 +377,20 @@ const MemoryGame = () => {
               </div>
             ))}
           </div>
-          <div className="flex justify-between items-center w-full max-w-[240px] mx-auto text-sm px-1">
-            <p className="text-white/80">Moves: <span className="font-bold text-accent-light">{moves}</span></p>
-            <p className="text-white/80">Time: <span className="font-bold text-accent-light">{formatTime(gameTime)}</span></p>
-          </div>
           <button 
-            onClick={initializeGame} 
-            className="mt-4 py-2 px-5 bg-red-500/70 hover:bg-red-400/70 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm w-full max-w-[240px] mx-auto"
+            onClick={initializeGameAndResetWelcome}
+            title="Restart Game"
+            className="absolute top-3 left-3 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
           >
-            Restart Game
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M4 9a8 8 0 0111.53-6.47L12 6M20 19v-5h-5M20 15a8 8 0 01-11.53 6.47L12 18" />
+            </svg>
+          </button>
+          <button 
+            onClick={handleBackToMenu}
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-4 text-sm"
+          >
+            Back to Menu
           </button>
         </>
       )}
@@ -360,16 +404,22 @@ const MemoryGame = () => {
             <p>Time: <span className="font-semibold text-white">{formatTime(gameTime)}</span></p>
           </div>
           {(bestTime !== null || bestScore !== null) && (
-            <div className="mb-4 text-xs text-white/60 border-t border-white/10 pt-2">
+            <div className="mb-4 text-xs text-white/60 border-t border-white/10 pt-2 mt-4">
               {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
               {bestScore !== null && <p>Best Moves: {bestScore}</p>}
             </div>
           )}
           <button 
-            onClick={initializeGame}
+            onClick={initializeGameAndResetWelcome}
             className="w-full py-2.5 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
           >
             Play Again
+          </button>
+          <button 
+            onClick={handleBackToMenu}
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-2"
+          >
+            Back to Menu
           </button>
         </div>
       )}
@@ -377,4 +427,38 @@ const MemoryGame = () => {
   );
 };
 
-export default MemoryGame; 
+export default MemoryGame;
+
+// ADDED: Shiny button CSS
+const shinyButtonStyles = `
+  .shiny-button {
+    position: relative;
+    overflow: hidden;
+  }
+  .shiny-button::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
+    transform: rotate(45deg);
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    opacity: 0;
+  }
+  .shiny-button:hover::after {
+    transform: rotate(45deg) scale(2) translateX(-25%) translateY(-25%);
+    opacity: 1;
+  }
+`;
+
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  // Check if the game styles are already added to avoid duplication
+  if (!document.getElementById('memory-game-shiny-styles')) {
+    styleElement.id = 'memory-game-shiny-styles';
+    styleElement.innerHTML = shinyButtonStyles;
+    document.head.appendChild(styleElement);
+  }
+} 

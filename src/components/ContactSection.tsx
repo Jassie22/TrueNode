@@ -7,51 +7,6 @@ import CalendlyWidget from './CalendlyWidget';
 import MemoryGame from './MemoryGame';
 import { event as gaEvent } from '@/lib/gtag';
 
-// Add a privacy policy modal component
-const PrivacyPolicy = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  if (!isOpen) return null;
-  
-  return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-bg-darker border border-accent/20 rounded-xl max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-lg shadow-accent/10">
-        <div className="sticky top-0 bg-accent/20 backdrop-blur-sm px-6 py-4 border-b border-accent/20 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-white">Privacy Policy</h3>
-          <button 
-            onClick={onClose}
-            className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-        </div>
-        
-        <div className="p-6 space-y-4">
-          <div>
-            <h4 className="text-lg font-bold text-accent mb-2">What We Collect</h4>
-            <p className="text-white/80">We collect name, email, and message content through our contact form to respond to your inquiries and provide our services.</p>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-bold text-accent mb-2">How We Use Your Data</h4>
-            <p className="text-white/80">Your information is used only to respond to inquiries, communicate about our services, and fulfill contractual obligations.</p>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-bold text-accent mb-2">Your GDPR Rights</h4>
-            <p className="text-white/80">You have the right to access, rectify, delete, and port your personal data. You may also object to or restrict processing.</p>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-bold text-accent mb-2">Contact Us</h4>
-            <p className="text-white/80">For privacy inquiries, contact us at <a href="mailto:info@truenode.co.uk" className="text-accent hover:underline">info@truenode.co.uk</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const ContactSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -60,7 +15,6 @@ const ContactSection = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [showNotification, setShowNotification] = useState(false); // Kept for general form notifications
   
@@ -328,8 +282,12 @@ const ContactSection = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 gap-y-16 relative" ref={formContentRef}>
           <div className="lg:mr-5">
+            <div className="mb-6 p-4 text-center lg:text-left">
+              <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">Send us a message</h3>
+              <p className="text-white/70 text-base lg:text-lg">Fill out the form below to get in touch with our team.</p>
+            </div>
             <div className="enquiry-form-gradient-border">
-              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-8 shadow-lg h-full relative">
+              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
                 <div className="relative z-10">
                   {showNotification && (
                     <div className="mb-4 bg-gradient-to-r from-accent/30 to-accent-blue/30 text-white p-4 rounded-xl text-center">
@@ -343,22 +301,14 @@ const ContactSection = () => {
                   )}
                   {!formSubmitted ? (
                     <>
-                      <div className="mb-6 p-4 bg-accent/5 rounded-lg border border-accent/20 shadow-lg">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="text-2xl font-bold mb-2 text-white">Send us a message</h3>
-                            <p className="text-white/60 text-sm">Fill out the form below to get in touch with our team.</p>
-                          </div>
-                        </div>
-                      </div>
                       {formError && (
                         <div className="mb-4 p-3 bg-red-500/20 border border-red-500/30 rounded-md text-white">
                           <p className="text-sm">{formError}</p>
                         </div>
                       )}
-                      <form onSubmit={handleSubmit} className="space-y-6">
+                      <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                          <label htmlFor="name" className="block text-white/80 mb-2 text-sm">Your Name</label>
+                          <label htmlFor="name" className="block text-white/80 mb-1.5 text-sm">Your Name</label>
                           <input
                             type="text"
                             id="name"
@@ -371,7 +321,7 @@ const ContactSection = () => {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label htmlFor="email" className="block text-white/80 mb-2 text-sm">Email Address</label>
+                            <label htmlFor="email" className="block text-white/80 mb-1.5 text-sm">Email Address</label>
                             <input
                               type="email"
                               id="email"
@@ -383,7 +333,7 @@ const ContactSection = () => {
                             />
                           </div>
                           <div>
-                            <label htmlFor="phone" className="block text-white/80 mb-2 text-sm">Phone Number <span className="text-white/40">(Optional)</span></label>
+                            <label htmlFor="phone" className="block text-white/80 mb-1.5 text-sm">Phone Number <span className="text-white/40">(Optional)</span></label>
                             <input
                               type="tel"
                               id="phone"
@@ -394,33 +344,8 @@ const ContactSection = () => {
                             />
                           </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label htmlFor="businessName" className="block text-white/80 mb-2 text-sm">Business Name <span className="text-white/40">(Optional)</span></label>
-                            <input
-                              type="text"
-                              id="businessName"
-                              name="businessName"
-                              value={formData.businessName}
-                              onChange={handleInputChange}
-                              className="w-full px-4 py-3 bg-bg-darker border border-white/10 text-white focus:border-accent focus:outline-none transition-colors rounded-md"
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="businessUrl" className="block text-white/80 mb-2 text-sm">Website URL <span className="text-white/40">(Optional)</span></label>
-                            <input
-                              type="text"
-                              id="businessUrl"
-                              name="businessUrl"
-                              value={formData.businessUrl}
-                              onChange={handleInputChange}
-                              placeholder="Your website address (if you have one)"
-                              className="w-full px-4 py-3 bg-bg-darker border border-white/10 text-white focus:border-accent focus:outline-none transition-colors rounded-md"
-                            />
-                          </div>
-                        </div>
                         <div>
-                          <label htmlFor="message" className="block text-white/80 mb-2 text-sm">Your Message</label>
+                          <label htmlFor="message" className="block text-white/80 mb-1.5 text-sm">Your Message</label>
                           <textarea
                             id="message"
                             name="message"
@@ -428,12 +353,16 @@ const ContactSection = () => {
                             onChange={handleInputChange}
                             rows={5}
                             required
+                            maxLength={4000}
                             className="w-full px-4 py-3 bg-bg-darker border border-white/10 text-white focus:border-accent focus:outline-none transition-colors rounded-md resize-none"
                           ></textarea>
+                          <p className="text-right text-xs text-white/50 mt-1">
+                            {formData.message.length} / 4000
+                          </p>
                         </div>
                         <div>
-                          <label className="block text-white/80 mb-3 text-sm">Which services are you interested in?</label>
-                          <div className="grid grid-cols-2 gap-2">
+                          <label className="block text-white/80 mb-2 text-sm">Which services are you interested in?</label>
+                          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2">
                             {serviceOptions.map((service, index) => (
                               <div key={index} className="flex items-center">
                                 <input
@@ -454,8 +383,8 @@ const ContactSection = () => {
                           </div>
                         </div>
                         <div>
-                          <label htmlFor="fileUpload" className="block text-white/80 mb-2 text-sm">Attach a File <span className="text-white/40">(Optional)</span></label>
-                          <div className="flex items-center gap-4">
+                          <label htmlFor="fileUpload" className="block text-white/80 mb-1.5 text-sm">Attach a File <span className="text-white/40">(Optional)</span></label>
+                          <div className="flex items-center gap-3">
                             <input
                               type="file"
                               id="fileUpload"
@@ -488,13 +417,14 @@ const ContactSection = () => {
                           />
                           <label htmlFor="gdprConsent" className="text-sm text-white/70">
                             I consent to True Node collecting my data. 
-                            <button 
-                              type="button"
-                              onClick={() => setShowPrivacyPolicy(true)}
+                            <a 
+                              href="/privacy-policy" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
                               className="text-purple-400 hover:text-purple-300 underline ml-1 focus:outline-none"
                             >
                               View Privacy Policy
-                            </button>
+                            </a>
                           </label>
                         </div>
                         <div className="relative group">
@@ -543,47 +473,47 @@ const ContactSection = () => {
           
           <div className="lg:ml-5 h-full">
             <div className="flex flex-col h-full gap-6">
-              <div className="rounded-xl bg-black/20 border border-white/10 overflow-hidden hidden md:block">
-                <div className="p-5">
-                  <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+              <div className="rounded-xl bg-black/20 border border-white/10 overflow-hidden hidden md:block lg:mt-16">
+                <div className="p-5 md:p-4 lg:p-5">
+                  <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent mr-2" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     Quick Contact
                   </h3>
-                  <p className="text-white/70 mb-4">
+                  <p className="text-white/70 mb-3 text-sm">
                     Need immediate assistance? Reach out to us directly. We work with clients globally, providing both remote and on-site solutions tailored to your needs.
                   </p>
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <div className="flex items-start">
-                      <div className="bg-accent/20 rounded-full p-2.5 mr-3 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" viewBox="0 0 20 20" fill="currentColor">
+                      <div className="bg-accent/20 rounded-full p-2 mr-2.5 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-accent" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                           <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-white font-medium">Email Us</h4>
-                        <a href="mailto:info@truenode.co.uk" className="text-accent hover:text-accent-hover">info@truenode.co.uk</a>
-                        <p className="text-xs text-white/50 mt-1">We typically respond within 24 hours</p>
+                        <h4 className="text-white font-medium text-sm">Email Us</h4>
+                        <a href="mailto:info@truenode.co.uk" className="text-accent hover:text-accent-hover text-sm">info@truenode.co.uk</a>
+                        <p className="text-xs text-white/50 mt-0.5">We typically respond within 24 hours</p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="bg-accent/20 rounded-full p-2.5 mr-3 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" viewBox="0 0 20 20" fill="currentColor">
+                      <div className="bg-accent/20 rounded-full p-2 mr-2.5 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-accent" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-white font-medium">Location</h4>
-                        <p className="text-white/70">Leamington Spa, Warwickshire, UK</p>
+                        <h4 className="text-white font-medium text-sm">Location</h4>
+                        <p className="text-white/70 text-sm">Leamington Spa, Warwickshire, UK</p>
                         <a 
                           href="https://g.co/kgs/C8je7zR" 
                           target="_blank" 
                           rel="noopener noreferrer" 
-                          className="text-xs text-accent hover:text-accent-hover flex items-center gap-1 mt-1"
+                          className="text-xs text-accent hover:text-accent-hover flex items-center gap-1 mt-0.5"
                         >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M12 1.586l-4 4v12.828l4-4V1.586zM3.707 3.293A1 1 0 002 4v10a1 1 0 00.293.707L6 18.414V5.586L3.707 3.293zM17.707 5.293L14 1.586v12.828l2.293 2.293A1 1 0 0018 16V6a1 1 0 00-.293-.707z" clipRule="evenodd" />
                           </svg>
                           <span>Find us on Google Maps</span>
@@ -591,22 +521,22 @@ const ContactSection = () => {
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <div className="bg-accent/20 rounded-full p-2.5 mr-3 flex-shrink-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent" viewBox="0 0 20 20" fill="currentColor">
+                      <div className="bg-accent/20 rounded-full p-2 mr-2.5 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-accent" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                         </svg>
                       </div>
                       <div>
-                        <h4 className="text-white font-medium">Global Service</h4>
-                        <p className="text-white/70">UK based, working worldwide</p>
-                        <p className="text-xs text-white/50 mt-1">Remote & on-site capabilities</p>
+                        <h4 className="text-white font-medium text-sm">Global Service</h4>
+                        <p className="text-white/70 text-sm">UK based, working worldwide</p>
+                        <p className="text-xs text-white/50 mt-0.5">Remote & on-site capabilities</p>
                       </div>
                     </div>
                   </div>
-                  <div className="border-t border-white/10 pt-4 mt-6">
+                  <div className="border-t border-white/10 pt-3 mt-4">
                     <button 
                       onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
-                      className="w-full py-3 px-4 text-white text-base font-medium rounded-xl bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 shadow-lg"
+                      className="w-full py-2.5 px-4 text-white text-sm font-medium rounded-xl bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 shadow-lg"
                     >
                       Book a Free Consultation
                     </button>
@@ -622,7 +552,6 @@ const ContactSection = () => {
           </div>
         </div>
       </div>
-      <PrivacyPolicy isOpen={showPrivacyPolicy} onClose={() => setShowPrivacyPolicy(false)} />
     </section>
   );
 };

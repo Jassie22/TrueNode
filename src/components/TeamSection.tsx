@@ -16,7 +16,7 @@ const teamMembers = [
   {
     id: 1,
     name: 'Jasmeen Dahak',
-    role: 'Founder & Developer',
+    role: 'Lead Developer',
     bio: 'Technical founder with 8+ years of development experience. Jasmeen has won machine learning competitions, built numerous dashboards, websites, and apps, and has contracted AI work contributing to the building of large AI models. Her unique blend of technical expertise brings innovative solutions to every project.',
     image: '/images/team/jasmeen.jpg',
     experience: '8+ years development, 3+ years ML/AI',
@@ -220,7 +220,6 @@ const TeamSection = () => {
           gsap.to(member, {
             scale: 0.95,
             opacity: 0.6,
-            filter: 'grayscale(60%)',
             duration: 0.3
           });
         }
@@ -239,7 +238,6 @@ const TeamSection = () => {
           y: 0,
           scale: 1,
           opacity: 1,
-          filter: 'grayscale(0%)',
           boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
           zIndex: 1,
           duration: 0.4,

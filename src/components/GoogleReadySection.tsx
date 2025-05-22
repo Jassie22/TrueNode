@@ -127,23 +127,23 @@ const getRandomItems = (arr: string[], count: number): string[] => {
   return shuffled.slice(0, count);
 };
 
-const AnimatedCounter: React.FC<{ target: number }> = ({ target }) => {
+const AnimatedCounter: React.FC<{ target: number; triggerRef: React.RefObject<HTMLElement> }> = ({ target, triggerRef }) => {
   const countRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    if (countRef.current) {
+    if (countRef.current && triggerRef.current) {
       gsap.to(countRef.current, {
         textContent: target,
         duration: 2,
         ease: 'power1.inOut',
         snap: { textContent: 1 },
         scrollTrigger: {
-          trigger: countRef.current,
+          trigger: triggerRef.current,
           start: 'top 80%',
           toggleActions: 'play none none none',
         },
       });
     }
-  }, [target]);
+  }, [target, triggerRef]);
   return <span ref={countRef}>0</span>;
 };
 
@@ -211,22 +211,24 @@ const GoogleReadySection = () => {
   const bannerRef = useRef<HTMLDivElement>(null);
   const starsContainerRef = useRef<HTMLDivElement>(null);
   const lanesContainerRef = useRef<HTMLDivElement>(null);
+  const counterRef = useRef<HTMLSpanElement>(null);
   
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
-  const numLanes = hasMounted && isMobile ? 4 : 6; // Adjusted number of lanes
-  const itemsPerLane = hasMounted && isMobile ? 12 : 18; // Adjusted items per lane
+  const numLanes = 5;
+  const itemsPerLane = hasMounted && isMobile ? 12 : 18;
 
   const laneData = useMemo(() => {
     const lanes = [];
-    // Slightly adjusted durations for more variation and potentially slower, more readable speeds
-    const baseDurations = ['40s', '55s', '45s', '60s', '50s', '65s']; 
+    const fastSpeed = '35s';
+    const slowSpeed = '50s';
+    
     for (let i = 0; i < numLanes; i++) {
       lanes.push({
         id: `lane-${i}`,
         items: getRandomItems(allUniqueChecklistItems, itemsPerLane),
-        duration: baseDurations[i % baseDurations.length],
+        duration: (i % 2 === 0) ? fastSpeed : slowSpeed,
         ref: React.createRef<HTMLDivElement>()
       });
     }
@@ -237,23 +239,24 @@ const GoogleReadySection = () => {
     if (!starsContainerRef.current) return;
     const container = starsContainerRef.current;
     container.innerHTML = '';
-    const starCount = hasMounted && isMobile ? 35 : 70; // Adjusted star count
+    const starCount = hasMounted && isMobile ? 40 : 80;
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < starCount; i++) {
-        const isBright = Math.random() < 0.1;
+        const isBright = Math.random() < 0.15;
         const starEl = document.createElement('div');
+        const baseSize = isBright ? (2.5 + Math.random() * 2) : (1.5 + Math.random() * 1.5);
         Object.assign(starEl.style, {
           position: 'absolute',
           left: `${Math.random() * 100}%`,
           top: `${Math.random() * 100}%`,
-          width: `${isBright ? (2 + Math.random() * 1) : (0.5 + Math.random() * 1)}px`,
-          height: `${isBright ? (2 + Math.random() * 1) : (0.5 + Math.random() * 1)}px`,
+          width: `${baseSize}px`,
+          height: `${baseSize}px`,
           background: 'white',
           borderRadius: '50%',
-          opacity: `${isBright ? (0.5 + Math.random() * 0.4) : (0.1 + Math.random() * 0.2)}`,
-          animation: `twinkle ${3 + Math.random() * 4}s ease-in-out ${Math.random() * 5}s infinite`
+          opacity: `${isBright ? (0.6 + Math.random() * 0.4) : (0.25 + Math.random() * 0.35)}`,
+          animation: `twinkle ${4 + Math.random() * 5}s ease-in-out ${Math.random() * 6}s infinite`
         });
-        starEl.classList.add('star'); // Ensure class is added for global styles if any
+        starEl.classList.add('star');
         fragment.appendChild(starEl);
       }
       container.appendChild(fragment);
@@ -318,11 +321,11 @@ const GoogleReadySection = () => {
           x: '0%', 
           opacity: 1, 
           duration: 1,
-          stagger: 0.15, // Stagger entrance of each lane
+          stagger: 0.15,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: lanesContainerRef.current,
-            start: 'top 85%', // Start animation a bit earlier
+            start: 'top 85%',
             toggleActions: 'play none none none'
           }
         }
@@ -333,11 +336,10 @@ const GoogleReadySection = () => {
       ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => trigger.kill());
       tl.kill();
     };
-  }, [hasMounted, laneData]); // laneData dependency is important here
+  }, [hasMounted, laneData]);
   
   useEffect(() => {
     const handleResize = () => {
-      // No need to explicitly call generateStars, isMobile state change will trigger it.
     };
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -347,7 +349,7 @@ const GoogleReadySection = () => {
     if (hasMounted) {
       generateStars();
     }
-  }, [hasMounted, generateStars]); // generateStars is a dependency now
+  }, [hasMounted, generateStars]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -363,29 +365,28 @@ const GoogleReadySection = () => {
     <>
       <style jsx global>{`
         @keyframes twinkle {
-          0%, 100% { opacity: var(--star-opacity-start, 0.1); } /* Changed var name for clarity */
+          0%, 100% { opacity: var(--star-opacity-start, 0.1); }
           50% { opacity: var(--star-opacity-end, 0.8); }
         }
         
-        .star { /* For direct DOM manipulation of stars */
+        .star {
           will-change: opacity;
         }
 
         @keyframes scroll-left {
           0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); } /* Each row has duplicated items, so -50% is one full scroll */
+          100% { transform: translateX(-50%); }
         }
 
         .animate-scroll-left {
           animation: scroll-left linear infinite;
         }
-        /* Removed .animate-scroll-right as it wasn't used */
       `}</style>
       
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'}`} // Conditional top padding, further reduced for mobile
+        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'}`}
       >
         <div 
           ref={backgroundRef}
@@ -418,10 +419,10 @@ const GoogleReadySection = () => {
                 className="text-6xl md:text-7xl font-bold text-accent mr-4"
                 style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
               >
-                <AnimatedCounter target={allUniqueChecklistItems.length} />
+                <AnimatedCounter target={allUniqueChecklistItems.length} triggerRef={titleRef} />
               </span>
-              <span className="text-xl md:text-2xl text-white/80 font-light">
-                meticulous considerations
+              <span ref={counterRef} className="text-xl md:text-2xl text-white/80 font-light">
+                Key SEO Metrics Tracked
               </span>
             </div>
             
@@ -429,14 +430,14 @@ const GoogleReadySection = () => {
               ref={descriptionRef}
               className={`text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto ${hasMounted && isMobile ? 'hidden' : ''}`}
             >
-              Witness the breadth of our SEO strategy. Each scrolling lane below unveils a different facet of our comprehensive approach to digital excellence.
+              Explore the depth of our SEO methodology. Our dynamic checklist highlights the critical areas we address to elevate your digital presence.
             </p>
           </div>
         </div>
         
         <div 
-          ref={bannerRef} // This div wraps the stars and the lanes section
-          className="relative w-full" // Removed padding/bg here, will apply conditionally
+          ref={bannerRef}
+          className="relative w-full"
         >
           {hasMounted && !isMobile && (
             <div className="desktop-lanes-container relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
@@ -468,7 +469,7 @@ const GoogleReadySection = () => {
                 Unlock your website's full potential. Our {allUniqueChecklistItems.length}-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
               </p>
               <a 
-                href="#contact" // Assuming a contact section ID
+                href="#contact"
                 className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
               >
                 Get Your Free SEO Analysis
@@ -476,7 +477,7 @@ const GoogleReadySection = () => {
             </div>
           )}
 
-          {!hasMounted && !isMobile && ( // Placeholder for desktop before mount
+          {!hasMounted && !isMobile && (
             <div 
               className="relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-4 sm:space-y-5"
             >
@@ -485,7 +486,7 @@ const GoogleReadySection = () => {
               ))}
             </div>
           )}
-          {!hasMounted && isMobile && ( // Placeholder for mobile before mount
+          {!hasMounted && isMobile && (
             <div className="relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gradient-to-br from-bg-darker to-bg-dark rounded-xl shadow-xl border border-purple-500/30 text-center opacity-50">
                <div className="h-8 bg-purple-500/10 rounded w-3/4 mx-auto mb-4"></div>
                <div className="h-4 bg-purple-500/10 rounded w-full mx-auto mb-2"></div>
