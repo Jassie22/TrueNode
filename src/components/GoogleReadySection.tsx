@@ -155,13 +155,16 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
   useEffect(() => {
     if (!starRef.current) return;
     const star = starRef.current;
-    const animationDuration = 4 + Math.random() * 6;
-    const delay = Math.random() * 7;
+    const animationDuration = 3 + Math.random() * 4; // Faster twinkling
+    const delay = Math.random() * 5;
     
-    const initialOpacity = parseFloat(star.style.opacity || '0.5');
+    const initialScale = isBrightNode ? 0.8 + Math.random() * 0.4 : 0.5 + Math.random() * 0.3;
+    const targetScale = initialScale * (isBrightNode ? 1.5 : 1.3);
+    const initialOpacity = parseFloat(star.style.opacity || '0.6');
     
+    // Scale animation for twinkling effect
     gsap.to(star, {
-      opacity: initialOpacity * (isBrightNode ? 0.3 : 0.1),
+      scale: targetScale,
       duration: animationDuration / 2,
       repeat: -1,
       yoyo: true,
@@ -169,15 +172,25 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
       delay: delay
     });
 
+    // Opacity animation
+    gsap.to(star, {
+      opacity: initialOpacity * (isBrightNode ? 0.3 : 0.2),
+      duration: animationDuration / 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      delay: delay + 0.2
+    });
+
   }, [isBrightNode]);
 
-  const size = isBrightNode ? 2.5 + Math.random() * 2 : 1.5 + Math.random() * 1.5;
-  const opacity = isBrightNode ? 0.7 + Math.random() * 0.3 : 0.4 + Math.random() * 0.3;
+  const size = isBrightNode ? 12 + Math.random() * 8 : 8 + Math.random() * 6;
+  const opacity = isBrightNode ? 0.8 + Math.random() * 0.2 : 0.5 + Math.random() * 0.3;
 
   return (
     <svg
       ref={starRef}
-      className="absolute"
+      className="absolute star-instance"
       width={size}
       height={size}
       viewBox="0 0 24 24"
@@ -186,10 +199,12 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
         opacity: opacity,
-        transform: `rotate(${Math.random() * 360}deg)`
+        transform: `rotate(${Math.random() * 360}deg)`,
+        filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.5))',
+        zIndex: 15
       }}
     >
-      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+      <path d="M12,0L12,0c0.257,6.518,5.482,11.743,12,12h0h0c-6.518,0.257-11.743,5.482-12,12v0v0c-0.257-6.518-5.482-11.743-12-12h0h0	C6.518,11.743,11.743,6.518,12,0L12,0z"/>
     </svg>
   );
 };
@@ -205,7 +220,7 @@ const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) =>
   return (
     <div 
       ref={laneRef} 
-      className="overflow-hidden whitespace-nowrap opacity-0 pl-2" 
+      className="overflow-hidden whitespace-nowrap opacity-0 invisible pl-2" 
       style={{ transform: 'translateX(100%)', willChange: 'transform, opacity' }}
     >
       <div className="flex animate-scroll-left" style={{ animationDuration }}>
@@ -255,48 +270,87 @@ const GoogleReadySection = () => {
   }, [numLanes, itemsPerLane]);
 
   const generateStars = useCallback(() => {
-    if (!starsContainerRef.current) return;
-    const container = starsContainerRef.current;
-    container.querySelectorAll('.star-svg-wrapper').forEach(el => el.remove());
+    if (!starsContainerRef.current) {
+      console.log('Stars container ref not available');
+      return;
+    }
     
-    const starCount = hasMounted && isMobile ? 40 : 120;
-    const fragment = document.createDocumentFragment();
+    const container = starsContainerRef.current;
+    // Clear existing stars
+    container.innerHTML = '';
+    
+    const starCount = hasMounted && isMobile ? 30 : 80;
+    console.log(`Generating ${starCount} stars in container:`, container);
 
     for (let i = 0; i < starCount; i++) {
-      const isBright = Math.random() < 0.2;
+      const isBright = Math.random() < 0.25;
       
-      const starWrapper = document.createElement('div');
-      starWrapper.className = 'star-svg-wrapper absolute inset-0';
-      
-      const size = isBright ? 2.5 + Math.random() * 2 : 1.5 + Math.random() * 1.5;
-      const opacity = isBright ? 0.7 + Math.random() * 0.3 : 0.4 + Math.random() * 0.3;
+      const size = isBright ? 16 + Math.random() * 8 : 12 + Math.random() * 6;
+      const initialOpacity = isBright ? 0.9 : 0.7;
       const rotation = Math.random() * 360;
       const left = Math.random() * 100;
       const top = Math.random() * 100;
-      const animationDuration = 4 + Math.random() * 6;
-      const delay = Math.random() * 7;
+      const animationDuration = 3 + Math.random() * 4;
+      const delay = Math.random() * 5;
+      const initialScale = isBright ? 1.0 : 0.8;
+      const targetScale = initialScale * (isBright ? 1.4 : 1.2);
 
-      starWrapper.innerHTML = `
+      const starElement = document.createElement('div');
+      starElement.className = 'absolute star-wrapper';
+      starElement.style.cssText = `
+        left: ${left}%;
+        top: ${top}%;
+        width: ${size}px;
+        height: ${size}px;
+        z-index: 8;
+        pointer-events: none;
+      `;
+
+      starElement.innerHTML = `
         <svg
-          class="absolute star-instance"
-          width="${size}"
-          height="${size}"
+          class="star-instance"
+          width="100%"
+          height="100%"
           viewBox="0 0 24 24"
           fill="white"
           style="
-            left: ${left}%;
-            top: ${top}%;
-            opacity: ${opacity};
-            transform: rotate(${rotation}deg);
-            animation: twinkle-svg ${animationDuration}s ease-in-out ${delay}s infinite;
+            opacity: ${initialOpacity};
+            transform: rotate(${rotation}deg) scale(${initialScale});
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+            position: absolute;
+            top: 0;
+            left: 0;
           "
         >
-          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          <path d="M12,0L12,0c0.257,6.518,5.482,11.743,12,12h0h0c-6.518,0.257-11.743,5.482-12,12v0v0c-0.257-6.518-5.482-11.743-12-12h0h0	C6.518,11.743,11.743,6.518,12,0L12,0z"/>
         </svg>
       `;
-      fragment.appendChild(starWrapper.firstChild!);
+      
+      container.appendChild(starElement);
+      
+      const svgElement = starElement.querySelector('svg');
+      if (svgElement) {
+        // Apply GSAP animations
+        gsap.to(svgElement, {
+          scale: targetScale,
+          duration: animationDuration / 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: delay
+        });
+        
+        gsap.to(svgElement, {
+          opacity: initialOpacity * 0.4,
+          duration: animationDuration / 2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: delay + 0.2
+        });
+      }
     }
-    container.appendChild(fragment);
+    console.log(`Stars generated. Container children count: ${container.children.length}`);
   }, [isMobile, hasMounted]);
   
   useEffect(() => {
@@ -353,10 +407,11 @@ const GoogleReadySection = () => {
     
     if(hasMounted && lanesContainerRef.current) { 
       gsap.fromTo(lanesContainerRef.current.children, 
-        { x: '50%', opacity: 0 }, 
+        { x: '50%', opacity: 0, visibility: 'hidden' }, 
         { 
           x: '0%', 
           opacity: 1, 
+          visibility: 'visible',
           duration: 1,
           stagger: 0.15,
           ease: 'power3.out',
@@ -411,8 +466,14 @@ const GoogleReadySection = () => {
           50% { opacity: calc(var(--initial-opacity, 0.6) * 0.3); }
         }
 
-        .star {
-          will-change: opacity;
+        @keyframes twinkle-scale {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.3); }
+        }
+
+        @keyframes twinkle-opacity {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 0.2; }
         }
 
         @keyframes scroll-left {
@@ -424,15 +485,38 @@ const GoogleReadySection = () => {
           animation: scroll-left linear infinite;
         }
         
+        .star-wrapper {
+          z-index: 8 !important;
+          position: absolute;
+          pointer-events: none;
+        }
+        
         .star-instance {
-          will-change: opacity;
+          will-change: opacity, transform;
+          z-index: 8 !important;
+          position: absolute;
+        }
+
+        .desktop-lanes-container {
+          position: relative;
+          z-index: 1;
+        }
+
+        .seo-section-fade-in {
+          opacity: 0;
+          animation: fadeInSection 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInSection {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
       `}</style>
       
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'}`}
+        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           ref={backgroundRef}
@@ -486,14 +570,18 @@ const GoogleReadySection = () => {
           className="relative w-full"
         >
           {hasMounted && !isMobile && (
-            <div className="desktop-lanes-container relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
+            <div className="desktop-lanes-container relative py-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y-2 border-purple-500/20">
+              {/* Stars container - positioned behind lanes */}
               <div 
                 ref={starsContainerRef}
-                className="absolute inset-0 z-0 opacity-70"
+                className="absolute inset-0 z-5 pointer-events-none overflow-hidden"
+                style={{ height: '100%', width: '100%' }}
               ></div>
+              
+              {/* Lanes content */}
               <div 
                 ref={lanesContainerRef} 
-                className="relative z-10 flex flex-col space-y-4 sm:space-y-5">
+                className="relative z-20 flex flex-col space-y-4 sm:space-y-5">
                 {laneData.map((lane) => (
                   <SeoLane 
                     key={lane.id}
@@ -503,6 +591,9 @@ const GoogleReadySection = () => {
                   />
                 ))}
               </div>
+              
+              {/* Bottom blur effect - positioned above everything */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
             </div>
           )}
 
@@ -525,10 +616,13 @@ const GoogleReadySection = () => {
 
           {!hasMounted && !isMobile && (
             <div 
-              className="relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-4 sm:space-y-5"
+              className="relative py-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y-2 border-purple-500/20 flex flex-col space-y-4 sm:space-y-5"
             >
+              {/* Bottom blur effect for placeholder */}
+              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
+              
               {Array.from({ length: numLanes }).map((_, i) => (
-                <div key={`placeholder-lane-${i}`} className="h-12 bg-purple-500/5 rounded-lg mx-4 opacity-50"></div> 
+                <div key={`placeholder-lane-${i}`} className="h-12 bg-transparent rounded-lg mx-4 opacity-0"></div> 
               ))}
             </div>
           )}

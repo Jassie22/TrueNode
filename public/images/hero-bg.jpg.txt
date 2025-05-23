@@ -1,4 +1,0 @@
-This is a placeholder for the hero-bg.jpg file.
- 
-Please add an actual JPG image with the name "hero-bg.jpg" in this directory.
-Recommended dimensions: 1920x1080px or larger with a dark overlay to ensure text readability. 
