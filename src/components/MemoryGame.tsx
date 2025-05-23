@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import confetti from 'canvas-confetti';
 
 interface Card {
   id: number;
@@ -13,6 +14,12 @@ enum GameState {
   Welcome,
   Playing,
   Complete
+}
+
+interface Achievements {
+  newHighScore: boolean;
+  newFastestTime: boolean;
+  newBestMoves: boolean;
 }
 
 const MemoryGame = () => {
@@ -28,38 +35,52 @@ const MemoryGame = () => {
   const [showInstructionsScreen, setShowInstructionsScreen] = useState(false);
   const [bestScore, setBestScore] = useState<number | null>(null);
   const [bestTime, setBestTime] = useState<number | null>(null);
+  const [bestMoves, setBestMoves] = useState<number | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [gameStartTime, setGameStartTime] = useState<number>(0);
   const [gameTime, setGameTime] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
+  const [hasTriggeredConfetti, setHasTriggeredConfetti] = useState(false);
+  const [achievements, setAchievements] = useState<Achievements>({
+    newHighScore: false,
+    newFastestTime: false,
+    newBestMoves: false
+  });
 
   // Card emojis for matching pairs
   const cardContents = ['🚀', '🌟', '🎮', '💻', '🤖', '🦄', '🎨', '🔮'];
 
-  // Calculate score based on moves and time
-  const calculateScore = (matchCount: number, moveCount: number, timeInSeconds: number) => {
-    // Base points per match
-    const basePointsPerMatch = 200;
-    
-    // Time penalty - reduces points per match as time increases
-    // After 60 seconds, each match is worth 50% less
-    const timeMultiplier = Math.max(0.2, 1 - (timeInSeconds / 120));
-    
-    // Calculate score - each match gives points, but value decreases with time
-    let totalScore = 0;
-    for (let i = 0; i < matchCount; i++) {
-      // Each match gives slightly fewer points than the previous one
-      const matchPoints = Math.round(basePointsPerMatch * timeMultiplier * (1 - (i * 0.05)));
-      totalScore += matchPoints;
+  // Trigger confetti burst once
+  const triggerConfetti = () => {
+    if (!hasTriggeredConfetti) {
+      confetti({
+        origin: { x: 0.5, y: 0 },
+        particleCount: 250,
+        spread: 160,
+        startVelocity: 35,
+        zIndex: 999,
+        ticks: 240, // ~4 seconds duration
+        colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'],
+        gravity: 0.6,
+        drift: 0
+      });
+      setHasTriggeredConfetti(true);
     }
+  };
+
+  // Calculate score based on moves and time with new formula
+  const calculateScore = (matchCount: number, moveCount: number, timeInSeconds: number) => {
+    const baseScore = 1000;
+    const movePenalty = 10;
+    const timePenalty = 0.5;
+    const minimumScore = 50;
     
-    // Move penalty - reduce score for excessive moves
-    const movePenalty = Math.max(0, (moveCount - matchCount) * 25);
+    const score = Math.max(
+      baseScore - (moveCount * movePenalty) - (timeInSeconds * timePenalty),
+      minimumScore
+    );
     
-    // Calculate final score
-    const finalScore = Math.max(0, totalScore - movePenalty);
-    
-    return Math.round(finalScore);
+    return Math.round(score);
   };
 
   // Initialize game
@@ -87,6 +108,12 @@ const MemoryGame = () => {
     setScore(0);
     setGameState(GameState.Playing);
     setShowInstructionsScreen(false);
+    setHasTriggeredConfetti(false); // Reset confetti trigger
+    setAchievements({
+      newHighScore: false,
+      newFastestTime: false,
+      newBestMoves: false
+    });
     
     // Set start time and start timer
     const startTime = Date.now();
@@ -188,30 +215,55 @@ const MemoryGame = () => {
       const finalScore = calculateScore(cardContents.length, moves, gameTime);
       setScore(finalScore);
       
-      // Save best score
-      const currentScore = moves;
+      // Trigger confetti burst once
+      triggerConfetti();
+      
+      // Check for achievements and save records
+      const newAchievements = {
+        newHighScore: false,
+        newFastestTime: false,
+        newBestMoves: false
+      };
+
+      // Save and check best score
       const storedBestScore = localStorage.getItem('memoryGameBestScore');
       const currentBestScore = storedBestScore ? parseInt(storedBestScore) : null;
       
-      if (!currentBestScore || currentScore < currentBestScore) {
-        localStorage.setItem('memoryGameBestScore', currentScore.toString());
-        setBestScore(currentScore);
+      if (!currentBestScore || finalScore > currentBestScore) {
+        localStorage.setItem('memoryGameBestScore', finalScore.toString());
+        setBestScore(finalScore);
+        newAchievements.newHighScore = true;
       } else {
         setBestScore(currentBestScore);
       }
       
-      // Save best time
+      // Save and check best time
       const storedBestTime = localStorage.getItem('memoryGameBestTime');
       const currentBestTime = storedBestTime ? parseInt(storedBestTime) : null;
       
       if (!currentBestTime || gameTime < currentBestTime) {
         localStorage.setItem('memoryGameBestTime', gameTime.toString());
         setBestTime(gameTime);
+        newAchievements.newFastestTime = true;
       } else {
         setBestTime(currentBestTime);
       }
+
+      // Save and check best moves
+      const storedBestMoves = localStorage.getItem('memoryGameBestMoves');
+      const currentBestMoves = storedBestMoves ? parseInt(storedBestMoves) : null;
+      
+      if (!currentBestMoves || moves < currentBestMoves) {
+        localStorage.setItem('memoryGameBestMoves', moves.toString());
+        setBestMoves(moves);
+        newAchievements.newBestMoves = true;
+      } else {
+        setBestMoves(currentBestMoves);
+      }
+
+      setAchievements(newAchievements);
     }
-  }, [matchedPairs, cardContents.length, gameState, moves, gameTime, calculateScore]);
+  }, [matchedPairs, cardContents.length, gameState, moves, gameTime, calculateScore, hasTriggeredConfetti]);
 
   // Load best score and time on component mount
   useEffect(() => {
@@ -223,6 +275,11 @@ const MemoryGame = () => {
     const storedBestTime = localStorage.getItem('memoryGameBestTime');
     if (storedBestTime) {
       setBestTime(parseInt(storedBestTime));
+    }
+
+    const storedBestMoves = localStorage.getItem('memoryGameBestMoves');
+    if (storedBestMoves) {
+      setBestMoves(parseInt(storedBestMoves));
     }
     
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -273,12 +330,13 @@ const MemoryGame = () => {
   const handleBackToMenu = () => {
     setGameState(GameState.Welcome);
     setShowInstructionsScreen(false);
+    setHasTriggeredConfetti(false); // Reset confetti trigger when going back to menu
   };
 
   return (
     <div 
       ref={gameWrapperRef}
-      className={`relative flex flex-col items-center justify-center p-4 rounded-lg shadow-xl bg-gradient-to-br from-bg-darker/80 to-bg-dark/90 backdrop-blur-md border border-white/10 w-full transition-all duration-300 ease-in-out ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none' : 'max-w-md mx-auto min-h-[380px]'} ${ gameState === GameState.Playing || gameState === GameState.Complete ? 'sm:p-6' : 'sm:p-4'}`}
+      className={`relative flex flex-col items-center justify-center p-4 w-full ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none' : gameState === GameState.Welcome && !showInstructionsScreen ? 'max-w-[260px] mx-auto min-h-[160px]' : 'max-w-sm mx-auto min-h-[380px]'} ${ gameState === GameState.Playing || gameState === GameState.Complete ? 'sm:p-6' : 'sm:p-4'}`}
     >
       {/* Fullscreen toggle button - only on mobile and not on any welcome screen variant */}
       {isMobile && gameState !== GameState.Welcome && (
@@ -302,49 +360,56 @@ const MemoryGame = () => {
       {gameState === GameState.Welcome && (
         <>
           {!showInstructionsScreen ? (
-            <div className="text-center text-white animate-fadeIn">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-8 bg-gradient-to-r from-accent to-accent-blue text-transparent bg-clip-text py-1">
-                Bored? Play a game!
-              </h2>
+            <div className="text-center text-white flex flex-col items-center justify-center h-full">
+              <div className="mb-6">
+                <div className="text-4xl mb-3">🎮</div>
+                <h2 className="text-3xl font-bold mb-6 text-white drop-shadow-lg leading-tight">
+                  Bored?<br />Play a game!
+                </h2>
+              </div>
               <button 
                 onClick={() => setShowInstructionsScreen(true)}
-                className="shiny-button px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg focus:outline-none focus:ring-4 focus:ring-purple-400 focus:ring-opacity-60 transform hover:scale-105"
+                className="shiny-button px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl text-lg focus:outline-none focus:ring-4 focus:ring-purple-400 focus:ring-opacity-60 border-2 border-white/20"
               >
                 View Instructions
               </button>
             </div>
           ) : (
-            <div className="text-center text-white animate-fadeIn">
-              <h3 className="text-xl font-bold mb-3 text-white">How to Play</h3>
-              <ul className="text-sm text-white/80 mb-4 space-y-1.5 text-left max-w-xs mx-auto px-2">
+            <div className="text-center text-white">
+              <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-lg">How to Play</h3>
+              <ul className="text-base text-white/90 mb-6 space-y-2 text-left max-w-xs mx-auto px-2">
                 <li className="flex items-start">
-                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
                   <span>Click on cards to flip them over.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
                   <span>Find and match pairs of identical cards.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-2 mt-1">&#8226;</span>
+                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
                   <span>Match all pairs to win the game!</span>
                 </li>
               </ul>
-              {(bestScore !== null || bestTime !== null) && (
-                <div className="my-3 text-white/70 text-xs">
-                  {bestScore !== null && <p>Best Score (Moves): {bestScore}</p>}
-                  {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
+              {(bestScore !== null || bestTime !== null || bestMoves !== null) && (
+                <div className="my-6 p-3 bg-white/10 rounded-lg border border-white/20">
+                  <h4 className="text-sm font-semibold text-white/80 mb-2">🏆 Personal Records</h4>
+                  <div className="space-y-1 text-sm">
+                    {bestScore !== null && <p className="text-white"><span className="font-bold text-yellow-400">Best Score:</span> {bestScore}</p>}
+                    {bestTime !== null && <p className="text-white"><span className="font-bold text-green-400">Best Time:</span> {formatTime(bestTime)}</p>}
+                    {bestMoves !== null && <p className="text-white"><span className="font-bold text-blue-400">Best Moves:</span> {bestMoves}</p>}
+                  </div>
                 </div>
               )}
               <button 
                 onClick={initializeGame} 
-                className="w-full max-w-xs mx-auto px-8 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 transform hover:scale-105 mb-3"
+                className="w-full max-w-xs mx-auto px-8 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg shadow-lg hover:shadow-xl text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 mb-3"
               >
                 Start Game
               </button>
               <button 
                 onClick={() => setShowInstructionsScreen(false)}
-                className="px-5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors text-xs"
+                className="px-5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg text-sm"
               >
                 Back
               </button>
@@ -381,16 +446,13 @@ const MemoryGame = () => {
           </div>
           <button 
             onClick={initializeGameAndResetWelcome}
-            title="Restart Game"
-            className="absolute top-3 left-3 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-10"
+            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-4 text-sm"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h5M4 9a8 8 0 0111.53-6.47L12 6M20 19v-5h-5M20 15a8 8 0 01-11.53 6.47L12 18" />
-            </svg>
+            Restart Game
           </button>
           <button 
             onClick={handleBackToMenu}
-            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-4 text-sm"
+            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-2 text-sm"
           >
             Back to Menu
           </button>
@@ -399,21 +461,40 @@ const MemoryGame = () => {
 
       {gameState === GameState.Complete && (
         <div className="text-center p-4 w-full max-w-xs mx-auto">
-          <h3 className="text-3xl font-bold text-transparent bg-gradient-to-r from-accent to-accent-blue-light bg-clip-text mb-4">You Won!</h3>
+          <h3 className="text-4xl font-bold mb-4 you-won-text">
+            You Won!
+          </h3>
+          
+          {/* Achievements */}
+          {(achievements.newHighScore || achievements.newFastestTime || achievements.newBestMoves) && (
+            <div className="mb-4 space-y-1">
+              {achievements.newHighScore && (
+                <div className="text-yellow-400 font-bold text-sm">✅ New High Score!</div>
+              )}
+              {achievements.newFastestTime && (
+                <div className="text-green-400 font-bold text-sm">⏱ New Fastest Time!</div>
+              )}
+              {achievements.newBestMoves && (
+                <div className="text-blue-400 font-bold text-sm">🧠 Best Move Count!</div>
+              )}
+            </div>
+          )}
+
           <div className="mb-6 space-y-2 text-white/90">
             <p>Your Score: <span className="font-semibold text-lg text-white">{score}</span></p>
             <p>Moves: <span className="font-semibold text-white">{moves}</span></p>
             <p>Time: <span className="font-semibold text-white">{formatTime(gameTime)}</span></p>
           </div>
-          {(bestTime !== null || bestScore !== null) && (
-            <div className="mb-6 text-xs text-white/60 border-t border-white/20 pt-3 mt-4">
-              {bestTime !== null && <p className="mb-1">Best Time: <span className="text-accent-light">{formatTime(bestTime)}</span></p>}
-              {bestScore !== null && <p>Best Moves: <span className="text-accent-light">{bestScore}</span></p>}
+          {(bestTime !== null || bestScore !== null || bestMoves !== null) && (
+            <div className="mb-6 text-sm text-white/70 border-t border-white/20 pt-3 mt-4">
+              {bestScore !== null && <p className="mb-1">Best Score: <span className="text-yellow-400 font-semibold">{bestScore}</span></p>}
+              {bestTime !== null && <p className="mb-1">Best Time: <span className="text-green-400 font-semibold">{formatTime(bestTime)}</span></p>}
+              {bestMoves !== null && <p>Best Moves: <span className="text-blue-400 font-semibold">{bestMoves}</span></p>}
             </div>
           )}
           <button 
             onClick={initializeGameAndResetWelcome}
-            className="w-full py-3 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-base transform hover:scale-105"
+            className="w-full py-3 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-base"
           >
             Play Again
           </button>
@@ -431,7 +512,7 @@ const MemoryGame = () => {
 
 export default MemoryGame;
 
-// ADDED: Shiny button CSS
+// ADDED: Shiny button CSS and You Won text styling
 const shinyButtonStyles = `
   .shiny-button {
     position: relative;
@@ -453,6 +534,10 @@ const shinyButtonStyles = `
   .shiny-button:hover::after {
     transform: rotate(45deg) scale(2) translateX(-25%) translateY(-25%);
     opacity: 1;
+  }
+  .you-won-text {
+    color: white;
+    text-shadow: 0 0 10px #a855f7, 0 0 20px #a855f7;
   }
 `;
 
