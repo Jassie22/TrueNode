@@ -131,7 +131,7 @@ const AnimatedCounter: React.FC<{ target: number; triggerRef: React.RefObject<HT
   const countRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     if (countRef.current && triggerRef.current) {
-      gsap.to(countRef.current, {
+      const animation = gsap.to(countRef.current, {
         textContent: target,
         duration: 2,
         ease: 'power1.inOut',
@@ -142,36 +142,55 @@ const AnimatedCounter: React.FC<{ target: number; triggerRef: React.RefObject<HT
           toggleActions: 'play none none none',
         },
       });
+      return () => {
+        animation.kill();
+      };
     }
   }, [target, triggerRef]);
   return <span ref={countRef}>0</span>;
 };
 
-const Star = ({ isBrightNode }: { isBrightNode?: boolean }) => {
-  const starRef = useRef<HTMLDivElement>(null);
+const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
+  const starRef = useRef<SVGSVGElement>(null);
   useEffect(() => {
     if (!starRef.current) return;
     const star = starRef.current;
-    const animationDuration = 3 + Math.random() * 4;
-    const delay = Math.random() * 5;
-    star.style.animation = `twinkle ${animationDuration}s ease-in-out ${delay}s infinite`;
-  }, []);
+    const animationDuration = 4 + Math.random() * 6;
+    const delay = Math.random() * 7;
+    
+    const initialOpacity = parseFloat(star.style.opacity || '0.5');
+    
+    gsap.to(star, {
+      opacity: initialOpacity * (isBrightNode ? 0.3 : 0.1),
+      duration: animationDuration / 2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      delay: delay
+    });
 
-  const size = isBrightNode ? 2.5 + Math.random() * 1.5 : 1 + Math.random() * 1;
-  const opacity = isBrightNode ? 0.6 + Math.random() * 0.4 : 0.15 + Math.random() * 0.25;
+  }, [isBrightNode]);
+
+  const size = isBrightNode ? 2.5 + Math.random() * 2 : 1.5 + Math.random() * 1.5;
+  const opacity = isBrightNode ? 0.7 + Math.random() * 0.3 : 0.4 + Math.random() * 0.3;
 
   return (
-    <div
+    <svg
       ref={starRef}
-      className="absolute bg-white rounded-full"
+      className="absolute"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="white"
       style={{
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
-        width: `${size}px`,
-        height: `${size}px`,
         opacity: opacity,
+        transform: `rotate(${Math.random() * 360}deg)`
       }}
-    />
+    >
+      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+    </svg>
   );
 };
 
@@ -238,28 +257,46 @@ const GoogleReadySection = () => {
   const generateStars = useCallback(() => {
     if (!starsContainerRef.current) return;
     const container = starsContainerRef.current;
-    container.innerHTML = '';
-    const starCount = hasMounted && isMobile ? 40 : 80;
+    container.querySelectorAll('.star-svg-wrapper').forEach(el => el.remove());
+    
+    const starCount = hasMounted && isMobile ? 40 : 120;
     const fragment = document.createDocumentFragment();
+
     for (let i = 0; i < starCount; i++) {
-        const isBright = Math.random() < 0.15;
-        const starEl = document.createElement('div');
-        const baseSize = isBright ? (2.5 + Math.random() * 2) : (1.5 + Math.random() * 1.5);
-        Object.assign(starEl.style, {
-          position: 'absolute',
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          width: `${baseSize}px`,
-          height: `${baseSize}px`,
-          background: 'white',
-          borderRadius: '50%',
-          opacity: `${isBright ? (0.6 + Math.random() * 0.4) : (0.25 + Math.random() * 0.35)}`,
-          animation: `twinkle ${4 + Math.random() * 5}s ease-in-out ${Math.random() * 6}s infinite`
-        });
-        starEl.classList.add('star');
-        fragment.appendChild(starEl);
-      }
-      container.appendChild(fragment);
+      const isBright = Math.random() < 0.2;
+      
+      const starWrapper = document.createElement('div');
+      starWrapper.className = 'star-svg-wrapper absolute inset-0';
+      
+      const size = isBright ? 2.5 + Math.random() * 2 : 1.5 + Math.random() * 1.5;
+      const opacity = isBright ? 0.7 + Math.random() * 0.3 : 0.4 + Math.random() * 0.3;
+      const rotation = Math.random() * 360;
+      const left = Math.random() * 100;
+      const top = Math.random() * 100;
+      const animationDuration = 4 + Math.random() * 6;
+      const delay = Math.random() * 7;
+
+      starWrapper.innerHTML = `
+        <svg
+          class="absolute star-instance"
+          width="${size}"
+          height="${size}"
+          viewBox="0 0 24 24"
+          fill="white"
+          style="
+            left: ${left}%;
+            top: ${top}%;
+            opacity: ${opacity};
+            transform: rotate(${rotation}deg);
+            animation: twinkle-svg ${animationDuration}s ease-in-out ${delay}s infinite;
+          "
+        >
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+      `;
+      fragment.appendChild(starWrapper.firstChild!);
+    }
+    container.appendChild(fragment);
   }, [isMobile, hasMounted]);
   
   useEffect(() => {
@@ -369,6 +406,11 @@ const GoogleReadySection = () => {
           50% { opacity: var(--star-opacity-end, 0.8); }
         }
         
+        @keyframes twinkle-svg {
+          0%, 100% { opacity: var(--initial-opacity, 0.6); }
+          50% { opacity: calc(var(--initial-opacity, 0.6) * 0.3); }
+        }
+
         .star {
           will-change: opacity;
         }
@@ -380,6 +422,10 @@ const GoogleReadySection = () => {
 
         .animate-scroll-left {
           animation: scroll-left linear infinite;
+        }
+        
+        .star-instance {
+          will-change: opacity;
         }
       `}</style>
       
@@ -443,7 +489,7 @@ const GoogleReadySection = () => {
             <div className="desktop-lanes-container relative pt-6 pb-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
               <div 
                 ref={starsContainerRef}
-                className="absolute inset-0 z-0 opacity-50"
+                className="absolute inset-0 z-0 opacity-70"
               ></div>
               <div 
                 ref={lanesContainerRef} 

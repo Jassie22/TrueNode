@@ -346,11 +346,11 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
           {projects.map((project, index) => {
             let cardClassName = 'flex-shrink-0 snap-center relative transition-all duration-300 ease-out ';
             if (selectedProject === project.id) {
-              cardClassName += 'w-[750px] z-10'; // Expanded card
+              cardClassName += 'w-[750px] z-20'; // Expanded card, highest z-index
             } else if (selectedProject === null && index === currentCenterIndex) {
-              cardClassName += 'w-[350px] scale-110 -translate-y-4 shadow-2xl z-5'; // MODIFIED: Centered, unselected card - increased pop
+              cardClassName += 'w-[350px] scale-135 -translate-y-12 shadow-2xl shadow-accent/20 z-10'; // Centered, unselected card - increased pop, higher z-index, added glow
             } else {
-              cardClassName += 'w-[350px] opacity-80 group-hover:opacity-100'; // Other unselected cards
+              cardClassName += 'w-[350px] opacity-70 group-hover:opacity-100'; // Reduced opacity for other cards to enhance contrast
             }
 
             return (

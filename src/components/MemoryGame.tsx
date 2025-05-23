@@ -303,10 +303,12 @@ const MemoryGame = () => {
         <>
           {!showInstructionsScreen ? (
             <div className="text-center text-white animate-fadeIn">
-              <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-accent">Bored? Play a game!</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold mb-8 bg-gradient-to-r from-accent to-accent-blue text-transparent bg-clip-text py-1">
+                Bored? Play a game!
+              </h2>
               <button 
                 onClick={() => setShowInstructionsScreen(true)}
-                className="shiny-button px-6 py-2.5 bg-accent text-white font-semibold rounded-lg shadow-lg transition-all duration-300 text-md focus:outline-none focus:ring-2 focus:ring-accent-dark focus:ring-opacity-50"
+                className="shiny-button px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg focus:outline-none focus:ring-4 focus:ring-purple-400 focus:ring-opacity-60 transform hover:scale-105"
               >
                 View Instructions
               </button>
@@ -336,7 +338,7 @@ const MemoryGame = () => {
               )}
               <button 
                 onClick={initializeGame} 
-                className="px-7 py-2.5 bg-accent hover:bg-accent text-white font-semibold rounded-lg shadow-lg transition-all duration-200 text-md focus:outline-none focus:ring-2 focus:ring-accent-dark focus:ring-opacity-50 mb-2.5"
+                className="w-full max-w-xs mx-auto px-8 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 transform hover:scale-105 mb-3"
               >
                 Start Game
               </button>
@@ -359,7 +361,7 @@ const MemoryGame = () => {
           </div>
           <div 
             ref={cardGridRef} 
-            className={`grid grid-cols-4 gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-black/20 rounded-lg border border-white/10 w-full max-w-xs mx-auto ${
+            className={`grid grid-cols-4 gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-black/20 rounded-lg w-full max-w-xs mx-auto ${
               isFullscreen && isMobile ? '!max-w-full !gap-3 sm:!gap-4 landscape:!gap-2 landscape:max-w-[300px] portrait:p-4' : 'sm:max-w-sm'
             }`}
           >
@@ -396,28 +398,28 @@ const MemoryGame = () => {
       )}
 
       {gameState === GameState.Complete && (
-        <div className="text-center p-4">
-          <h3 className="text-2xl font-bold text-accent-light mb-2">You Won!</h3>
-          <div className="mb-4 space-y-1 text-white/90">
+        <div className="text-center p-4 w-full max-w-xs mx-auto">
+          <h3 className="text-3xl font-bold text-transparent bg-gradient-to-r from-accent to-accent-blue-light bg-clip-text mb-4">You Won!</h3>
+          <div className="mb-6 space-y-2 text-white/90">
             <p>Your Score: <span className="font-semibold text-lg text-white">{score}</span></p>
             <p>Moves: <span className="font-semibold text-white">{moves}</span></p>
             <p>Time: <span className="font-semibold text-white">{formatTime(gameTime)}</span></p>
           </div>
           {(bestTime !== null || bestScore !== null) && (
-            <div className="mb-4 text-xs text-white/60 border-t border-white/10 pt-2 mt-4">
-              {bestTime !== null && <p>Best Time: {formatTime(bestTime)}</p>}
-              {bestScore !== null && <p>Best Moves: {bestScore}</p>}
+            <div className="mb-6 text-xs text-white/60 border-t border-white/20 pt-3 mt-4">
+              {bestTime !== null && <p className="mb-1">Best Time: <span className="text-accent-light">{formatTime(bestTime)}</span></p>}
+              {bestScore !== null && <p>Best Moves: <span className="text-accent-light">{bestScore}</span></p>}
             </div>
           )}
           <button 
             onClick={initializeGameAndResetWelcome}
-            className="w-full py-2.5 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-sm"
+            className="w-full py-3 px-5 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-base transform hover:scale-105"
           >
             Play Again
           </button>
           <button 
             onClick={handleBackToMenu}
-            className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-2"
+            className="w-full px-6 py-2.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors mt-3"
           >
             Back to Menu
           </button>
@@ -434,6 +436,7 @@ const shinyButtonStyles = `
   .shiny-button {
     position: relative;
     overflow: hidden;
+    z-index: 1; /* Ensure button content is above the ::after element */
   }
   .shiny-button::after {
     content: '';
@@ -444,7 +447,7 @@ const shinyButtonStyles = `
     height: 200%;
     background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%);
     transform: rotate(45deg);
-    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+    transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.4s ease-out; /* Added opacity transition */
     opacity: 0;
   }
   .shiny-button:hover::after {

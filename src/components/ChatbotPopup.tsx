@@ -695,6 +695,8 @@ const ChatbotPopup = () => {
     // If in form builder mode, handle form input
     if (showFormBuilder) {
       handleFormInput();
+      // Refocus input after handling form input
+      setTimeout(() => inputRef.current?.focus(), 0);
       return;
     }
 
@@ -914,24 +916,38 @@ const ChatbotPopup = () => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
+      // Refocus input after AI response
+      setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
 
   // Handle skip button click below message
   const handleSkipButtonClick = () => {
     setInputValue('skip');
-    setTimeout(() => handleSendMessage(), 0);
+    setTimeout(() => {
+        handleSendMessage();
+        // Refocus input after skip
+        setTimeout(() => inputRef.current?.focus(), 0); 
+    }, 0);
   };
 
   // Handle edit/send buttons below submission
   const handleEditButtonClick = () => {
     setInputValue('edit');
-    setTimeout(() => handleSendMessage(), 0);
+    setTimeout(() => {
+        handleSendMessage();
+        // Refocus input after edit
+        setTimeout(() => inputRef.current?.focus(), 0);
+    }, 0);
   };
 
   const handleSendToTeamButtonClick = () => {
     setInputValue('yes');
-    setTimeout(() => handleSendMessage(), 0);
+    setTimeout(() => {
+        handleSendMessage();
+        // Refocus input after sending to team
+        setTimeout(() => inputRef.current?.focus(), 0);
+    }, 0);
   };
 
   const formatTime = (date: Date) => {
@@ -1196,7 +1212,7 @@ const ChatbotPopup = () => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (handleSendMessage(), setTimeout(() => inputRef.current?.focus(), 0))}
               placeholder={showFormBuilder ? "Type your response..." : "Type your message..."}
               className="w-full bg-zinc-800/90 border border-gray-700/50 rounded-lg py-2.5 pl-4 pr-12 text-white focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/30 transition-all"
               disabled={isTyping || isSubmitting}
