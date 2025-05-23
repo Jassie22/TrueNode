@@ -211,23 +211,45 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
 
 interface SeoLaneProps {
   items: string[];
-  animationDuration?: string;
+  laneIndex: number;
   laneRef: React.RefObject<HTMLDivElement>;
 }
 
-const SeoLane = ({ items, animationDuration = '60s', laneRef }: SeoLaneProps) => {
-  const duplicatedItems = [...items, ...items]; // Duplicate for seamless scroll
+const SeoLane = ({ items, laneIndex, laneRef }: SeoLaneProps) => {
+  // Create exactly two copies for perfect loop
+  const duplicatedItems = [...items, ...items];
+  
+  // Define different speeds for each lane
+  const getLaneSpeed = (index: number): string => {
+    switch (index) {
+      case 0: return '60s'; // Lane 1 - slower (was 30s)
+      case 1: return '45s'; // Lane 2 - faster (was 18s)
+      case 2: return '40s'; // Lane 3 - faster (was 16s)
+      case 3: return '55s'; // Lane 4 - slower (was 28s)
+      case 4: return '35s'; // Lane 5 - fastest (was 14s)
+      default: return '50s';
+    }
+  };
+
   return (
     <div 
       ref={laneRef} 
       className="overflow-hidden whitespace-nowrap opacity-0 invisible pl-2" 
       style={{ transform: 'translateX(100%)', willChange: 'transform, opacity' }}
     >
-      <div className="flex animate-scroll-left" style={{ animationDuration }}>
+      <div 
+        className={`flex animate-scroll-loop lane-${laneIndex + 1}`}
+        style={{ 
+          animationDuration: getLaneSpeed(laneIndex),
+          width: 'max-content',
+          willChange: 'transform',
+          gap: '12px'
+        }}
+      >
         {duplicatedItems.map((item, index) => (
           <span 
-            key={`${item}-${index}`} // Ensure unique key for duplicated items
-            className="text-white bg-purple-600/80 backdrop-blur-sm mx-2 sm:mx-3 px-4 py-2 rounded-lg shadow-lg text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis text-center min-w-[180px] sm:min-w-[220px] border border-purple-500/30 transition-all hover:bg-purple-500/90 hover:shadow-purple-500/30 hover:scale-105"
+            key={`${item}-${index}`}
+            className="text-white bg-purple-600/80 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg text-xs sm:text-sm whitespace-nowrap overflow-hidden text-ellipsis text-center min-w-[180px] sm:min-w-[220px] border border-purple-500/30 transition-all hover:bg-purple-500/90 hover:shadow-purple-500/30 hover:scale-105 flex-shrink-0"
           >
             {item}
           </span>
@@ -255,14 +277,11 @@ const GoogleReadySection = () => {
 
   const laneData = useMemo(() => {
     const lanes = [];
-    const fastSpeed = '35s';
-    const slowSpeed = '50s';
     
     for (let i = 0; i < numLanes; i++) {
       lanes.push({
         id: `lane-${i}`,
         items: getRandomItems(allUniqueChecklistItems, itemsPerLane),
-        duration: (i % 2 === 0) ? fastSpeed : slowSpeed,
         ref: React.createRef<HTMLDivElement>()
       });
     }
@@ -279,21 +298,21 @@ const GoogleReadySection = () => {
     // Clear existing stars
     container.innerHTML = '';
     
-    const starCount = hasMounted && isMobile ? 30 : 80;
+    const starCount = hasMounted && isMobile ? 20 : 60; // Reduced count for subtlety
     console.log(`Generating ${starCount} stars in container:`, container);
 
     for (let i = 0; i < starCount; i++) {
-      const isBright = Math.random() < 0.25;
+      const isBright = Math.random() < 0.15; // Reduced bright star chance
       
-      const size = isBright ? 16 + Math.random() * 8 : 12 + Math.random() * 6;
-      const initialOpacity = isBright ? 0.9 : 0.7;
+      const size = isBright ? 8 + Math.random() * 4 : 6 + Math.random() * 3; // 30-50% smaller
+      const initialOpacity = isBright ? 0.5 : 0.3; // Much more subtle
       const rotation = Math.random() * 360;
       const left = Math.random() * 100;
       const top = Math.random() * 100;
-      const animationDuration = 3 + Math.random() * 4;
-      const delay = Math.random() * 5;
-      const initialScale = isBright ? 1.0 : 0.8;
-      const targetScale = initialScale * (isBright ? 1.4 : 1.2);
+      const animationDuration = 5 + Math.random() * 3; // Slower, more gradual (5-8s)
+      const delay = Math.random() * 8; // Longer delay spread
+      const initialScale = isBright ? 0.8 : 0.6; // Smaller initial scale
+      const targetScale = initialScale * (isBright ? 1.3 : 1.2); // Less dramatic scaling
 
       const starElement = document.createElement('div');
       starElement.className = 'absolute star-wrapper';
@@ -316,7 +335,7 @@ const GoogleReadySection = () => {
           style="
             opacity: ${initialOpacity};
             transform: rotate(${rotation}deg) scale(${initialScale});
-            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+            filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
             position: absolute;
             top: 0;
             left: 0;
@@ -330,7 +349,7 @@ const GoogleReadySection = () => {
       
       const svgElement = starElement.querySelector('svg');
       if (svgElement) {
-        // Apply GSAP animations
+        // Apply GSAP animations with slower, more gradual easing
         gsap.to(svgElement, {
           scale: targetScale,
           duration: animationDuration / 2,
@@ -341,12 +360,12 @@ const GoogleReadySection = () => {
         });
         
         gsap.to(svgElement, {
-          opacity: initialOpacity * 0.4,
+          opacity: initialOpacity * 0.5, // More subtle opacity change
           duration: animationDuration / 2,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
-          delay: delay + 0.2
+          delay: delay + 0.5 // Longer offset
         });
       }
     }
@@ -448,7 +467,25 @@ const GoogleReadySection = () => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    
+    // Handle tab switching to pause/resume animations for performance
+    const handleVisibilityChange = () => {
+      const lanes = document.querySelectorAll('.animate-scroll-loop');
+      lanes.forEach(lane => {
+        if (document.hidden) {
+          (lane as HTMLElement).style.animationPlayState = 'paused';
+        } else {
+          (lane as HTMLElement).style.animationPlayState = 'running';
+        }
+      });
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const grainEffectUrl = "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E";
@@ -476,13 +513,17 @@ const GoogleReadySection = () => {
           50% { opacity: 0.2; }
         }
 
-        @keyframes scroll-left {
-          0% { transform: translateX(0%); }
+        @keyframes scroll-loop {
+          0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
 
-        .animate-scroll-left {
-          animation: scroll-left linear infinite;
+        .animate-scroll-loop {
+          animation: scroll-loop linear infinite;
+          transform: translateZ(0);
+          backface-visibility: hidden;
+          perspective: 1000px;
+          will-change: transform;
         }
         
         .star-wrapper {
@@ -500,6 +541,7 @@ const GoogleReadySection = () => {
         .desktop-lanes-container {
           position: relative;
           z-index: 1;
+          overflow: hidden;
         }
 
         .seo-section-fade-in {
@@ -511,12 +553,40 @@ const GoogleReadySection = () => {
           from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Individual lane styling for perfect loops */
+        .lane-1, .lane-2, .lane-3, .lane-4, .lane-5 {
+          display: flex;
+          width: max-content;
+          gap: 12px;
+        }
+        
+        /* Specific animation durations for each lane */
+        .lane-1 {
+          animation-duration: 120s !important;
+        }
+        
+        .lane-2 {
+          animation-duration: 135s !important;
+        }
+        
+        .lane-3 {
+          animation-duration: 95s !important;
+        }
+        
+        .lane-4 {
+          animation-duration: 110s !important;
+        }
+        
+        .lane-5 {
+          animation-duration: 85s !important;
+        }
       `}</style>
       
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden pb-12 ${hasMounted && isMobile ? 'pt-4' : 'pt-20'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
+        className={`relative bg-transparent overflow-hidden pb-8 ${hasMounted && isMobile ? 'pt-4' : 'pt-12'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           ref={backgroundRef}
@@ -534,17 +604,17 @@ const GoogleReadySection = () => {
           }}
         ></div>
         
-        <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-16 ${hasMounted && isMobile ? 'hidden' : ''}`}>
+        <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-0 ${hasMounted && isMobile ? 'hidden' : ''}`}>
           <div className="max-w-4xl mx-auto">
             <h2
               ref={titleRef}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white"
               style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
             >
               Our <span className="text-accent">SEO</span> Checklist
             </h2>
             
-            <div className={`flex items-center justify-center mb-10 ${hasMounted && isMobile ? 'hidden' : ''}`}>
+            <div className={`flex items-center justify-center mb-6 ${hasMounted && isMobile ? 'hidden' : ''}`}>
               <span 
                 className="text-6xl md:text-7xl font-bold text-accent mr-4"
                 style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
@@ -570,7 +640,7 @@ const GoogleReadySection = () => {
           className="relative w-full"
         >
           {hasMounted && !isMobile && (
-            <div className="desktop-lanes-container relative py-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y-2 border-purple-500/20">
+            <div className="desktop-lanes-container relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
               {/* Stars container - positioned behind lanes */}
               <div 
                 ref={starsContainerRef}
@@ -581,19 +651,19 @@ const GoogleReadySection = () => {
               {/* Lanes content */}
               <div 
                 ref={lanesContainerRef} 
-                className="relative z-20 flex flex-col space-y-4 sm:space-y-5">
-                {laneData.map((lane) => (
+                className="relative z-20 flex flex-col space-y-3 sm:space-y-4">
+                {laneData.map((lane, index) => (
                   <SeoLane 
                     key={lane.id}
                     laneRef={lane.ref}
                     items={lane.items} 
-                    animationDuration={lane.duration}
+                    laneIndex={index}
                   />
                 ))}
               </div>
               
               {/* Bottom blur effect - positioned above everything */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
             </div>
           )}
 
@@ -616,10 +686,10 @@ const GoogleReadySection = () => {
 
           {!hasMounted && !isMobile && (
             <div 
-              className="relative py-10 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y-2 border-purple-500/20 flex flex-col space-y-4 sm:space-y-5"
+              className="relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-3 sm:space-y-4"
             >
               {/* Bottom blur effect for placeholder */}
-              <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
               
               {Array.from({ length: numLanes }).map((_, i) => (
                 <div key={`placeholder-lane-${i}`} className="h-12 bg-transparent rounded-lg mx-4 opacity-0"></div> 

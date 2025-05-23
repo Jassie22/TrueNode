@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -188,16 +188,28 @@ interface CarouselProps {
 // Desktop implementation of the carousel
 const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
   const initialProjectIndex = projects.length > 0 ? Math.floor(projects.length / 2) : 0;
-  const [selectedProject, setSelectedProject] = useState<number | null>(null); // Don't open a project by default
+  const [selectedProject, setSelectedProject] = useState<number | null>(null);
   const [currentCenterIndex, setCurrentCenterIndex] = useState<number>(initialProjectIndex);
   const carouselRef = useRef<HTMLDivElement>(null);
   const [dragStartX, setDragStartX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   
+  // Update center index based on scroll position
+  const updateCenterIndex = useCallback(() => {
+    if (!carouselRef.current) return;
+    
+    const scrollLeft = carouselRef.current.scrollLeft;
+    const cardWidth = 350 + 24; // card width + spacing
+    const containerWidth = carouselRef.current.clientWidth;
+    const centerPosition = scrollLeft + containerWidth / 2;
+    const estimatedIndex = Math.round(centerPosition / cardWidth);
+    
+    setCurrentCenterIndex(Math.max(0, Math.min(projects.length - 1, estimatedIndex)));
+  }, [projects.length]);
+
   // Scroll to center the selected project card, or initial project on load
   useEffect(() => {
     if (carouselRef.current) {
-      // If a project is selected, center that. Otherwise, center the initial/current non-selected middle card.
       const projectToCenterId = selectedProject ?? projects[currentCenterIndex]?.id;
       if (projectToCenterId === null) return;
 
@@ -217,7 +229,6 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       const currentCardEffectiveWidth = (projectToCenterId === selectedProject && selectedProject !== null) ? cardWidthExpanded : cardWidthCollapsed;
       const targetScrollLeft = offsetLeft - (carouselRef.current.clientWidth / 2) + (currentCardEffectiveWidth / 2);
 
-      // On initial load, center the middle card without smooth scroll
       const isInitialLoad = carouselRef.current.scrollLeft === 0 && selectedProject === null;
 
       carouselRef.current.scrollTo({
@@ -225,35 +236,18 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
         behavior: isInitialLoad ? 'auto' : 'smooth' 
       });
     }
-  }, [selectedProject, projects]); // REMOVED currentCenterIndex from dependency array
-
-  // Handle scroll wheel navigation
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    if (carouselRef.current) {
-      e.preventDefault();
-      carouselRef.current.scrollLeft += e.deltaY;
-    }
-  };
-  
-  // Initialize wheel event listeners
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (carousel) {
-      carousel.addEventListener('wheel', handleWheel as unknown as EventListener, { passive: false });
-      return () => carousel.removeEventListener('wheel', handleWheel as unknown as EventListener);
-    }
-  }, []);
+  }, [selectedProject, projects, currentCenterIndex]);
 
   // Navigation functions
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -374, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: 374, behavior: 'smooth' });
     }
   };
   
@@ -272,36 +266,50 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
   
   const handleDragEnd = () => {
     setIsDragging(false);
-    // Update currentCenterIndex based on scroll position after drag
-    // This is a simplified estimation. A more robust way involves calculating visible items.
-    if (carouselRef.current) {
-      const scrollLeft = carouselRef.current.scrollLeft;
-      const cardWidth = 350 + 24; // Approximate width of a collapsed card with spacing
-      const newIndex = Math.round(scrollLeft / cardWidth);
-      setCurrentCenterIndex(Math.max(0, Math.min(projects.length - 1, newIndex)));
-    }
+    updateCenterIndex();
   };
+
+  // Handle scroll events to update center index
+  const handleScroll = useCallback(() => {
+    updateCenterIndex();
+  }, [updateCenterIndex]);
+
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (carousel) {
+      carousel.addEventListener('scroll', handleScroll);
+      return () => carousel.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   // Function to handle dot click for desktop
   const handleDotClick = (index: number) => {
-    setSelectedProject(null); // Close any open card
+    setSelectedProject(null);
     setCurrentCenterIndex(index);
-    const projectToCenterId = projects[index]?.id;
-    if (projectToCenterId && carouselRef.current) {
-        const targetIdx = projects.findIndex(p => p.id === projectToCenterId);
-        if (targetIdx === -1) return;
+    
+    if (carouselRef.current) {
+      const cardWidthCollapsed = 350;
+      const spacing = 24;
+      
+      let offsetLeft = 0;
+      for (let i = 0; i < index; i++) {
+        offsetLeft += cardWidthCollapsed + spacing;
+      }
+      
+      const targetScrollLeft = offsetLeft - (carouselRef.current.clientWidth / 2) + (cardWidthCollapsed / 2);
+      carouselRef.current.scrollTo({
+        left: Math.max(0, targetScrollLeft),
+        behavior: 'smooth'
+      });
+    }
+  };
 
-        const cardWidthCollapsed = 350;
-        const spacing = 24;
-        let offsetLeft = 0;
-        for (let i = 0; i < targetIdx; i++) {
-            offsetLeft += cardWidthCollapsed + spacing;
-        }
-        const targetScrollLeft = offsetLeft - (carouselRef.current.clientWidth / 2) + (cardWidthCollapsed / 2);
-        carouselRef.current.scrollTo({
-            left: Math.max(0, targetScrollLeft),
-            behavior: 'smooth'
-        });
+  // Function to handle card close - ensure it stays centered
+  const handleCardClose = () => {
+    const currentProjectIndex = projects.findIndex(p => p.id === selectedProject);
+    setSelectedProject(null);
+    if (currentProjectIndex !== -1) {
+      setCurrentCenterIndex(currentProjectIndex);
     }
   };
 
@@ -331,7 +339,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       {/* Carousel Container */}
       <div 
         ref={carouselRef}
-        className="flex overflow-x-auto hide-scrollbar pb-8 pt-2 snap-x snap-mandatory"
+        className="flex overflow-x-auto hide-scrollbar pb-8 pt-2"
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
@@ -344,13 +352,15 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       >
         <div className="flex space-x-6 px-4">
           {projects.map((project, index) => {
-            let cardClassName = 'flex-shrink-0 snap-center relative transition-all duration-300 ease-out ';
+            const isCentered = selectedProject === null && index === currentCenterIndex;
+            
+            let cardClassName = 'flex-shrink-0 relative transition-all duration-500 ease-out ';
             if (selectedProject === project.id) {
-              cardClassName += 'w-[750px] z-20'; // Expanded card, highest z-index
-            } else if (selectedProject === null && index === currentCenterIndex) {
-              cardClassName += 'w-[350px] scale-135 -translate-y-12 shadow-2xl shadow-accent/20 z-10'; // Centered, unselected card - increased pop, higher z-index, added glow
+              cardClassName += 'w-[750px] z-20';
+            } else if (isCentered) {
+              cardClassName += 'w-[350px] scale-125 -translate-y-12 shadow-2xl shadow-accent/40 z-10 transform-gpu';
             } else {
-              cardClassName += 'w-[350px] opacity-70 group-hover:opacity-100'; // Reduced opacity for other cards to enhance contrast
+              cardClassName += 'w-[350px] opacity-80 hover:opacity-100';
             }
 
             return (
@@ -359,7 +369,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                 className={cardClassName}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: project.id * 0.1 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 layout="position"
               >
                 <AnimatePresence mode="wait">
@@ -374,7 +384,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                     >
                       <ExpandedDesktopCard 
                         project={project} 
-                        onClose={() => setSelectedProject(null)} 
+                        onClose={handleCardClose} 
                       />
                     </motion.div>
                   ) : (
@@ -406,8 +416,6 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
             <button
               key={`desktop-dot-${project.id}`}
               className={`h-3 rounded-full transition-all duration-300 ease-in-out ${
-                // Highlight dot if it corresponds to the centered card (even if not expanded) 
-                // or the expanded card
                 (selectedProject === project.id || (selectedProject === null && index === currentCenterIndex)) 
                   ? "bg-accent w-8" 
                   : "bg-white/20 w-3 hover:bg-white/40"
@@ -455,7 +463,7 @@ const DesktopProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) =>
         {/* Title overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
           <h3 className="text-xl font-bold text-white mb-1">{project.title}</h3>
-          <span className="inline-block bg-accent/30 text-accent-light text-xs px-2 py-1 rounded">
+          <span className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full">
             {project.category}
           </span>
         </div>
@@ -570,7 +578,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
         </button>
       
         <motion.h3 custom={0} variants={textContentVariants} className="text-xl font-bold text-white mb-1">{project.title}</motion.h3>
-        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-white/20 text-white text-xs px-2 py-1 rounded mb-3">
+        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full mb-3">
           {project.category}
         </motion.span>
         
@@ -598,7 +606,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
           <motion.h4 variants={listItemVariants} className="text-base font-semibold text-white mb-2">Technologies Used</motion.h4>
           <motion.div variants={listVariants} className="flex flex-wrap gap-1.5">
             {project.technologies.map((tech, index) => (
-              <motion.span key={index} variants={listItemVariants} className="bg-white/10 text-gray-200 border border-white/20 px-2 py-0.5 rounded-md text-xs">
+              <motion.span key={index} variants={listItemVariants} className="bg-accent/30 text-accent-light border border-accent/20 px-3 py-1 rounded-full text-xs font-medium">
                 {tech}
               </motion.span>
             ))}
@@ -611,7 +619,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
 
 // Mobile implementation of the carousel
 const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
-  const [activeIndex, setActiveIndex] = useState(0); // Mobile carousel starts at the first item (index 0)
+  const [activeIndex, setActiveIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const swipeRef = useRef<HTMLDivElement>(null);
   
@@ -756,7 +764,7 @@ const MobileProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => 
         {/* Title overlay */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
           <h3 className="text-xl font-bold text-white mb-1">{project.title}</h3>
-          <span className="inline-block bg-accent/30 text-accent-light text-xs px-2 py-1 rounded mb-2">
+          <span className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full mb-2">
             {project.category}
           </span>
           
@@ -827,7 +835,7 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
             {/* Project Details */}
             <div className="bg-gray-900 p-6 rounded-b-xl shadow-xl">
               <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-              <span className="inline-block bg-white/20 text-white text-sm px-3 py-1 rounded mb-4">
+              <span className="inline-block bg-accent/30 text-accent-light text-sm px-3 py-1.5 rounded-full mb-4">
                 {project.category}
               </span>
             
@@ -855,7 +863,7 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
                 <h4 className="text-xl font-semibold text-white mb-4">Technologies Used</h4>
                 <div className="flex flex-wrap gap-3">
                   {project.technologies.map((tech, index) => (
-                    <span key={index} className="bg-white/10 text-gray-100 border border-white/20 px-4 py-2 rounded-md text-lg font-medium">
+                    <span key={index} className="bg-accent/30 text-accent-light border border-accent/20 px-4 py-2 rounded-full text-lg font-medium">
                       {tech}
                     </span>
                   ))}
