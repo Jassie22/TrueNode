@@ -130,16 +130,23 @@ const getRandomItems = (arr: string[], count: number): string[] => {
 const AnimatedCounter: React.FC<{ target: number; triggerRef: React.RefObject<HTMLElement> }> = ({ target, triggerRef }) => {
   const countRef = useRef<HTMLSpanElement>(null);
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+    
     if (countRef.current && triggerRef.current) {
+      // Set initial value
+      gsap.set(countRef.current, { textContent: 0 });
+      
       const animation = gsap.to(countRef.current, {
-        textContent: target,
-        duration: 2,
-        ease: 'power1.inOut',
+        textContent: 96, // Hard coded target value
+        duration: 2.5,
+        ease: 'power2.out',
         snap: { textContent: 1 },
         scrollTrigger: {
           trigger: triggerRef.current,
-          start: 'top 80%',
+          start: 'top 85%',
           toggleActions: 'play none none none',
+          once: true
         },
       });
       return () => {
@@ -155,8 +162,8 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
   useEffect(() => {
     if (!starRef.current) return;
     const star = starRef.current;
-    const animationDuration = 3 + Math.random() * 4; // Faster twinkling
-    const delay = Math.random() * 5;
+    const animationDuration = 1.5 + Math.random() * 2; // Faster twinkling (reduced from 3 + Math.random() * 4)
+    const delay = Math.random() * 3; // Reduced delay
     
     const initialScale = isBrightNode ? 0.8 + Math.random() * 0.4 : 0.5 + Math.random() * 0.3;
     const targetScale = initialScale * (isBrightNode ? 1.5 : 1.3);
@@ -172,14 +179,14 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
       delay: delay
     });
 
-    // Opacity animation
+    // Opacity animation - more dramatic brightness changes
     gsap.to(star, {
-      opacity: initialOpacity * (isBrightNode ? 0.3 : 0.2),
+      opacity: initialOpacity * (isBrightNode ? 0.1 : 0.05), // Much more dramatic fade (was 0.3 and 0.2)
       duration: animationDuration / 2,
       repeat: -1,
       yoyo: true,
       ease: "sine.inOut",
-      delay: delay + 0.2
+      delay: delay + 0.1 // Reduced offset
     });
 
   }, [isBrightNode]);
@@ -199,7 +206,7 @@ const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
         opacity: opacity,
-        transform: `rotate(${Math.random() * 360}deg)`,
+        transform: 'scale(1)', // Removed rotation
         filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.5))',
         zIndex: 15
       }}
@@ -305,12 +312,11 @@ const GoogleReadySection = () => {
       const isBright = Math.random() < 0.15; // Reduced bright star chance
       
       const size = isBright ? 8 + Math.random() * 4 : 6 + Math.random() * 3; // 30-50% smaller
-      const initialOpacity = isBright ? 0.5 : 0.3; // Much more subtle
-      const rotation = Math.random() * 360;
+      const initialOpacity = isBright ? 0.7 : 0.4; // Higher initial opacity for better visibility
       const left = Math.random() * 100;
       const top = Math.random() * 100;
-      const animationDuration = 5 + Math.random() * 3; // Slower, more gradual (5-8s)
-      const delay = Math.random() * 8; // Longer delay spread
+      const animationDuration = 2 + Math.random() * 2; // Much faster (was 5 + Math.random() * 3)
+      const delay = Math.random() * 4; // Shorter delay spread (was 8)
       const initialScale = isBright ? 0.8 : 0.6; // Smaller initial scale
       const targetScale = initialScale * (isBright ? 1.3 : 1.2); // Less dramatic scaling
 
@@ -334,7 +340,7 @@ const GoogleReadySection = () => {
           fill="white"
           style="
             opacity: ${initialOpacity};
-            transform: rotate(${rotation}deg) scale(${initialScale});
+            transform: scale(${initialScale});
             filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
             position: absolute;
             top: 0;
@@ -349,7 +355,7 @@ const GoogleReadySection = () => {
       
       const svgElement = starElement.querySelector('svg');
       if (svgElement) {
-        // Apply GSAP animations with slower, more gradual easing
+        // Apply GSAP animations with faster, more dramatic effects
         gsap.to(svgElement, {
           scale: targetScale,
           duration: animationDuration / 2,
@@ -360,12 +366,12 @@ const GoogleReadySection = () => {
         });
         
         gsap.to(svgElement, {
-          opacity: initialOpacity * 0.5, // More subtle opacity change
+          opacity: initialOpacity * (isBright ? 0.15 : 0.1), // Much more dramatic opacity change
           duration: animationDuration / 2,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
-          delay: delay + 0.5 // Longer offset
+          delay: delay + 0.2 // Shorter offset
         });
       }
     }
@@ -586,7 +592,7 @@ const GoogleReadySection = () => {
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden pb-8 ${hasMounted && isMobile ? 'pt-4' : 'pt-12'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
+        className={`relative bg-transparent overflow-hidden pb-8 ${hasMounted && isMobile ? 'pt-2' : 'pt-12'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           ref={backgroundRef}
@@ -604,6 +610,7 @@ const GoogleReadySection = () => {
           }}
         ></div>
         
+        {/* Desktop Title Section */}
         <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-0 ${hasMounted && isMobile ? 'hidden' : ''}`}>
           <div className="max-w-4xl mx-auto">
             <h2
@@ -614,12 +621,12 @@ const GoogleReadySection = () => {
               Our <span className="text-accent">SEO</span> Checklist
             </h2>
             
-            <div className={`flex items-center justify-center mb-6 ${hasMounted && isMobile ? 'hidden' : ''}`}>
+            <div className={`flex items-center justify-center mb-6`}>
               <span 
                 className="text-6xl md:text-7xl font-bold text-accent mr-4"
                 style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
               >
-                <AnimatedCounter target={allUniqueChecklistItems.length} triggerRef={titleRef} />
+                <AnimatedCounter target={96} triggerRef={titleRef} />
               </span>
               <span ref={counterRef} className="text-xl md:text-2xl text-white/80 font-light">
                 Key SEO Metrics Tracked
@@ -628,12 +635,27 @@ const GoogleReadySection = () => {
             
             <p
               ref={descriptionRef}
-              className={`text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto ${hasMounted && isMobile ? 'hidden' : ''}`}
+              className={`text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto`}
             >
-              Explore the depth of our SEO methodology. Our dynamic checklist highlights the critical areas we address to elevate your digital presence.
+              Unlock your website's full potential. Our 96-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
             </p>
           </div>
         </div>
+
+        {/* Mobile Title Section */}
+        {hasMounted && isMobile && (
+          <div className="relative z-10 max-w-md mx-auto px-4 text-center mb-4">
+            <h2 className="text-3xl font-bold mb-2 text-white" style={{ textShadow: '0 0 25px rgba(147, 51, 234, 0.7)' }}>
+              Our <span className="text-accent">SEO</span> Checklist
+            </h2>
+            <div className="flex items-center justify-center mb-3">
+              <span className="text-4xl font-bold text-accent mr-2" style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.85)' }}>
+                96
+              </span>
+              <span className="text-sm text-white/80 font-light">Critical Points</span>
+            </div>
+          </div>
+        )}
         
         <div 
           ref={bannerRef}
@@ -668,16 +690,13 @@ const GoogleReadySection = () => {
           )}
 
           {hasMounted && isMobile && (
-            <div className="mobile-summary-box relative z-10 mx-auto mt-0 mb-4 p-6 max-w-md bg-gray-800 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-500/30 text-center">
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Our Comprehensive SEO Checklist
-              </h3>
-              <p className="text-white/80 mb-6 text-sm">
-                Unlock your website's full potential. Our {allUniqueChecklistItems.length}-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
+            <div className="mobile-summary-box relative z-10 mx-auto mt-0 mb-4 p-6 max-w-sm bg-gradient-to-br from-purple-900/90 via-purple-800/80 to-indigo-900/90 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-400/40 text-center">
+              <p className="text-white/90 mb-6 text-sm leading-relaxed">
+                Transform your digital presence with our comprehensive SEO strategy. From technical optimization to content excellence, we ensure every element works together for maximum search visibility and organic growth.
               </p>
               <a 
                 href="#contact"
-                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 text-base"
+                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-base"
               >
                 Get Your Free SEO Analysis
               </a>
