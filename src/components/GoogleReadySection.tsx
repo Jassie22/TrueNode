@@ -5,215 +5,152 @@ import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-// SEO Checklist data
-const seoChecklist = {
-  technical: [
-    "Mobile-friendly design",
-    "Fast page speed (< 3s)",
-    "HTTPS secure website",
-    "XML sitemap impl.",
-    "Robots.txt configuration",
-    "Schema for rich snippets",
-    "Browser compatibility",
-    "Core Web Vitals optim.",
-    "LCP optimization",
-    "CLS minimization",
-    "FID reduction",
-    "Structured data impl.",
-    "Site architecture optim.",
-    "Internal linking structure",
-    "URL structure optim.",
-    "301 redirects for URLs",
-    "404 error page custom.",
-    "Image optimization",
-    "Lazy loading impl.",
-    "CSS/JS minification",
-    "Gzip compression",
-    "Browser caching config.",
-    "CDN implementation",
-    "Server response optim.",
-    "AMP implementation",
-    "PWA capabilities",
-    "Cross-device compatible",
-    "JS rendering issues",
-    "Pagination implementation",
-    "Canonical tag issues",
-    "Robots meta tags",
-    "Hreflang for intl. sites",
-    "Secure DNS config.",
-    "SSL certificate impl.",
-    "Site architecture depth",
-    "Web font optimization",
-    "DB optimization"
-  ],
-  content: [
-    "Keyword research/strategy",
-    "Keyword mapping",
-    "Unique, quality content",
-    "SEO page titles",
-    "Compelling meta desc.",
-    "Proper header tags (H1-H3)",
-    "Keyword-rich URLs",
-    "Optimized image alt text",
-    "Internal linking strat.",
-    "Content length optim.",
-    "Regular content updates",
-    "Blog strategy impl.",
-    "Topic cluster dev.",
-    "Content gaps analysis",
-    "Featured snippets optim.",
-    "NLP optimization",
-    "FAQ section impl.",
-    "Long-tail keyword target.",
-    "Geographic targeting",
-    "Semantic search optim."
-  ],
-  user: [
-    "Clear CTAs",
-    "Intuitive navigation",
-    "Readable typography",
-    "Proper color contrast",
-    "Logical page structure",
-    "Page scroll depth analysis",
-    "Mobile nav optim.",
-    "Trust signals impl.",
-    "Social proof integr.",
-    "WCAG compliance",
-    "User journey map",
-    "Conversion path analysis",
-    "User flow optim.",
-    "Form optimization",
-    "Site search function",
-    "Navigation breadcrumbs"
-  ],
-  analytics: [
-    "Google Analytics impl.",
-    "Search Console setup",
-    "Conversion tracking",
-    "Goal setup in analytics",
-    "Event tracking config.",
-    "Regular SEO audits",
-    "Keyword position track.",
-    "Backlink profile monitor.",
-    "Competitor analysis",
-    "Traffic source analysis",
-    "Session duration analysis",
-    "Bounce rate optim.",
-    "Exit page analysis",
-    "User behavior analysis",
-    "Heatmap impl.",
-    "A/B testing setup",
-    "Custom dashboard setup",
-    "Funnel visualization",
-    "Organic traffic monitor.",
-    "Search visibility trends",
-    "CTR analysis",
-    "ROI measurement",
-    "Attribution modeling"
-  ]
-};
-
-const allUniqueChecklistItems = Array.from(
-  new Set([
-    ...seoChecklist.technical,
-    ...seoChecklist.content,
-    ...seoChecklist.user,
-    ...seoChecklist.analytics,
-  ])
-);
+// Simplified SEO checklist data
+const allSeoItems = [
+  "Mobile-friendly design",
+  "Fast page speed (< 3s)",
+  "HTTPS secure website",
+  "XML sitemap impl.",
+  "Robots.txt configuration",
+  "Schema for rich snippets",
+  "Browser compatibility",
+  "Core Web Vitals optim.",
+  "LCP optimization",
+  "CLS minimization",
+  "FID reduction",
+  "Structured data impl.",
+  "Site architecture optim.",
+  "Internal linking structure",
+  "URL structure optim.",
+  "301 redirects for URLs",
+  "404 error page custom.",
+  "Image optimization",
+  "Lazy loading impl.",
+  "CSS/JS minification",
+  "Gzip compression",
+  "Browser caching config.",
+  "CDN implementation",
+  "Server response optim.",
+  "AMP implementation",
+  "PWA capabilities",
+  "Cross-device compatible",
+  "JS rendering issues",
+  "Pagination implementation",
+  "Canonical tag issues",
+  "Robots meta tags",
+  "Hreflang for intl. sites",
+  "Secure DNS config.",
+  "SSL certificate impl.",
+  "Site architecture depth",
+  "Web font optimization",
+  "DB optimization",
+  "Keyword research/strategy",
+  "Keyword mapping",
+  "Unique, quality content",
+  "SEO page titles",
+  "Compelling meta desc.",
+  "Proper header tags (H1-H3)",
+  "Keyword-rich URLs",
+  "Optimized image alt text",
+  "Internal linking strat.",
+  "Content length optim.",
+  "Regular content updates",
+  "Blog strategy impl.",
+  "Topic cluster dev.",
+  "Content gaps analysis",
+  "Featured snippets optim.",
+  "NLP optimization",
+  "FAQ section impl.",
+  "Long-tail keyword target.",
+  "Geographic targeting",
+  "Semantic search optim.",
+  "Clear CTAs",
+  "Intuitive navigation",
+  "Readable typography",
+  "Proper color contrast",
+  "Logical page structure",
+  "Page scroll depth analysis",
+  "Mobile nav optim.",
+  "Trust signals impl.",
+  "Social proof integr.",
+  "WCAG compliance",
+  "User journey map",
+  "Conversion path analysis",
+  "User flow optim.",
+  "Form optimization",
+  "Site search function",
+  "Navigation breadcrumbs",
+  "Google Analytics impl.",
+  "Search Console setup",
+  "Conversion tracking",
+  "Goal setup in analytics",
+  "Event tracking config.",
+  "Regular SEO audits",
+  "Keyword position track.",
+  "Backlink profile monitor.",
+  "Competitor analysis",
+  "Traffic source analysis",
+  "Session duration analysis",
+  "Bounce rate optim.",
+  "Exit page analysis",
+  "User behavior analysis",
+  "Heatmap impl.",
+  "A/B testing setup",
+  "Custom dashboard setup",
+  "Funnel visualization",
+  "Organic traffic monitor.",
+  "Search visibility trends",
+  "CTR analysis",
+  "ROI measurement",
+  "Attribution modeling"
+];
 
 const getRandomItems = (arr: string[], count: number): string[] => {
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
   return shuffled.slice(0, count);
 };
 
-const AnimatedCounter: React.FC<{ target: number; triggerRef: React.RefObject<HTMLElement> }> = ({ target, triggerRef }) => {
-  const countRef = useRef<HTMLSpanElement>(null);
+const AnimatedCounter: React.FC<{ triggerRef: React.RefObject<HTMLElement> }> = ({ triggerRef }) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
+    if (typeof window === 'undefined' || !triggerRef.current) return;
     
-    if (countRef.current && triggerRef.current) {
-      // Set initial value
-      gsap.set(countRef.current, { textContent: 0 });
-      
-      const animation = gsap.to(countRef.current, {
-        textContent: 96, // Hard coded target value
-        duration: 2.5,
-        ease: 'power2.out',
-        snap: { textContent: 1 },
-        scrollTrigger: {
-          trigger: triggerRef.current,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-          once: true
-        },
-      });
-      return () => {
-        animation.kill();
-      };
-    }
-  }, [target, triggerRef]);
-  return <span ref={countRef}>0</span>;
-};
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+            
+            // Simple counter animation
+            let currentCount = 0;
+            const increment = 96 / 60; // 60 steps to reach 96
+            const timer = setInterval(() => {
+              currentCount += increment;
+              if (currentCount >= 96) {
+                setCount(96);
+                clearInterval(timer);
+              } else {
+                setCount(Math.floor(currentCount));
+              }
+            }, 40); // Update every 40ms for smooth animation
+            
+            return () => clearInterval(timer);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
 
-const StarSvg = ({ isBrightNode }: { isBrightNode?: boolean }) => {
-  const starRef = useRef<SVGSVGElement>(null);
-  useEffect(() => {
-    if (!starRef.current) return;
-    const star = starRef.current;
-    const animationDuration = 1.5 + Math.random() * 2; // Faster twinkling (reduced from 3 + Math.random() * 4)
-    const delay = Math.random() * 3; // Reduced delay
-    
-    const initialScale = isBrightNode ? 0.8 + Math.random() * 0.4 : 0.5 + Math.random() * 0.3;
-    const targetScale = initialScale * (isBrightNode ? 1.5 : 1.3);
-    const initialOpacity = parseFloat(star.style.opacity || '0.6');
-    
-    // Scale animation for twinkling effect
-    gsap.to(star, {
-      scale: targetScale,
-      duration: animationDuration / 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      delay: delay
-    });
+    observer.observe(triggerRef.current);
 
-    // Opacity animation - more dramatic brightness changes
-    gsap.to(star, {
-      opacity: initialOpacity * (isBrightNode ? 0.1 : 0.05), // Much more dramatic fade (was 0.3 and 0.2)
-      duration: animationDuration / 2,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-      delay: delay + 0.1 // Reduced offset
-    });
+    return () => {
+      observer.disconnect();
+    };
+  }, [triggerRef, hasAnimated]);
 
-  }, [isBrightNode]);
-
-  const size = isBrightNode ? 12 + Math.random() * 8 : 8 + Math.random() * 6;
-  const opacity = isBrightNode ? 0.8 + Math.random() * 0.2 : 0.5 + Math.random() * 0.3;
-
-  return (
-    <svg
-      ref={starRef}
-      className="absolute star-instance"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="white"
-      style={{
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        opacity: opacity,
-        transform: 'scale(1)', // Removed rotation
-        filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.5))',
-        zIndex: 15
-      }}
-    >
-      <path d="M12,0L12,0c0.257,6.518,5.482,11.743,12,12h0h0c-6.518,0.257-11.743,5.482-12,12v0v0c-0.257-6.518-5.482-11.743-12-12h0h0	C6.518,11.743,11.743,6.518,12,0L12,0z"/>
-    </svg>
-  );
+  return <span>{count}</span>;
 };
 
 interface SeoLaneProps {
@@ -223,17 +160,15 @@ interface SeoLaneProps {
 }
 
 const SeoLane = ({ items, laneIndex, laneRef }: SeoLaneProps) => {
-  // Create exactly two copies for perfect loop
   const duplicatedItems = [...items, ...items];
   
-  // Define different speeds for each lane
   const getLaneSpeed = (index: number): string => {
     switch (index) {
-      case 0: return '60s'; // Lane 1 - slower (was 30s)
-      case 1: return '45s'; // Lane 2 - faster (was 18s)
-      case 2: return '40s'; // Lane 3 - faster (was 16s)
-      case 3: return '55s'; // Lane 4 - slower (was 28s)
-      case 4: return '35s'; // Lane 5 - fastest (was 14s)
+      case 0: return '60s';
+      case 1: return '45s';
+      case 2: return '40s';
+      case 3: return '55s';
+      case 4: return '35s';
       default: return '50s';
     }
   };
@@ -271,10 +206,8 @@ const GoogleReadySection = () => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
-  const bannerRef = useRef<HTMLDivElement>(null);
   const starsContainerRef = useRef<HTMLDivElement>(null);
   const lanesContainerRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLSpanElement>(null);
   
   const [hasMounted, setHasMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -284,11 +217,10 @@ const GoogleReadySection = () => {
 
   const laneData = useMemo(() => {
     const lanes = [];
-    
     for (let i = 0; i < numLanes; i++) {
       lanes.push({
         id: `lane-${i}`,
-        items: getRandomItems(allUniqueChecklistItems, itemsPerLane),
+        items: getRandomItems(allSeoItems, itemsPerLane),
         ref: React.createRef<HTMLDivElement>()
       });
     }
@@ -296,29 +228,23 @@ const GoogleReadySection = () => {
   }, [numLanes, itemsPerLane]);
 
   const generateStars = useCallback(() => {
-    if (!starsContainerRef.current) {
-      console.log('Stars container ref not available');
-      return;
-    }
+    if (!starsContainerRef.current) return;
     
     const container = starsContainerRef.current;
-    // Clear existing stars
     container.innerHTML = '';
     
-    const starCount = hasMounted && isMobile ? 20 : 60; // Reduced count for subtlety
-    console.log(`Generating ${starCount} stars in container:`, container);
+    const starCount = hasMounted && isMobile ? 20 : 60;
 
     for (let i = 0; i < starCount; i++) {
-      const isBright = Math.random() < 0.15; // Reduced bright star chance
-      
-      const size = isBright ? 8 + Math.random() * 4 : 6 + Math.random() * 3; // 30-50% smaller
-      const initialOpacity = isBright ? 0.7 : 0.4; // Higher initial opacity for better visibility
+      const isBright = Math.random() < 0.15;
+      const size = isBright ? 8 + Math.random() * 4 : 6 + Math.random() * 3;
+      const initialOpacity = isBright ? 0.7 : 0.4;
       const left = Math.random() * 100;
       const top = Math.random() * 100;
-      const animationDuration = 2 + Math.random() * 2; // Much faster (was 5 + Math.random() * 3)
-      const delay = Math.random() * 4; // Shorter delay spread (was 8)
-      const initialScale = isBright ? 0.8 : 0.6; // Smaller initial scale
-      const targetScale = initialScale * (isBright ? 1.3 : 1.2); // Less dramatic scaling
+      const animationDuration = 2 + Math.random() * 2;
+      const delay = Math.random() * 4;
+      const initialScale = isBright ? 0.8 : 0.6;
+      const targetScale = initialScale * (isBright ? 1.3 : 1.2);
 
       const starElement = document.createElement('div');
       starElement.className = 'absolute star-wrapper';
@@ -355,7 +281,6 @@ const GoogleReadySection = () => {
       
       const svgElement = starElement.querySelector('svg');
       if (svgElement) {
-        // Apply GSAP animations with faster, more dramatic effects
         gsap.to(svgElement, {
           scale: targetScale,
           duration: animationDuration / 2,
@@ -366,16 +291,15 @@ const GoogleReadySection = () => {
         });
         
         gsap.to(svgElement, {
-          opacity: initialOpacity * (isBright ? 0.15 : 0.1), // Much more dramatic opacity change
+          opacity: initialOpacity * (isBright ? 0.15 : 0.1),
           duration: animationDuration / 2,
           repeat: -1,
           yoyo: true,
           ease: "sine.inOut",
-          delay: delay + 0.2 // Shorter offset
+          delay: delay + 0.2
         });
       }
     }
-    console.log(`Stars generated. Container children count: ${container.children.length}`);
   }, [isMobile, hasMounted]);
   
   useEffect(() => {
@@ -456,13 +380,6 @@ const GoogleReadySection = () => {
   }, [hasMounted, laneData]);
   
   useEffect(() => {
-    const handleResize = () => {
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
-  useEffect(() => {
     if (hasMounted) {
       generateStars();
     }
@@ -474,7 +391,6 @@ const GoogleReadySection = () => {
     checkMobile();
     window.addEventListener('resize', checkMobile);
     
-    // Handle tab switching to pause/resume animations for performance
     const handleVisibilityChange = () => {
       const lanes = document.querySelectorAll('.animate-scroll-loop');
       lanes.forEach(lane => {
@@ -494,31 +410,9 @@ const GoogleReadySection = () => {
     };
   }, []);
 
-  const grainEffectUrl = "data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E";
-
   return (
     <>
       <style jsx global>{`
-        @keyframes twinkle {
-          0%, 100% { opacity: var(--star-opacity-start, 0.1); }
-          50% { opacity: var(--star-opacity-end, 0.8); }
-        }
-        
-        @keyframes twinkle-svg {
-          0%, 100% { opacity: var(--initial-opacity, 0.6); }
-          50% { opacity: calc(var(--initial-opacity, 0.6) * 0.3); }
-        }
-
-        @keyframes twinkle-scale {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.3); }
-        }
-
-        @keyframes twinkle-opacity {
-          0%, 100% { opacity: 0.6; }
-          50% { opacity: 0.2; }
-        }
-
         @keyframes scroll-loop {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -560,39 +454,23 @@ const GoogleReadySection = () => {
           to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Individual lane styling for perfect loops */
         .lane-1, .lane-2, .lane-3, .lane-4, .lane-5 {
           display: flex;
           width: max-content;
           gap: 12px;
         }
         
-        /* Specific animation durations for each lane */
-        .lane-1 {
-          animation-duration: 120s !important;
-        }
-        
-        .lane-2 {
-          animation-duration: 135s !important;
-        }
-        
-        .lane-3 {
-          animation-duration: 95s !important;
-        }
-        
-        .lane-4 {
-          animation-duration: 110s !important;
-        }
-        
-        .lane-5 {
-          animation-duration: 85s !important;
-        }
+        .lane-1 { animation-duration: 120s !important; }
+        .lane-2 { animation-duration: 135s !important; }
+        .lane-3 { animation-duration: 95s !important; }
+        .lane-4 { animation-duration: 110s !important; }
+        .lane-5 { animation-duration: 85s !important; }
       `}</style>
       
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden pb-8 ${hasMounted && isMobile ? 'pt-2' : 'pt-12'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
+        className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12' : 'pb-8'} ${hasMounted && !isMobile ? 'pt-12' : 'pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           ref={backgroundRef}
@@ -606,74 +484,57 @@ const GoogleReadySection = () => {
         <div 
           className="absolute inset-0 z-0 opacity-[0.025] pointer-events-none"
           style={{
-            backgroundImage: `url('${grainEffectUrl}')`,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
           }}
         ></div>
         
         {/* Desktop Title Section */}
-        <div className={`relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-0 ${hasMounted && isMobile ? 'hidden' : ''}`}>
-          <div className="max-w-4xl mx-auto">
-            <h2
-              ref={titleRef}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white"
-              style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
-            >
-              Our <span className="text-accent">SEO</span> Checklist
-            </h2>
-            
-            <div className={`flex items-center justify-center mb-6`}>
-              <span 
-                className="text-6xl md:text-7xl font-bold text-accent mr-4"
-                style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
+        {!isMobile && (
+          <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-0">
+            <div className="max-w-4xl mx-auto">
+              <h2
+                ref={titleRef}
+                className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white"
+                style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
               >
-                <AnimatedCounter target={96} triggerRef={titleRef} />
-              </span>
-              <span ref={counterRef} className="text-xl md:text-2xl text-white/80 font-light">
-                Key SEO Metrics Tracked
-              </span>
-            </div>
-            
-            <p
-              ref={descriptionRef}
-              className={`text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto`}
-            >
-              Unlock your website's full potential. Our 96-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
-            </p>
-          </div>
-        </div>
-
-        {/* Mobile Title Section */}
-        {hasMounted && isMobile && (
-          <div className="relative z-10 max-w-md mx-auto px-4 text-center mb-4">
-            <h2 className="text-3xl font-bold mb-2 text-white" style={{ textShadow: '0 0 25px rgba(147, 51, 234, 0.7)' }}>
-              Our <span className="text-accent">SEO</span> Checklist
-            </h2>
-            <div className="flex items-center justify-center mb-3">
-              <span className="text-4xl font-bold text-accent mr-2" style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.85)' }}>
-                96
-              </span>
-              <span className="text-sm text-white/80 font-light">Critical Points</span>
+                Our <span className="text-accent">SEO</span> Checklist
+              </h2>
+              
+              <div className="flex items-center justify-center mb-6">
+                <span 
+                  className="text-6xl md:text-7xl font-bold text-accent mr-4"
+                  style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
+                >
+                  <AnimatedCounter triggerRef={titleRef} />
+                </span>
+                <span className="text-xl md:text-2xl text-white/80 font-light">
+                  Key SEO Metrics Tracked
+                </span>
+              </div>
+              
+              <p
+                ref={descriptionRef}
+                className="text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto"
+              >
+                Unlock your website's full potential. Our 96-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
+              </p>
             </div>
           </div>
         )}
         
-        <div 
-          ref={bannerRef}
-          className="relative w-full"
-        >
+        <div className={`relative w-full ${!isMobile ? 'mt-0' : 'mt-8'}`}>
           {hasMounted && !isMobile && (
             <div className="desktop-lanes-container relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
-              {/* Stars container - positioned behind lanes */}
               <div 
                 ref={starsContainerRef}
                 className="absolute inset-0 z-5 pointer-events-none overflow-hidden"
                 style={{ height: '100%', width: '100%' }}
               ></div>
               
-              {/* Lanes content */}
               <div 
                 ref={lanesContainerRef} 
-                className="relative z-20 flex flex-col space-y-3 sm:space-y-4">
+                className="relative z-20 flex flex-col space-y-3 sm:space-y-4"
+              >
                 {laneData.map((lane, index) => (
                   <SeoLane 
                     key={lane.id}
@@ -684,44 +545,65 @@ const GoogleReadySection = () => {
                 ))}
               </div>
               
-              {/* Bottom blur effect - positioned above everything */}
               <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
             </div>
           )}
 
           {hasMounted && isMobile && (
-            <div className="mobile-summary-box relative z-10 mx-auto mt-0 mb-4 p-6 max-w-sm bg-gradient-to-br from-purple-900/90 via-purple-800/80 to-indigo-900/90 backdrop-blur-lg rounded-xl shadow-2xl border border-purple-400/40 text-center">
-              <p className="text-white/90 mb-6 text-sm leading-relaxed">
-                Transform your digital presence with our comprehensive SEO strategy. From technical optimization to content excellence, we ensure every element works together for maximum search visibility and organic growth.
-              </p>
-              <a 
-                href="#contact"
-                className="inline-block py-3 px-8 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-base"
-              >
-                Get Your Free SEO Analysis
-              </a>
+            <div className="relative z-10 mx-auto px-4 max-w-sm">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl">
+                {/* Mobile Title and Counter inside the box */}
+                <h2
+                  ref={titleRef}
+                  className="text-3xl font-bold mb-4 text-white text-center"
+                  style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
+                >
+                  Our <span className="text-accent">SEO</span> Checklist
+                </h2>
+                
+                <div className="flex items-center justify-center mb-6">
+                  <span 
+                    className="text-4xl font-bold text-accent mr-2"
+                    style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
+                  >
+                    <AnimatedCounter triggerRef={titleRef} />
+                  </span>
+                  <span className="text-sm text-white/80 font-light">
+                    Critical Points
+                  </span>
+                </div>
+                
+                <p className="text-white/90 mb-6 text-sm leading-relaxed text-center">
+                  Transform your digital presence with our comprehensive SEO strategy. From technical optimization to content excellence, we ensure maximum search visibility.
+                </p>
+                <a 
+                  href="#contact"
+                  className="block w-full py-3 px-6 bg-gradient-to-r from-accent to-accent-blue hover:from-accent-light hover:to-accent-blue-light text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 text-center text-sm"
+                >
+                  Get Your Free SEO Analysis
+                </a>
+              </div>
             </div>
           )}
 
           {!hasMounted && !isMobile && (
-            <div 
-              className="relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-3 sm:space-y-4"
-            >
-              {/* Bottom blur effect for placeholder */}
+            <div className="relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-3 sm:space-y-4">
               <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
-              
               {Array.from({ length: numLanes }).map((_, i) => (
                 <div key={`placeholder-lane-${i}`} className="h-12 bg-transparent rounded-lg mx-4 opacity-0"></div> 
               ))}
             </div>
           )}
+          
           {!hasMounted && isMobile && (
-            <div className="relative z-10 mx-auto mt-8 mb-4 p-6 max-w-md bg-gradient-to-br from-bg-darker to-bg-dark rounded-xl shadow-xl border border-purple-500/30 text-center opacity-50">
-               <div className="h-8 bg-purple-500/10 rounded w-3/4 mx-auto mb-4"></div>
-               <div className="h-4 bg-purple-500/10 rounded w-full mx-auto mb-2"></div>
-               <div className="h-4 bg-purple-500/10 rounded w-full mx-auto mb-2"></div>
-               <div className="h-4 bg-purple-500/10 rounded w-5/6 mx-auto mb-6"></div>
-               <div className="h-12 bg-accent/20 rounded w-1/2 mx-auto"></div>
+            <div className="relative z-10 mx-auto px-4 max-w-sm mt-8">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl opacity-50">
+                <div className="h-8 bg-purple-500/20 rounded w-3/4 mx-auto mb-4"></div>
+                <div className="h-6 bg-purple-500/20 rounded w-1/2 mx-auto mb-6"></div>
+                <div className="h-4 bg-purple-500/20 rounded w-full mx-auto mb-3"></div>
+                <div className="h-4 bg-purple-500/20 rounded w-3/4 mx-auto mb-6"></div>
+                <div className="h-10 bg-accent/20 rounded w-full mx-auto"></div>
+              </div>
             </div>
           )}
         </div>
