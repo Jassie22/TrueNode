@@ -195,7 +195,7 @@ const TechnologyReel = () => {
     <div className="w-screen bg-transparent py-6 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
       
       <div className="relative z-10 text-center mb-6 md:mb-6 lg:mb-10">
-        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-3 lg:mb-4 text-white">
+        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-3 lg:mb-4 text-white">
           <span className="bg-gradient-to-r from-accent to-accent-blue bg-clip-text text-transparent">
             Technologies
           </span> We Work With
