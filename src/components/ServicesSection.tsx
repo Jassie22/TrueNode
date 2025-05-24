@@ -131,6 +131,10 @@ const ServicesSection = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
   const hoverTimeouts = useRef<Array<NodeJS.Timeout | null>>([]);
   const transformTextRef = useRef<HTMLDivElement>(null);
+  
+  // Mobile-specific state
+  const [isMobile, setIsMobile] = useState(false);
+  const [showAllServices, setShowAllServices] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -240,6 +244,15 @@ const ServicesSection = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Check if mobile
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Handle service hover
   const handleServiceHover = (index: number) => {
     // Clear any pending timeouts
@@ -274,7 +287,7 @@ const ServicesSection = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="pt-24 pb-20 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion section-overlap-top"
+      className="pt-24 pb-8 md:pb-12 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion section-overlap-top"
     >
       {/* SVG wave divider at the top */}
       <div className="absolute top-0 left-0 w-full overflow-hidden z-0 pointer-events-none">
@@ -362,12 +375,14 @@ const ServicesSection = () => {
           ref={serviceContainerRef}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8"
         >
-          {mainServices.map((service, index) => (
+          {mainServices
+            .slice(0, isMobile && !showAllServices ? 3 : mainServices.length)
+            .map((service, index) => (
             <div key={service.id} className="service-card transform transition-all duration-500 ease-out hover:scale-105">
               <ServiceCard
                 service={service}
                 active={activeService === index}
-                expanded={expandedService === index}
+                expanded={isMobile ? true : expandedService === index} // Auto-expand on mobile
                 onHover={() => handleServiceHover(index)}
                 onLeave={handleServiceLeave}
                 onToggleExpand={() => toggleExpandService(index)}
@@ -376,18 +391,60 @@ const ServicesSection = () => {
           ))}
         </div>
         
+        {/* Show More Button for Mobile */}
+        {isMobile && !showAllServices && mainServices.length > 3 && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setShowAllServices(true)}
+              className="px-6 py-3 bg-accent/20 hover:bg-accent/30 text-white rounded-lg transition-all duration-300 flex items-center gap-2 border border-accent/30"
+            >
+              Show More Services
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5 transition-transform duration-300" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
+        
+        {/* Show Less Button for Mobile */}
+        {isMobile && showAllServices && (
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={() => setShowAllServices(false)}
+              className="px-6 py-3 bg-accent/20 hover:bg-accent/30 text-white rounded-lg transition-all duration-300 flex items-center gap-2 border border-accent/30"
+            >
+              Show Less
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className="h-5 w-5 transition-transform duration-300 rotate-180" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          </div>
+        )}
+        
         {/* CTA section */}
         <div className="mt-20 text-center">
           <div className="overflow-hidden mb-6">
             <p 
-              className="text-white/70 max-w-2xl mx-auto transform transition-all duration-700 animate-fade-in-up"
+              className="text-white/70 max-w-2xl mx-auto transform transition-all duration-700 animate-fade-in-up hidden md:block"
             >
               Not sure which service is right for your specific needs? Let's discuss your project in detail.
             </p>
           </div>
           <button
             onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
-            className="px-8 py-4 bg-gradient-to-r from-accent to-[#1B6CF2] hover:from-accent-light hover:to-[#3D82F3] text-white font-medium rounded-lg transition-all duration-300 shadow-glow-accent"
+            className="px-8 py-4 bg-gradient-to-r from-accent to-[#1B6CF2] hover:from-accent-light hover:to-[#3D82F3] text-white font-medium rounded-lg transition-all duration-300 shadow-glow-accent hidden md:inline-block"
           >
             Schedule Free Consultation
           </button>

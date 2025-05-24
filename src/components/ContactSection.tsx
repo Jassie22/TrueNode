@@ -499,23 +499,23 @@ const ContactSection = () => {
                             </a>
                           </label>
                         </div>
-                        <div className="relative group">
-                          <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-accent-blue rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-300 animate-pulse"></div>
+                        <div className="relative group w-full mb-4">
+                          <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-accent-blue rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200 animate-pulse"></div>
                           <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="relative w-full py-4 bg-accent hover:bg-accent/90 text-white font-medium rounded-md transition-all duration-300 text-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                            className="relative w-full py-3 md:py-4 bg-accent hover:bg-accent/90 text-white font-medium rounded-md transition-all duration-300 text-sm sm:text-base md:text-lg disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center min-h-[44px] md:min-h-[48px]"
                           >
                             {isSubmitting ? (
                               <span className="flex items-center justify-center">
-                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin -ml-1 mr-3 h-4 w-4 md:h-5 md:w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                Sending...
+                                <span className="text-sm sm:text-base">Sending...</span>
                               </span>
                             ) : (
-                              'Send Message'
+                              <span className="text-sm sm:text-base md:text-lg">Send Message</span>
                             )}
                           </button>
                         </div>
@@ -643,7 +643,7 @@ const styles = `
     height: calc(100% + 20px);
     background: linear-gradient(90deg, #903AE7, #23B5D3, #E73AA9, #903AE7);
     background-size: 300% 300%;
-    animation: gradient-animation 8s ease infinite;
+    animation: gradient-animation 4s ease infinite;
     border-radius: 16px;
     filter: blur(8px);
     opacity: 0.7;
@@ -680,7 +680,7 @@ const styles = `
   }
   .background-animate {
     background-size: 300% 300%;
-    animation: gradient-animation 8s ease infinite;
+    animation: gradient-animation 4s ease infinite;
   }
   .book-call-btn {
     position: relative;

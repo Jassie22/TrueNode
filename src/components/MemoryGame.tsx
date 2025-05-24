@@ -339,7 +339,7 @@ const MemoryGame = () => {
       className={`
         relative flex flex-col items-center justify-center 
         w-full h-full mx-auto
-        bg-dark/20 rounded-lg overflow-hidden p-4 
+        bg-dark/20 rounded-lg overflow-hidden p-2 sm:p-3 md:p-4 
         text-white text-center
         ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none !max-w-full !max-h-full !h-screen bg-dark/20' : ''}
       `}
@@ -348,7 +348,7 @@ const MemoryGame = () => {
       {isMobile && gameState !== GameState.Welcome && (
         <button 
           onClick={toggleFullscreen}
-          className="absolute top-2 right-2 p-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
+          className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
           title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         >
           {isFullscreen ? (
@@ -366,57 +366,57 @@ const MemoryGame = () => {
       {gameState === GameState.Welcome && (
         <>
           {!showInstructionsScreen ? (
-            <>
-              <h1 className="text-2xl font-bold leading-tight mb-3 text-center">
+            <div className="flex flex-col items-center justify-center h-full px-1 sm:px-2 md:px-4">
+              <h1 className="text-base sm:text-lg md:text-2xl font-bold leading-tight mb-2 sm:mb-3 text-center max-w-full">
                 Bored?<br />Play a game!
               </h1>
               <button 
                 onClick={() => setShowInstructionsScreen(true)}
-                className="text-lg bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium"
+                className="text-xs sm:text-sm md:text-lg bg-purple-600 hover:bg-purple-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 rounded-lg font-medium"
               >
                 View Instructions
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-lg">How to Play</h3>
-              <ul className="text-lg text-white/90 mb-6 space-y-2 text-left max-w-xs mx-auto px-2">
+            <div className="flex flex-col items-center justify-center h-full px-1 sm:px-2 md:px-4 py-1 sm:py-2 overflow-hidden">
+              <h3 className="text-base sm:text-lg md:text-2xl font-bold mb-1 sm:mb-2 md:mb-4 text-white drop-shadow-lg text-center">How to Play</h3>
+              <ul className="text-[10px] sm:text-xs md:text-lg text-white/90 mb-2 sm:mb-3 md:mb-6 space-y-0.5 sm:space-y-1 md:space-y-2 text-left w-full max-w-[95%] sm:max-w-xs mx-auto px-0 sm:px-1 md:px-2">
                 <li className="flex items-start">
-                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
-                  <span>Click on cards to flip them over.</span>
+                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
+                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Click cards to flip them over.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
-                  <span>Find and match pairs of identical cards.</span>
+                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
+                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Find and match pairs of identical cards.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-3 mt-1 text-lg">&#8226;</span>
-                  <span>Match all pairs to win the game!</span>
+                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
+                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Match all pairs to win!</span>
                 </li>
               </ul>
               {(bestScore !== null || bestTime !== null || bestMoves !== null) && (
-                <div className="my-6 p-3 bg-white/10 rounded-lg border border-white/20">
-                  <h4 className="text-sm font-semibold text-white/80 mb-2">🏆 Personal Records</h4>
-                  <div className="space-y-1 text-sm">
-                    {bestScore !== null && <p className="text-white"><span className="font-bold text-yellow-400">Best Score:</span> {bestScore}</p>}
-                    {bestTime !== null && <p className="text-white"><span className="font-bold text-green-400">Best Time:</span> {formatTime(bestTime)}</p>}
-                    {bestMoves !== null && <p className="text-white"><span className="font-bold text-blue-400">Best Moves:</span> {bestMoves}</p>}
+                <div className="my-1 sm:my-3 md:my-6 p-1.5 sm:p-2 md:p-3 bg-white/10 rounded-lg border border-white/20 w-full max-w-[95%] sm:max-w-xs">
+                  <h4 className="text-[9px] sm:text-xs md:text-sm font-semibold text-white/80 mb-0.5 sm:mb-1 md:mb-2">🏆 Records</h4>
+                  <div className="space-y-0.5 sm:space-y-1 text-[8px] sm:text-xs md:text-sm">
+                    {bestScore !== null && <p className="text-white"><span className="font-bold text-yellow-400">Score:</span> {bestScore}</p>}
+                    {bestTime !== null && <p className="text-white"><span className="font-bold text-green-400">Time:</span> {formatTime(bestTime)}</p>}
+                    {bestMoves !== null && <p className="text-white"><span className="font-bold text-blue-400">Moves:</span> {bestMoves}</p>}
                   </div>
                 </div>
               )}
               <button 
                 onClick={initializeGame} 
-                className="w-full max-w-xs mx-auto px-8 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg shadow-lg hover:shadow-xl text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 mb-3"
+                className="w-full max-w-[95%] sm:max-w-xs mx-auto px-2 sm:px-4 md:px-8 py-1.5 sm:py-2 md:py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 mb-1 sm:mb-2 md:mb-3"
               >
                 Start Game
               </button>
               <button 
                 onClick={() => setShowInstructionsScreen(false)}
-                className="px-5 py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg text-sm"
+                className="px-2 sm:px-3 md:px-5 py-0.5 sm:py-1 md:py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg text-[10px] sm:text-xs md:text-sm"
               >
                 Back
               </button>
-            </>
+            </div>
           )}
         </>
       )}

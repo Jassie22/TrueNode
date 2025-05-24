@@ -194,13 +194,13 @@ const TechnologyReel = () => {
   return (
     <div className="w-screen bg-transparent py-6 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
       
-      <div className="relative z-10 text-center mb-6 md:mb-6 lg:mb-10">
-        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 md:mb-3 lg:mb-4 text-white">
+      <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-8 px-4">
+        <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-white leading-tight">
           <span className="bg-gradient-to-r from-accent to-accent-blue bg-clip-text text-transparent">
             Technologies
           </span> We Work With
         </h3>
-        <p className="text-white/60 max-w-2xl mx-auto px-6 md:px-6 text-sm md:text-sm lg:text-base">
+        <p className="text-white/60 max-w-2xl mx-auto px-4 text-xs sm:text-sm md:text-base leading-relaxed">
           We employ a range of technologies and techniques to build a custom product that will boost your business
         </p>
       </div>

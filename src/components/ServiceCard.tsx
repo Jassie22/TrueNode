@@ -74,6 +74,9 @@ const ServiceCard = ({
   useEffect(() => {
     if (!cardRef.current) return;
     
+    // Skip hover effects on mobile
+    if (isMobile) return;
+    
     // Set up card hover animations
     const card = cardRef.current;
     
@@ -137,11 +140,14 @@ const ServiceCard = ({
       card.removeEventListener('mousemove', handleMouseMove);
       card.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [isMobile]);
   
   // Handle active state animations
   useEffect(() => {
     if (!cardRef.current || !iconRef.current || !contentRef.current || !detailsRef.current) return;
+    
+    // Skip animations on mobile
+    if (isMobile) return;
     
     if (active || expanded) {
       // Expand card with a smoother, more elegant animation
@@ -182,12 +188,12 @@ const ServiceCard = ({
         ease: 'power2.out'
       });
     }
-  }, [active, expanded]);
+  }, [active, expanded, isMobile]);
 
   return (
     <div
       ref={cardRef}
-      className="group relative overflow-hidden backdrop-blur-sm rounded-2xl p-4 sm:p-6 h-full transform transition-all duration-500 border border-white/5 hover:border-accent/20 hover:shadow-glow-accent/20"
+      className={`group relative overflow-hidden backdrop-blur-sm rounded-2xl p-4 sm:p-6 h-full transform transition-all duration-500 border border-white/5 ${!isMobile ? 'hover:border-accent/20 hover:shadow-glow-accent/20' : ''}`}
       style={{
         backgroundColor: 'rgba(25, 25, 35, 0.5)',
         transformStyle: 'preserve-3d',
@@ -197,21 +203,25 @@ const ServiceCard = ({
       onMouseEnter={isMobile ? undefined : onHover}
       onMouseLeave={isMobile ? undefined : onLeave}
     >
-      {/* Enhanced glow effect that appears on hover */}
-      <div 
-        ref={glowRef}
-        className="absolute w-[250px] h-[250px] rounded-full bg-gradient-to-br from-accent/30 to-[#1B6CF2]/20 opacity-0 blur-[80px] pointer-events-none transition-opacity duration-500 ease-in-out group-hover:opacity-40"
-        style={{
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)'
-        }}
-      />
+      {/* Enhanced glow effect that appears on hover - disabled on mobile */}
+      {!isMobile && (
+        <div 
+          ref={glowRef}
+          className="absolute w-[250px] h-[250px] rounded-full bg-gradient-to-br from-accent/30 to-[#1B6CF2]/20 opacity-0 blur-[80px] pointer-events-none transition-opacity duration-500 ease-in-out group-hover:opacity-40"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+      )}
       
-      {/* Pulse glow border that activates on hover */}
-      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-accent/40 to-accent-blue/30 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse-glow"></div>
-      </div>
+      {/* Pulse glow border that activates on hover - disabled on mobile */}
+      {!isMobile && (
+        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-accent/40 to-accent-blue/30 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-all duration-700 animate-pulse-glow"></div>
+        </div>
+      )}
       
       {/* Decorative accents */}
       <div className="absolute top-0 right-0 w-16 h-16 opacity-10">
@@ -239,15 +249,6 @@ const ServiceCard = ({
                   className="object-contain group-hover:scale-125 transition-transform duration-300 filter drop-shadow-glow z-10 relative"
                 />
               </div>
-            </div>
-          )}
-          
-          {/* Mobile expand indicator - improved with animation */}
-          {isMobile && (
-            <div className={`ml-2 transition-transform duration-300 flex items-center justify-center w-8 h-8 bg-accent/20 rounded-full ${expanded ? 'rotate-180' : ''}`}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
             </div>
           )}
         </div>

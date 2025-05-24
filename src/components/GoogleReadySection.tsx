@@ -446,7 +446,7 @@ const GoogleReadySection = () => {
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12' : 'pb-8'} ${hasMounted && !isMobile ? 'pt-12' : 'pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
+        className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12 pt-2' : 'pb-8 pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           className="absolute inset-0 z-0 opacity-[0.025] pointer-events-none"

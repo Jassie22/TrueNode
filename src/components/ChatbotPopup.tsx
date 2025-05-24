@@ -165,71 +165,12 @@ const ChatbotPopup = () => {
     };
   }, []);
 
-  // Animation for chat bubble with improved visibility
+  // Animation for popup open/close - simplified to prevent flickering
   useEffect(() => {
-    if (!chatBubbleRef.current) return;
-    
-    if (showChatBubble) {
-      gsap.fromTo(
-        chatBubbleRef.current,
-        { 
-          scale: 0,
-          opacity: 0,
-          x: 20
-        },
-        { 
-          scale: 1,
-          opacity: 1,
-          x: 0,
-          duration: 0.4,
-          ease: 'back.out(1.7)',
-          onComplete: () => {
-            // Add a more noticeable bounce animation
-            gsap.to(chatBubbleRef.current, {
-              y: -10,
-              duration: 0.8,
-              repeat: 5,
-              yoyo: true,
-              ease: "sine.inOut"
-            });
-          }
-        }
-      );
-    }
-  }, [showChatBubble]);
-
-  // Animation for popup open/close
-  useEffect(() => {
-    if (!popupRef.current) return;
-
+    // No GSAP animations needed - using CSS transitions instead
     if (isOpen) {
       // Hide chat bubble when popup is opened
       setShowChatBubble(false);
-      
-      // Show the popup
-      popupRef.current.style.display = 'flex';
-      gsap.to(popupRef.current, {
-        y: 0,
-        opacity: 1,
-        duration: 0.4,
-        ease: 'power3.out'
-      });
-    } else {
-      // Immediately hide chat bubble when closing to prevent brief flash
-      setShowChatBubble(false);
-      
-      // Hide the popup
-      gsap.to(popupRef.current, {
-        y: 20,
-        opacity: 0, 
-        duration: 0.3,
-        ease: 'power2.in',
-        onComplete: () => {
-          if (popupRef.current) {
-            popupRef.current.style.display = 'none';
-          }
-        }
-      });
     }
   }, [isOpen]);
 
@@ -1008,13 +949,16 @@ const ChatbotPopup = () => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[10000] flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 z-[60] flex flex-col items-end">
       {/* Chat bubble */}
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-accent text-white p-4 rounded-lg rounded-br-none mb-3 max-w-[280px] shadow-lg shadow-accent/20 animate-pop-in cursor-pointer relative"
+          className="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl border border-white/20 cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300"
           onClick={() => setIsOpen(true)}
+          style={{
+            animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 2s ease-in-out 1s infinite'
+          }}
         >
           {/* Close button for chat bubble */}
           <button 
@@ -1022,7 +966,7 @@ const ChatbotPopup = () => {
               e.stopPropagation(); // Prevent opening the chat
               setShowChatBubble(false);
             }}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-accent-blue hover:bg-accent text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-gray-600 hover:bg-gray-500 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
             aria-label="Close chat bubble"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1030,9 +974,8 @@ const ChatbotPopup = () => {
             </svg>
           </button>
 
-          <p className="text-base font-medium">👋 Need help with your digital project? Chat with our AI assistant!</p>
-          <p className="text-xs mt-2 opacity-80">Click to start a conversation</p>
-          <div className="absolute -bottom-2 right-0 w-4 h-4 bg-accent-blue transform translate-y-1/2 rotate-45"></div>
+          <p className="text-sm md:text-base font-medium">✨ Ready to transform your digital presence? Let's chat!</p>
+          <p className="text-xs mt-2 opacity-80">Tap to explore what's possible</p>
         </div>
       )}
       
@@ -1040,25 +983,29 @@ const ChatbotPopup = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-accent hover:bg-accent-light text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-50"
+          className="bg-accent hover:bg-accent-light text-white rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-10"
           aria-label={isOpen ? "Close chat" : "Open chat"}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-7 md:h-7">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
         </button>
       )}
 
-      {/* Chat popup - using style for display instead of conditional rendering */}
-      <div
-        ref={popupRef}
-        className="bg-[#121212] backdrop-blur-lg border border-[#333] rounded-lg shadow-2xl w-[90vw] sm:w-[400px] md:w-[450px] h-[450px] sm:h-[550px] mt-4 flex flex-col"
-        style={{ transform: 'translateY(20px)', opacity: 0, display: 'none' }}
+      {/* Chat popup - enhanced and modern */}
+      <div 
+        className={`absolute bottom-0 right-0 w-[360px] h-[580px] md:w-[420px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform ${
+          isOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
+        }`}
+        style={{ 
+          transformOrigin: 'bottom right',
+          willChange: 'transform, opacity'
+        }}
       >
         {/* Chat header with close button inside */}
-        <div className="bg-gradient-to-r from-accent to-accent-light p-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gradient-to-r from-accent/90 to-accent-light/90 backdrop-blur-md p-4 rounded-t-2xl flex items-center justify-between border-b border-white/10">
           <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm mr-3">
+            <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm mr-3 border border-white/20">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <path d="M12 16v-4"></path>
@@ -1066,8 +1013,8 @@ const ChatbotPopup = () => {
               </svg>
             </div>
             <div>
-              <h3 className="font-medium text-white text-lg">TrueNode AI Assistant</h3>
-              <p className="text-white/70 text-xs">Ask me anything about our services</p>
+              <h3 className="font-semibold text-white text-lg tracking-wide">TrueNode AI</h3>
+              <p className="text-white/80 text-sm">How can I help you today?</p>
             </div>
           </div>
           <div className="flex items-center">
@@ -1102,21 +1049,21 @@ const ChatbotPopup = () => {
         </div>
 
         {/* Messages container */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-5 bg-black/20">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-black/10 to-black/30">
           {messages.map((message, index) => (
             <div 
               key={index} 
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div 
-                className={`max-w-[85%] rounded-2xl p-4 ${
+                className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                   message.role === 'user' 
-                    ? 'bg-accent text-white shadow-md' 
-                    : 'bg-[#2A2A2A] text-white/90 shadow-md'
+                    ? 'bg-gradient-to-r from-accent to-accent-light text-white shadow-lg border border-white/10' 
+                    : 'bg-white/10 backdrop-blur-sm text-white/95 shadow-lg border border-white/5'
                 }`}
               >
-                <p className="text-[15px] whitespace-pre-line leading-relaxed">{message.content}</p>
-                <span className="text-xs text-white/60 block mt-2 text-right">
+                <p className="text-sm leading-relaxed">{message.content}</p>
+                <span className="text-xs text-white/50 block mt-2 text-right">
                   {formatTime(message.timestamp)}
                 </span>
               </div>
@@ -1298,5 +1245,40 @@ const ChatbotPopup = () => {
     </div>
   );
 };
+
+// Add CSS keyframes for animations
+const styles = `
+  @keyframes slideInBounce {
+    0% {
+      transform: translateX(20px) scale(0.8);
+      opacity: 0;
+    }
+    60% {
+      transform: translateX(-5px) scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes gentleBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+`;
+
+// Inject styles if not already added
+if (typeof window !== 'undefined' && !document.querySelector('#chatbot-styles')) {
+  const styleSheet = document.createElement('style');
+  styleSheet.id = 'chatbot-styles';
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+}
 
 export default ChatbotPopup; 

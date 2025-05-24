@@ -175,12 +175,12 @@ const PortfolioSection = () => {
         
         {/* Call to Action */}
         <div className="mt-16 text-center">
-          <p className="text-white/70 mb-6 max-w-2xl mx-auto">
+          <p className="text-white/70 mb-6 max-w-2xl mx-auto hidden md:block">
             These concept projects demonstrate our approach and capabilities. Ready to discuss your custom project?
           </p>
           <button
             onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
-            className="px-8 py-3 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/25 hover:scale-105"
+            className="px-8 py-3 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/25 hover:scale-105 hidden md:inline-block"
           >
             Discuss Your Project
           </button>
@@ -835,7 +835,7 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
                 {project.category}
               </span>
             
-              <p className="text-gray-200 mb-6">
+              <p className="text-gray-200 mb-6 text-lg">
                 {project.description}
               </p>
             

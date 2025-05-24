@@ -41,7 +41,7 @@ const HeroSection = () => {
       const masterTl = gsap.timeline({
         defaults: { 
           ease: "power3.out",
-          duration: 0.4
+          duration: 0.3
         },
         delay: 0
       });
@@ -52,7 +52,7 @@ const HeroSection = () => {
         masterTl.fromTo(
           grabberElements,
           { y: -30, opacity: 0, scale: 0.9 },
-          { y: 0, opacity: 1, scale: 1, stagger: 0.04, duration: 0.5, ease: "back.out(1.2)" },
+          { y: 0, opacity: 1, scale: 1, stagger: 0.03, duration: 0.4, ease: "back.out(1.2)" },
           0
         );
         grabberElements.forEach((el, index) => {
@@ -97,10 +97,10 @@ const HeroSection = () => {
           headingRef.current.innerHTML = ''; // Clear any SSR content before building
           
           const firstLineContainer = document.createElement('h1');
-          firstLineContainer.className = 'text-[20vw] sm:text-[17vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-6 md:mb-8 relative overflow-visible text-center md:text-left';
+          firstLineContainer.className = 'text-[18vw] sm:text-[16vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-6 md:mb-8 relative overflow-visible text-center md:text-left max-w-full';
           
           const secondLineContainer = document.createElement('div');
-          secondLineContainer.className = 'text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-8 md:mb-12 text-center md:text-left';
+          secondLineContainer.className = 'text-[11vw] sm:text-[9vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-8 md:mb-12 text-center md:text-left max-w-full';
           secondLineContainer.id = 'business-text';
           businessTextElement = secondLineContainer;
           
@@ -145,7 +145,7 @@ const HeroSection = () => {
           headingRef.current.appendChild(srHeading);
           
           const subtitleContainer = document.createElement('div');
-          subtitleContainer.className = `text-[5vw] sm:text-[4vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-none tracking-normal relative overflow-visible mt-4 md:mt-6 text-white/90 opacity-0 max-w-[90%] sm:max-w-[80%] mb-12 md:mb-16 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
+          subtitleContainer.className = `text-[4.5vw] sm:text-[3.8vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-tight tracking-normal relative overflow-visible mt-4 md:mt-6 text-white/90 opacity-0 max-w-[95%] sm:max-w-[85%] mb-12 md:mb-16 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
           subtitleContainer.innerHTML = `Custom <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Websites</span>. Smart <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">You</span>.`;
           headingRef.current.appendChild(subtitleContainer);
           
@@ -170,8 +170,8 @@ const HeroSection = () => {
             gsap.set(firstLineLetters, { opacity: 0, y: '100%' }); 
             masterTl.to(
               firstLineLetters,
-              { y: 0, opacity: 1, stagger: 0.02, duration: 0.6, ease: "power4.out" },
-              0 
+              { y: 0, opacity: 1, stagger: 0.015, duration: 0.5, ease: "power4.out" },
+              0.2 
             );
             firstLineLetters.forEach((letter) => {
               letter.addEventListener('mouseenter', () => {
@@ -185,26 +185,26 @@ const HeroSection = () => {
             firstLineContainer.classList.add('opacity-0', 'transform', 'translate-y-full');
             masterTl.to(
               firstLineContainer, 
-              { y: 0, opacity: 1, duration: 0.6, ease: "power4.out" },
-              0
+              { y: 0, opacity: 1, duration: 0.5, ease: "power4.out" },
+              0.2
             );
           }
           
           const secondLineWords = secondLineContainer.querySelectorAll('span');
           masterTl.to(
             secondLineWords[0],
-            { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-            '+=0.2' // Chain after first line with a small delay
+            { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+            '+=0.1' // Chain after first line with a small delay
           );
           masterTl.to(
             secondLineWords[1],
-            { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
-            '+=0.1' // Chain after "Your"
+            { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+            '+=0.05' // Chain after "Your"
           );
           masterTl.to(
             subtitleContainer,
-            { opacity: 1, duration: 0.6, ease: "power2.inOut" },
-            '+=0.1' // Chain after "Business"
+            { opacity: 1, duration: 0.5, ease: "power2.inOut" },
+            '+=0.05' // Chain after "Business"
           );
           
           gsap.to(firstLineContainer, {
@@ -241,8 +241,8 @@ const HeroSection = () => {
           masterTl.fromTo(
             ctaGroup,
             { y: 30, opacity: 0, scale: 0.9 },
-            { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.4)" },
-            '-=0.3'
+            { y: 0, opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" },
+            '-=0.1'
           );
         }
 
@@ -252,8 +252,8 @@ const HeroSection = () => {
             masterTl.fromTo(
                 statsWrapper,
                 { opacity: 0, y: 20 },
-                { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
-                '-=0.2'
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+                '-=0.1'
             );
         }
       } // End of if(hasMounted) for main animations
@@ -308,11 +308,11 @@ const HeroSection = () => {
         ref={attentionGrabberRef}
         className="absolute top-[15%] left-0 right-0 h-32 pointer-events-none z-10 flex justify-center items-center overflow-visible"
       >
-        <div className="attention-element w-16 h-16 sm:w-36 sm:h-36 bg-accent/10 rounded-full absolute" style={{ left: '10%' }}></div>
-        <div className="attention-element w-14 h-14 sm:w-28 sm:h-28 bg-accent-blue/20 rounded-full absolute" style={{ left: '25%' }}></div>
-        <div className="attention-element w-12 h-12 sm:w-24 sm:h-24 border-2 border-accent/40 rounded-full absolute" style={{ left: '55%' }}></div>
-        <div className="attention-element w-16 h-16 sm:w-32 sm:h-32 bg-purple-500/15 rounded-full absolute" style={{ left: '75%' }}></div>
-        <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute" style={{ left: '40%', top: '70%' }}></div>
+        <div className="attention-element w-16 h-16 sm:w-36 sm:h-36 bg-accent/10 rounded-full absolute aspect-square" style={{ left: '10%' }}></div>
+        <div className="attention-element w-14 h-14 sm:w-28 sm:h-28 bg-accent-blue/20 rounded-full absolute aspect-square" style={{ left: '25%' }}></div>
+        <div className="attention-element w-12 h-12 sm:w-24 sm:h-24 border-2 border-accent/40 rounded-full absolute aspect-square" style={{ left: '55%' }}></div>
+        <div className="attention-element w-16 h-16 sm:w-32 sm:h-32 bg-purple-500/15 rounded-full absolute aspect-square" style={{ left: '75%' }}></div>
+        <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute aspect-square" style={{ left: '40%', top: '70%' }}></div>
       </div>
       
       <div className="container mx-auto px-6 relative z-10">

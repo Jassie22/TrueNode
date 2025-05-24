@@ -9,6 +9,7 @@ const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [hasMounted, setHasMounted] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -17,34 +18,53 @@ const Navbar = () => {
   useEffect(() => {
     if (!hasMounted) return; // Don't run scroll listener until mounted
 
+    let scrollTimeout: NodeJS.Timeout;
+    
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
+      // Debounce scroll events to prevent flickering
+      clearTimeout(scrollTimeout);
+      setIsScrolling(true);
+      
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+
+      const scrollY = window.scrollY;
+      const shouldBeScrolled = scrollY > 50;
+      
+      // Only update state if it actually changes
+      if (shouldBeScrolled !== scrolled) {
+        setScrolled(shouldBeScrolled);
       }
       
       // Determine active section based on scroll position
-      const sections = ['home', 'services', 'portfolio', 'contact']; // Ensure 'home' corresponds to an actual ID or handle appropriately
-      let currentSection = 'home'; // Default
+      const sections = ['home', 'services', 'portfolio', 'contact'];
+      let currentSection = 'home';
       for (const sectionId of sections.reverse()) { 
         const element = document.getElementById(sectionId);
-        if (element && window.scrollY >= element.offsetTop - 200) { // Adjust offset as needed
+        if (element && scrollY >= element.offsetTop - 200) {
           currentSection = sectionId;
           break;
         }
       }
       // If scrolled to the very top, ensure 'home' is active
-      if (window.scrollY < 100 && document.getElementById('home')) { // Assuming 'home' is the hero section or similar
+      if (scrollY < 100 && document.getElementById('home')) {
          currentSection = 'home';
       }
-      setActiveSection(currentSection);
+      
+      // Only update active section if it changes
+      setActiveSection(prev => prev !== currentSection ? currentSection : prev);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    // Use passive listener for better performance on mobile
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Call once on mount to set initial state correctly
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [hasMounted]);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, [hasMounted, scrolled]);
   
   // Handle smooth scrolling to sections
   const handleSectionClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
@@ -84,7 +104,7 @@ const Navbar = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-out ${
         hasMounted && scrolled 
           ? 'py-3 bg-black/50 backdrop-blur-md' 
           : 'py-4 bg-transparent'
@@ -93,8 +113,9 @@ const Navbar = () => {
         boxShadow: hasMounted && scrolled 
           ? '0 4px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(144, 58, 231, 0.15)' 
           : 'none',
-        // Ensure initial state is non-transparent if it might start scrolled (e.g. page refresh)
-        // but this should be handled by handleScroll() call in useEffect
+        willChange: 'background-color, backdrop-filter, box-shadow, padding',
+        backfaceVisibility: 'hidden',
+        transform: 'translateZ(0)', // Force GPU acceleration
       }}
       aria-label="Main navigation"
     >

@@ -16,8 +16,8 @@ interface StatItem {
 const statsData: StatItem[] = [
   {
     id: 'roi',
-    value: '93%',
-    description: 'of businesses see ROI within 6 months of digital transformation.',
+    value: '78%',
+    description: 'of consumers research small businesses online before visiting.',
     mainColor: 'text-purple-300',
     gradientFrom: 'from-purple-600',
     gradientTo: 'to-indigo-700',
@@ -44,10 +44,36 @@ const HeroStats = () => {
   const statsContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const individualStatRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  
+  // Touch handling for mobile swipe
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   // Helper to assign refs
   const setStatRef = (id: string) => (el: HTMLDivElement | null) => {
     individualStatRefs.current[id] = el;
+  };
+
+  // Touch handlers for swipe functionality
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && activeIndex < statsData.length - 1) {
+      setActiveIndex(activeIndex + 1);
+    }
+    if (isRightSwipe && activeIndex > 0) {
+      setActiveIndex(activeIndex - 1);
+    }
   };
 
   useEffect(() => {
@@ -151,7 +177,7 @@ const HeroStats = () => {
         ))}
       </div>
 
-      {/* Mobile: Horizontal Carousel */}
+      {/* Mobile: Horizontal Carousel - updated for better UX */}
       <div className="md:hidden w-full overflow-hidden relative">
         <div 
           className="flex transition-transform duration-500 ease-in-out"
@@ -159,31 +185,34 @@ const HeroStats = () => {
             transform: `translateX(-${activeIndex * 100}%)`,
             willChange: 'transform' // Hint for browser performance
           }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {statsData.map((stat, mobileIndex) => (
             <div
               key={stat.id}
-              className={`p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} w-full flex-shrink-0 flex items-start gap-4`}
+              className={`p-4 rounded-lg bg-white/5 border border-white/10 w-full flex-shrink-0 flex items-center gap-3`}
               id={`stat-card-${stat.id}`}
               onClick={() => {
                   setActiveIndex(mobileIndex);
               }}
             >
-              <div className={`text-3xl font-bold ${stat.mainColor} text-shadow-sm flex-shrink-0 min-w-[4rem]`}>{stat.value}</div>
-              <p className="text-base text-white/90 leading-relaxed flex-1 pt-1">{stat.description}</p>
+              <div className={`text-2xl font-bold ${stat.mainColor} flex-shrink-0 min-w-[3rem]`}>{stat.value}</div>
+              <p className="text-sm text-white/80 leading-relaxed flex-1">{stat.description}</p>
             </div>
           ))}
         </div>
         {/* Dots for Carousel Navigation */}
-        <div className="flex justify-center space-x-2 pt-4">
+        <div className="flex justify-center space-x-2 pt-3">
           {statsData.map((stat, index) => (
             <button
               key={`dot-${stat.id}`}
               onClick={() => {
                 setActiveIndex(index);
               }}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                activeIndex === index ? `bg-white scale-125 shadow-md ring-2 ${stat.mainColor.replace("text-", "ring-").replace(/-\d+$/, '-500')}` : 'bg-white/30 hover:bg-white/60'
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                activeIndex === index ? `bg-white scale-125` : 'bg-white/30 hover:bg-white/60'
               }`}
               aria-label={`View stat ${stat.description.substring(0, 30)}...`}
             />
