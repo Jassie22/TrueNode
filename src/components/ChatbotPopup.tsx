@@ -215,6 +215,9 @@ const ChatbotPopup = () => {
         ease: 'power3.out'
       });
     } else {
+      // Immediately hide chat bubble when closing to prevent brief flash
+      setShowChatBubble(false);
+      
       // Hide the popup
       gsap.to(popupRef.current, {
         y: 20,
@@ -927,31 +930,72 @@ const ChatbotPopup = () => {
 
   // Handle skip button click below message
   const handleSkipButtonClick = () => {
-    setInputValue('skip');
+    // Add user message for skip
+    const userMessage: Message = {
+      role: 'user',
+      content: 'skip',
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    setIsTyping(true);
+    
+    // Process skip directly (for phone step)
     setTimeout(() => {
-        handleSendMessage();
-        // Refocus input after skip
-        setTimeout(() => inputRef.current?.focus(), 0); 
-    }, 0);
+      if (formStep === 2) {
+        // Skip phone number
+        setFormStep(3);
+        
+        const assistantMessage: Message = {
+          role: 'assistant',
+          content: `Thanks! Now, please tell me more about your project. What are you looking to achieve? Include details like:\n\n• Project type (website, app, etc.)\n• Key features you need\n• Timeline considerations\n• Any specific technologies you prefer`,
+          timestamp: new Date()
+        };
+        
+        setMessages(prev => [...prev, assistantMessage]);
+      }
+      setIsTyping(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }, 800);
   };
 
   // Handle edit/send buttons below submission
   const handleEditButtonClick = () => {
-    setInputValue('edit');
+    // Add user message for edit
+    const userMessage: Message = {
+      role: 'user',
+      content: 'edit',
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    setIsTyping(true);
+    
     setTimeout(() => {
-        handleSendMessage();
-        // Refocus input after edit
-        setTimeout(() => inputRef.current?.focus(), 0);
-    }, 0);
+      setEditingField('choose');
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: "Which field would you like to edit?",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsTyping(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }, 800);
   };
 
   const handleSendToTeamButtonClick = () => {
-    setInputValue('yes');
-    setTimeout(() => {
-        handleSendMessage();
-        // Refocus input after sending to team
-        setTimeout(() => inputRef.current?.focus(), 0);
-    }, 0);
+    // Add user message for send
+    const userMessage: Message = {
+      role: 'user',
+      content: 'yes',
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, userMessage]);
+    
+    // Submit the form directly
+    submitForm(formData);
   };
 
   const formatTime = (date: Date) => {
@@ -959,12 +1003,12 @@ const ChatbotPopup = () => {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[9999] flex flex-col items-end">
+    <div className="fixed bottom-8 right-8 z-[10000] flex flex-col items-end">
       {/* Chat bubble */}
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-gradient-to-r from-accent to-accent-blue text-white p-4 rounded-lg rounded-br-none mb-3 max-w-[280px] shadow-lg shadow-accent/20 animate-pop-in cursor-pointer relative"
+          className="bg-accent text-white p-4 rounded-lg rounded-br-none mb-3 max-w-[280px] shadow-lg shadow-accent/20 animate-pop-in cursor-pointer relative"
           onClick={() => setIsOpen(true)}
         >
           {/* Close button for chat bubble */}
@@ -988,21 +1032,17 @@ const ChatbotPopup = () => {
       )}
       
       {/* Chat button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-accent hover:bg-accent-light text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-50"
-        aria-label={isOpen ? "Close chat" : "Open chat"}
-      >
-        {isOpen ? (
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-accent hover:bg-accent-light text-white rounded-full w-16 h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-50"
+          aria-label={isOpen ? "Close chat" : "Open chat"}
+        >
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
           </svg>
-        ) : (
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-        )}
-      </button>
+        </button>
+      )}
 
       {/* Chat popup - using style for display instead of conditional rendering */}
       <div
@@ -1047,11 +1087,10 @@ const ChatbotPopup = () => {
             <button 
               onClick={() => setIsOpen(false)}
               className="hover:bg-white/10 rounded-full p-2 transition-colors"
-              aria-label="Close chat"
+              aria-label="Minimize chat"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </button>
           </div>

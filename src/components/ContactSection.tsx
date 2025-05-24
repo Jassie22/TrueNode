@@ -315,7 +315,7 @@ const ContactSection = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="py-24 relative bg-primary overflow-hidden enhanced-glow blue-glow"
+      className="py-24 relative bg-primary overflow-hidden enhanced-glow"
     >
       <div 
         ref={backgroundRef}

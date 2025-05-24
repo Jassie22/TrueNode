@@ -9,7 +9,6 @@ import GoogleReadySection from '@/components/GoogleReadySection';
 import ContactSection from '@/components/ContactSection';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
-import ScrollToTop from '@/components/ScrollToTop';
 import ChatbotPopup from '@/components/ChatbotPopup';
 
 export default function Home() {
@@ -52,7 +51,6 @@ export default function Home() {
       </div>
       
       <Footer />
-      <ScrollToTop />
       <ChatbotPopup />
     </main>
   );
