@@ -515,6 +515,10 @@ const ChatbotPopup = () => {
       form.style.display = 'none';
       form.target = 'hidden-form-iframe'; // Target the iframe to prevent page navigation
       
+      // Add debugging
+      console.log('Chatbot submitting form to:', form.action);
+      console.log('Form data being submitted:', data);
+      
       // Add form fields
       const nameField = document.createElement('input');
       nameField.type = 'text';

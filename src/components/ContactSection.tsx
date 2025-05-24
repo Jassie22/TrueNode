@@ -16,7 +16,6 @@ const ContactSection = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
-  const [showNotification, setShowNotification] = useState(false); // Kept for general form notifications
   
   // Service options for checkboxes
   const serviceOptions = [
@@ -35,9 +34,7 @@ const ContactSection = () => {
     email: '',
     phone: '',
     message: '',
-    services: [] as string[],
-    businessName: '',
-    businessUrl: ''
+    services: [] as string[]
   });
 
   useEffect(() => {
@@ -140,9 +137,7 @@ const ContactSection = () => {
       email: '',
       phone: '',
       message: '',
-      services: [],
-      businessName: '',
-      businessUrl: ''
+      services: []
     });
   };
   
@@ -152,16 +147,10 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      const formSubmitData = new FormData();
-      formSubmitData.append('name', formData.name);
-      formSubmitData.append('email', formData.email);
-      formSubmitData.append('phone', formData.phone || 'Not provided');
-      formSubmitData.append('message', formData.message);
-      formSubmitData.append('services', formData.services.join(', ') || 'None specified');
-      formSubmitData.append('businessName', formData.businessName || 'Not provided');
-      formSubmitData.append('businessUrl', formData.businessUrl || 'Not provided');
-      
+      // Get file input data first
       const fileInput = document.getElementById('fileUpload') as HTMLInputElement;
+      let fileData = null;
+      
       if (fileInput && fileInput.files && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         if (file.size > 5 * 1024 * 1024) {
@@ -175,36 +164,10 @@ const ContactSection = () => {
           setIsSubmitting(false);
           return;
         }
-        formSubmitData.append('attachment', file);
+        fileData = file;
       }
       
-      formSubmitData.append('_subject', 'New Website Contact Form Submission');
-      formSubmitData.append('_template', 'table');
-      formSubmitData.append('_captcha', 'false');
-      
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = 'https://formsubmit.co/info@truenode.co.uk';
-      form.enctype = 'multipart/form-data';
-      form.style.display = 'none';
-      
-      const entries = Array.from(formSubmitData.entries());
-      for (let i = 0; i < entries.length; i++) {
-        const [key, value] = entries[i];
-        const input = document.createElement('input');
-        input.name = key;
-        if (value instanceof File) {
-          input.type = 'file';
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(value);
-          input.files = dataTransfer.files;
-        } else {
-          input.type = 'text';
-          input.value = value.toString();
-        }
-        form.appendChild(input);
-      }
-      
+      // Create iframe to prevent redirect
       let iframe = document.getElementById('hidden-form-iframe') as HTMLIFrameElement;
       if (!iframe) {
         iframe = document.createElement('iframe');
@@ -213,27 +176,132 @@ const ContactSection = () => {
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
       }
+      
+      // Create form using the working ChatbotPopup approach
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = 'https://formsubmit.co/info@truenode.co.uk';
+      form.style.display = 'none';
       form.target = 'hidden-form-iframe';
       
+      // If we have a file, use multipart encoding
+      if (fileData) {
+        form.enctype = 'multipart/form-data';
+      }
+      
+      // Add debugging
+      console.log('Submitting form to:', form.action);
+      console.log('Form data:', formData);
+      
+      // Create input fields directly (like ChatbotPopup)
+      const nameField = document.createElement('input');
+      nameField.type = 'text';
+      nameField.name = 'name';
+      nameField.value = formData.name;
+      form.appendChild(nameField);
+      
+      const emailField = document.createElement('input');
+      emailField.type = 'email';
+      emailField.name = 'email';
+      emailField.value = formData.email;
+      form.appendChild(emailField);
+      
+      const phoneField = document.createElement('input');
+      phoneField.type = 'text';
+      phoneField.name = 'phone';
+      phoneField.value = formData.phone || 'Not provided';
+      form.appendChild(phoneField);
+      
+      const messageField = document.createElement('input');
+      messageField.type = 'text';
+      messageField.name = 'message';
+      messageField.value = formData.message;
+      form.appendChild(messageField);
+      
+      const servicesField = document.createElement('input');
+      servicesField.type = 'text';
+      servicesField.name = 'services';
+      servicesField.value = formData.services.join(', ') || 'None specified';
+      form.appendChild(servicesField);
+      
+      // Add file if exists (keep the original file input approach)
+      if (fileData && fileInput) {
+        const fileField = document.createElement('input');
+        fileField.type = 'file';
+        fileField.name = 'attachment';
+        fileField.files = fileInput.files;
+        form.appendChild(fileField);
+      }
+      
+      // Add FormSubmit configuration fields
+      const subjectField = document.createElement('input');
+      subjectField.type = 'hidden';
+      subjectField.name = '_subject';
+      subjectField.value = 'New Website Contact Form Submission';
+      form.appendChild(subjectField);
+      
+      const templateField = document.createElement('input');
+      templateField.type = 'hidden';
+      templateField.name = '_template';
+      templateField.value = 'table';
+      form.appendChild(templateField);
+      
+      const captchaField = document.createElement('input');
+      captchaField.type = 'hidden';
+      captchaField.name = '_captcha';
+      captchaField.value = 'false';
+      form.appendChild(captchaField);
+      
+      // Prevent redirect after submission
+      const nextField = document.createElement('input');
+      nextField.type = 'hidden';
+      nextField.name = '_next';
+      nextField.value = window.location.href;
+      form.appendChild(nextField);
+      
+      // Submit form
       document.body.appendChild(form);
       form.submit();
       
-      setShowNotification(true);
-      setFormSubmitted(true); // Set form submitted to true to show thank you message
+      // Clean up
+      setTimeout(() => {
+        if (document.body.contains(form)) {
+          document.body.removeChild(form);
+        }
+      }, 1000);
+      
+      setFormSubmitted(true);
       resetForm();
+      
+      // Show success notification banner at top of page (like chatbot popup)
+      const notificationBanner = document.createElement('div');
+      notificationBanner.className = 'fixed top-0 left-0 right-0 bg-green-600 text-white py-3 px-4 text-center z-[10000] shadow-xl';
+      notificationBanner.textContent = 'Message sent successfully! Our team will review it and get back to you shortly.';
+      notificationBanner.style.transform = 'translateY(-100%)';
+      notificationBanner.style.fontSize = '1rem';
+      document.body.appendChild(notificationBanner);
+      
+      // Animate the banner sliding down
+      setTimeout(() => {
+        notificationBanner.style.transition = 'transform 0.4s ease-out';
+        notificationBanner.style.transform = 'translateY(0)';
+      }, 10);
+      
+      // Remove the notification after 4 seconds
+      setTimeout(() => {
+        notificationBanner.style.transform = 'translateY(-100%)';
+        setTimeout(() => {
+          if (document.body.contains(notificationBanner)) {
+            document.body.removeChild(notificationBanner);
+          }
+        }, 400);
+      }, 4000);
       
       gaEvent({
         action: 'submit_form',
         category: 'Contact',
         label: 'Contact Form Submission'
       });
-      
-      setTimeout(() => {
-        if (document.body.contains(form)) {
-          document.body.removeChild(form);
-        }
-        setShowNotification(false); // Hide notification after a delay
-      }, 7000);
       
     } catch (error) {
       console.error('Form submission error:', error);
@@ -286,16 +354,6 @@ const ContactSection = () => {
               <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
                 <div className="relative z-10">
                   <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
-                  {showNotification && (
-                    <div className="mb-4 bg-gradient-to-r from-accent/30 to-accent-blue/30 text-white p-4 rounded-xl text-center">
-                      <div className="flex items-center justify-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-accent-light" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <p className="font-medium">Thank you! Your message has been sent successfully.</p>
-                      </div>
-                    </div>
-                  )}
                   {!formSubmitted ? (
                     <>
                       {formError && (
