@@ -97,10 +97,10 @@ const HeroSection = () => {
           headingRef.current.innerHTML = ''; // Clear any SSR content before building
           
           const firstLineContainer = document.createElement('h1');
-          firstLineContainer.className = 'text-[20vw] sm:text-[17vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-4 relative overflow-visible text-center md:text-left';
+          firstLineContainer.className = 'text-[20vw] sm:text-[17vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-6 md:mb-8 relative overflow-visible text-center md:text-left';
           
           const secondLineContainer = document.createElement('div');
-          secondLineContainer.className = 'text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-6 text-center md:text-left';
+          secondLineContainer.className = 'text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-8 md:mb-12 text-center md:text-left';
           secondLineContainer.id = 'business-text';
           businessTextElement = secondLineContainer;
           
@@ -145,9 +145,25 @@ const HeroSection = () => {
           headingRef.current.appendChild(srHeading);
           
           const subtitleContainer = document.createElement('div');
-          subtitleContainer.className = `text-[5vw] sm:text-[4vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-none tracking-normal relative overflow-visible mt-2 text-white/90 opacity-0 max-w-[90%] sm:max-w-[80%] mb-8 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
-          subtitleContainer.innerHTML = 'Custom <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Websites</span>. Smart <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold cursor-pointer hover:underline transition-all">You</span>.';
+          subtitleContainer.className = `text-[5vw] sm:text-[4vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-none tracking-normal relative overflow-visible mt-4 md:mt-6 text-white/90 opacity-0 max-w-[90%] sm:max-w-[80%] mb-12 md:mb-16 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
+          subtitleContainer.innerHTML = `Custom <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Websites</span>. Smart <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">You</span>.`;
           headingRef.current.appendChild(subtitleContainer);
+          
+          // Add click handlers for navigation (desktop only)
+          if (!isMobile) {
+            const navElements = subtitleContainer.querySelectorAll('[data-nav="services"]');
+            navElements.forEach(element => {
+              element.addEventListener('click', () => {
+                const servicesSection = document.getElementById('services');
+                if (servicesSection) {
+                  servicesSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                  });
+                }
+              });
+            });
+          }
           
           if (!isMobile) { // Desktop: animate "Transform" letter by letter
             const firstLineLetters = firstLineContainer.querySelectorAll('span');
@@ -274,7 +290,7 @@ const HeroSection = () => {
     <section 
       id="hero" 
       ref={sectionRef}
-      className="min-h-screen flex flex-col items-center justify-center pt-32 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
+      className="min-h-[120vh] flex flex-col items-center justify-center pt-32 pb-20 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
     >
       {/* Animated background with blobs */}
       <div 
@@ -284,7 +300,7 @@ const HeroSection = () => {
         {/* Glow blobs - Made larger and moved lower */}
         <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>
         <div className="glow-blob absolute w-[800px] h-[800px] rounded-full bg-accent-blue/5 blur-[150px] bottom-[20%] right-[5%] opacity-50"></div>
-        <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-accent-magenta/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
+        <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
       </div>
       
       {/* Eye-catching animation at the top - moved lower */}
@@ -295,7 +311,7 @@ const HeroSection = () => {
         <div className="attention-element w-16 h-16 sm:w-36 sm:h-36 bg-accent/10 rounded-full absolute" style={{ left: '10%' }}></div>
         <div className="attention-element w-14 h-14 sm:w-28 sm:h-28 bg-accent-blue/20 rounded-full absolute" style={{ left: '25%' }}></div>
         <div className="attention-element w-12 h-12 sm:w-24 sm:h-24 border-2 border-accent/40 rounded-full absolute" style={{ left: '55%' }}></div>
-        <div className="attention-element w-16 h-16 sm:w-32 sm:h-32 bg-accent-magenta/15 rounded-full absolute" style={{ left: '75%' }}></div>
+        <div className="attention-element w-16 h-16 sm:w-32 sm:h-32 bg-purple-500/15 rounded-full absolute" style={{ left: '75%' }}></div>
         <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute" style={{ left: '40%', top: '70%' }}></div>
       </div>
       
@@ -315,18 +331,18 @@ const HeroSection = () => {
             </div>
 
             {/* Container for CTAs and New Stats - Ref for potential group animation */}
-            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-between gap-8 mt-8 md:mt-12">
+            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-between gap-12 md:gap-16 mt-6 md:mt-8">
               {/* CTA Buttons Group */}
-              <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0">
+              <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0 mt-2 md:mt-4">
                 <CalendlyWidget
                   buttonText="Book a Free Consultation"
-                  className="group relative inline-flex items-center justify-center px-7 py-3 sm:px-9 sm:py-3.5 text-base sm:text-lg font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto"
+                  className="group relative inline-flex items-center justify-center px-10 py-4 sm:px-12 sm:py-5 text-lg sm:text-xl font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto"
                 />
               </div>
 
               {/* Stats section */}
               {hasMounted && (
-                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-6 md:-mt-24 opacity-0">
+                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-8 md:-mt-32 opacity-0">
                   <HeroStats />
                 </div>
               )}
@@ -343,7 +359,7 @@ const HeroSection = () => {
         {/* Glow blobs - Made larger and moved lower */}
         <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>
         <div className="glow-blob absolute w-[800px] h-[800px] rounded-full bg-accent-blue/5 blur-[150px] bottom-[20%] right-[5%] opacity-50"></div>
-        <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-accent-magenta/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
+        <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
       </div>
     </section>
   );

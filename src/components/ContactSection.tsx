@@ -102,19 +102,30 @@ const ContactSection = () => {
             { y: 0, opacity: 0.7, duration: 0.5 },
             '-=0.3'
           );
-          // Animate the form and game content with stagger
+          // Animate the form and game content with stagger - ensure they become visible
           tl.fromTo(
             [formInnerRef.current, gameContentRef.current],
             { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.1 },
+            { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', stagger: 0.1 },
             '-=0.3'
           );
           ScrollTrigger.refresh();
 
         }, sectionRef);
 
+        // Fallback to ensure content is visible if animations don't work
+        const fallbackTimer = setTimeout(() => {
+          if (formInnerRef.current) {
+            formInnerRef.current.style.opacity = '1';
+          }
+          if (gameContentRef.current) {
+            gameContentRef.current.style.opacity = '1';
+          }
+        }, 2000);
+
         return () => {
           ctx.revert();
+          clearTimeout(fallbackTimer);
         };
         
       } catch (error) {
@@ -358,7 +369,7 @@ const ContactSection = () => {
           <div className="lg:mr-5">
             <div className="enquiry-form-gradient-border">
               <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
-                <div className="relative z-10" ref={formInnerRef}>
+                <div className="relative z-10" ref={formInnerRef} style={{ opacity: 1 }}>
                   <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
                   {!formSubmitted ? (
                     <>
@@ -605,7 +616,7 @@ const ContactSection = () => {
                 </div>
               </div>
               <div className="rounded-xl border border-white/10 flex-grow">
-                <div className="h-full" ref={gameContentRef}>
+                <div className="h-full" ref={gameContentRef} style={{ opacity: 1 }}>
                   <MemoryGame />
                 </div>
               </div>

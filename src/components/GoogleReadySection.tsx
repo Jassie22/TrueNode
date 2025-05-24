@@ -462,7 +462,6 @@ const GoogleReadySection = () => {
               <h2
                 ref={titleRef}
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white"
-                style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
               >
                 Our <span className="text-accent">SEO</span> Checklist
               </h2>
@@ -470,7 +469,6 @@ const GoogleReadySection = () => {
               <div className="flex items-center justify-center mb-6">
                 <span 
                   className="text-6xl md:text-7xl font-bold text-accent mr-4"
-                  style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
                 >
                   <AnimatedCounter triggerRef={titleRef} />
                 </span>
@@ -491,7 +489,7 @@ const GoogleReadySection = () => {
         
         <div className={`relative w-full ${!isMobile ? 'mt-0' : 'mt-8'}`}>
           {hasMounted && !isMobile && (
-            <div className="desktop-lanes-container relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20">
+            <div className="desktop-lanes-container relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-lg border-y border-white/10">
               <div 
                 ref={starsContainerRef}
                 className="absolute inset-0 z-5 pointer-events-none overflow-hidden"
@@ -512,7 +510,7 @@ const GoogleReadySection = () => {
                 ))}
               </div>
               
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
+              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/40 via-black/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
             </div>
           )}
 
@@ -523,7 +521,6 @@ const GoogleReadySection = () => {
                 <h2
                   ref={titleRef}
                   className="text-3xl font-bold mb-4 text-white text-center"
-                  style={{ textShadow: '0 0 35px rgba(147, 51, 234, 0.7)' }}
                 >
                   Our <span className="text-accent">SEO</span> Checklist
                 </h2>
@@ -531,7 +528,6 @@ const GoogleReadySection = () => {
                 <div className="flex items-center justify-center mb-6">
                   <span 
                     className="text-4xl font-bold text-accent mr-2"
-                    style={{ textShadow: '0 0 45px rgba(147, 51, 234, 0.85)' }}
                   >
                     <AnimatedCounter triggerRef={titleRef} />
                   </span>
@@ -554,8 +550,8 @@ const GoogleReadySection = () => {
           )}
 
           {!hasMounted && !isMobile && (
-            <div className="relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-2xl shadow-purple-500/10 border-y border-purple-500/20 flex flex-col space-y-3 sm:space-y-4">
-              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
+            <div className="relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-lg border-y border-white/10 flex flex-col space-y-3 sm:space-y-4">
+              <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/40 via-black/20 to-transparent backdrop-blur-md z-25 pointer-events-none"></div>
               {Array.from({ length: numLanes }).map((_, i) => (
                 <div key={`placeholder-lane-${i}`} className="h-12 bg-transparent rounded-lg mx-4 opacity-0"></div> 
               ))}
@@ -565,10 +561,10 @@ const GoogleReadySection = () => {
           {!hasMounted && isMobile && (
             <div className="relative z-10 mx-auto px-4 max-w-sm mt-8">
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl opacity-50">
-                <div className="h-8 bg-purple-500/20 rounded w-3/4 mx-auto mb-4"></div>
-                <div className="h-6 bg-purple-500/20 rounded w-1/2 mx-auto mb-6"></div>
-                <div className="h-4 bg-purple-500/20 rounded w-full mx-auto mb-3"></div>
-                <div className="h-4 bg-purple-500/20 rounded w-3/4 mx-auto mb-6"></div>
+                <div className="h-8 bg-white/20 rounded w-3/4 mx-auto mb-4"></div>
+                <div className="h-6 bg-white/20 rounded w-1/2 mx-auto mb-6"></div>
+                <div className="h-4 bg-white/20 rounded w-full mx-auto mb-3"></div>
+                <div className="h-4 bg-white/20 rounded w-3/4 mx-auto mb-6"></div>
                 <div className="h-10 bg-accent/20 rounded w-full mx-auto"></div>
               </div>
             </div>

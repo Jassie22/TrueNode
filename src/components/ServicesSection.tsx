@@ -363,7 +363,7 @@ const ServicesSection = () => {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8"
         >
           {mainServices.map((service, index) => (
-            <div key={service.id} className="service-card transform transition-all duration-300">
+            <div key={service.id} className="service-card transform transition-all duration-500 ease-out hover:scale-105">
               <ServiceCard
                 service={service}
                 active={activeService === index}

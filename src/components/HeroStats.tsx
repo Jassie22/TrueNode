@@ -138,15 +138,15 @@ const HeroStats = () => {
   return (
     <div ref={statsContainerRef} className="w-full md:max-w-xs lg:max-w-sm mx-auto px-4 md:mx-0 md:px-0">
       {/* Desktop: Vertical List - no boxes, more compact */}
-      <div className="hidden md:flex flex-col items-start gap-2 lg:gap-3">
+      <div className="hidden md:flex flex-col items-start gap-4 lg:gap-5">
         {statsData.map((stat) => (
           <div
             key={stat.id}
             ref={setStatRef(stat.id)}
-            className={`transition-all duration-300 transform w-full`}
+            className={`transition-all duration-300 transform w-full flex items-start gap-4`}
           >
-            <div className={`stat-value text-3xl lg:text-4xl font-bold ${stat.mainColor} mb-0.5 text-shadow-sm`}>{stat.value}</div>
-            <p className="text-xs lg:text-sm text-white/80 leading-snug">{stat.description}</p>
+            <div className={`stat-value text-3xl lg:text-4xl font-bold ${stat.mainColor} text-shadow-sm flex-shrink-0 min-w-[4rem] lg:min-w-[5rem]`}>{stat.value}</div>
+            <p className="text-xs lg:text-sm text-white/80 leading-snug flex-1 pt-1">{stat.description}</p>
           </div>
         ))}
       </div>
@@ -163,14 +163,14 @@ const HeroStats = () => {
           {statsData.map((stat, mobileIndex) => (
             <div
               key={stat.id}
-              className={`p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} w-full flex-shrink-0`}
+              className={`p-6 rounded-xl shadow-xl bg-gradient-to-br ${stat.gradientFrom} ${stat.gradientTo} w-full flex-shrink-0 flex items-start gap-4`}
               id={`stat-card-${stat.id}`}
               onClick={() => {
                   setActiveIndex(mobileIndex);
               }}
             >
-              <div className={`text-3xl font-bold ${stat.mainColor} mb-2 text-shadow-sm`}>{stat.value}</div>
-              <p className="text-base text-white/90 leading-relaxed">{stat.description}</p>
+              <div className={`text-3xl font-bold ${stat.mainColor} text-shadow-sm flex-shrink-0 min-w-[4rem]`}>{stat.value}</div>
+              <p className="text-base text-white/90 leading-relaxed flex-1 pt-1">{stat.description}</p>
             </div>
           ))}
         </div>

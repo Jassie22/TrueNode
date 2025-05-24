@@ -471,7 +471,7 @@ const ChatbotPopup = () => {
     try {
       console.log('Submitting form data:', data);
       
-      // Generate chat summary (not shown to user, for email only)
+      // Generate chat summary as CSV (not shown to user, for email only)
       const relevantMessagesForSummary = messages.filter(msg =>
         !(msg.role === 'assistant' &&
          (msg.content.startsWith("Perfect! Here's what I'll send to our team:") || // Summary preview
@@ -485,19 +485,24 @@ const ChatbotPopup = () => {
          ))
       );
 
-      let chatSummaryForEmail = relevantMessagesForSummary
-        .map(msg => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
-        .join('\n\n---\n\n'); // Use double newline and separator for readability in email
-
-      // Truncate to a reasonable length for an email
-      const MAX_SUMMARY_OUTPUT_LINES = 25; // Max raw lines to prevent overly long emails
-      const summaryLines = chatSummaryForEmail.split('\n');
-      if (summaryLines.length > MAX_SUMMARY_OUTPUT_LINES) {
-        chatSummaryForEmail = summaryLines.slice(0, MAX_SUMMARY_OUTPUT_LINES).join('\n') + "\n... [Full conversation was longer]";
-      }
+      let chatSummaryForEmail = '';
       
-      if (relevantMessagesForSummary.length === 0) {
-        chatSummaryForEmail = "User proceeded to the inquiry form with minimal prior conversation.";
+      if (relevantMessagesForSummary.length > 0) {
+        // Create CSV format with proper escaping
+        const csvHeader = 'Role,Message,Timestamp\n';
+        const csvRows = relevantMessagesForSummary
+          .map(msg => {
+            // Escape quotes and format CSV properly
+            const role = msg.role === 'user' ? 'User' : 'Assistant';
+            const message = `"${msg.content.replace(/"/g, '""')}"`;
+            const timestamp = `"${msg.timestamp.toISOString()}"`;
+            return `${role},${message},${timestamp}`;
+          })
+          .join('\n');
+        
+        chatSummaryForEmail = csvHeader + csvRows;
+      } else {
+        chatSummaryForEmail = 'Role,Message,Timestamp\nUser,"Proceeded to inquiry form with minimal conversation","' + new Date().toISOString() + '"';
       }
       
       // Create hidden iframe to prevent redirect
