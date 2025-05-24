@@ -13,6 +13,8 @@ const ContactSection = () => {
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const formContentRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
+  const formInnerRef = useRef<HTMLDivElement>(null);
+  const gameContentRef = useRef<HTMLDivElement>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -49,61 +51,65 @@ const ContactSection = () => {
           if (descriptionRef.current) {
             gsap.set(descriptionRef.current, { y: 30, opacity: 0 });
           }
-          if (formContentRef.current) {
-            gsap.set(formContentRef.current, { y: 40, opacity: 0 });
+          // Only hide the form inner content, keeping the border visible
+          if (formInnerRef.current) {
+            gsap.set(formInnerRef.current, { y: 40, opacity: 0 });
+          }
+          if (gameContentRef.current) {
+            gsap.set(gameContentRef.current, { y: 40, opacity: 0 });
           }
 
-          const animationTimeout = setTimeout(() => {
-            const tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: 'top 75%',
-                end: 'center center',
-                toggleActions: 'play none none none'
-              }
-            });
-
-            if (backgroundRef.current) {
-              const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
-              blobs.forEach((blob, index) => {
-                gsap.set(blob, {
-                  x: Math.random() * 300 - 150,
-                  y: Math.random() * 300 - 150,
-                  scale: 0.8 + Math.random() * 0.4
-                });
-                gsap.to(blob, {
-                  x: `+=${Math.random() * 100 - 50}`,
-                  y: `+=${Math.random() * 100 - 50}`,
-                  scale: 0.9 + Math.random() * 0.3,
-                  opacity: 0.5 + Math.random() * 0.3,
-                  duration: 8 + index * 2,
-                  repeat: -1,
-                  yoyo: true,
-                  ease: "sine.inOut",
-                  delay: index * 1.5
-                });
-              });
+          // Remove the timeout and start animations immediately
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 85%', // Start slightly earlier
+              end: 'center center',
+              toggleActions: 'play none none none'
             }
+          });
 
-            tl.fromTo(
-              titleRef.current,
-              { y: 40, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-            );
-            tl.fromTo(
-              descriptionRef.current,
-              { y: 30, opacity: 0 },
-              { y: 0, opacity: 0.7, duration: 0.5 },
-              '-=0.3'
-            );
-            tl.fromTo(
-              formContentRef.current,
-              { y: 40, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-              '-=0.3'
-            );
-            ScrollTrigger.refresh();
-          }, 100);
+          if (backgroundRef.current) {
+            const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
+            blobs.forEach((blob, index) => {
+              gsap.set(blob, {
+                x: Math.random() * 300 - 150,
+                y: Math.random() * 300 - 150,
+                scale: 0.8 + Math.random() * 0.4
+              });
+              gsap.to(blob, {
+                x: `+=${Math.random() * 100 - 50}`,
+                y: `+=${Math.random() * 100 - 50}`,
+                scale: 0.9 + Math.random() * 0.3,
+                opacity: 0.5 + Math.random() * 0.3,
+                duration: 8 + index * 2,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: index * 1.5
+              });
+            });
+          }
+
+          tl.fromTo(
+            titleRef.current,
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
+          );
+          tl.fromTo(
+            descriptionRef.current,
+            { y: 30, opacity: 0 },
+            { y: 0, opacity: 0.7, duration: 0.5 },
+            '-=0.3'
+          );
+          // Animate the form and game content with stagger
+          tl.fromTo(
+            [formInnerRef.current, gameContentRef.current],
+            { y: 40, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.1 },
+            '-=0.3'
+          );
+          ScrollTrigger.refresh();
 
         }, sectionRef);
 
@@ -352,7 +358,7 @@ const ContactSection = () => {
           <div className="lg:mr-5">
             <div className="enquiry-form-gradient-border">
               <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
-                <div className="relative z-10">
+                <div className="relative z-10" ref={formInnerRef}>
                   <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
                   {!formSubmitted ? (
                     <>
@@ -599,7 +605,7 @@ const ContactSection = () => {
                 </div>
               </div>
               <div className="rounded-xl border border-white/10 flex-grow">
-                <div className="h-full">
+                <div className="h-full" ref={gameContentRef}>
                   <MemoryGame />
                 </div>
               </div>

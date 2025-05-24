@@ -193,7 +193,7 @@ const TechnologyReel = () => {
 
   return (
     <div className="w-screen bg-transparent py-8 md:py-12 lg:py-20 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/10 via-transparent to-purple-900/10 z-0"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/5 via-purple-800/3 to-purple-900/5 z-0"></div>
       
       <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-10">
         <h3 className="text-xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-3 lg:mb-4 text-white">
