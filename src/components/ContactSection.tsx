@@ -282,13 +282,10 @@ const ContactSection = () => {
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 gap-y-16 relative" ref={formContentRef}>
           <div className="lg:mr-5">
-            <div className="mb-6 p-4 text-center lg:text-left">
-              <h3 className="text-3xl lg:text-4xl font-bold mb-2 text-white">Send us a message</h3>
-              <p className="text-white/70 text-base lg:text-lg">Fill out the form below to get in touch with our team.</p>
-            </div>
             <div className="enquiry-form-gradient-border">
               <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
                 <div className="relative z-10">
+                  <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
                   {showNotification && (
                     <div className="mb-4 bg-gradient-to-r from-accent/30 to-accent-blue/30 text-white p-4 rounded-xl text-center">
                       <div className="flex items-center justify-center gap-3">
@@ -473,7 +470,7 @@ const ContactSection = () => {
           
           <div className="lg:ml-5 h-full">
             <div className="flex flex-col h-full gap-6">
-              <div className="rounded-xl bg-black/20 border border-white/10 overflow-hidden hidden md:block lg:mt-16">
+              <div className="rounded-xl bg-black/20 border border-white/10 overflow-hidden hidden md:block">
                 <div className="p-5 md:p-4 lg:p-5">
                   <h3 className="text-xl font-semibold text-white mb-3 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-accent mr-2" viewBox="0 0 20 20" fill="currentColor">
