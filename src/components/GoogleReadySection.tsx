@@ -303,9 +303,7 @@ const GoogleReadySection = () => {
   }, [isMobile, hasMounted]);
   
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    gsap.registerPlugin(ScrollTrigger);
-    if (!sectionRef.current) return;
+    if (typeof window === 'undefined' || !sectionRef.current) return;
     
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -314,28 +312,6 @@ const GoogleReadySection = () => {
         toggleActions: 'play none none none'
       }
     });
-    
-    if (backgroundRef.current) {
-      const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
-      blobs.forEach((blob, index) => {
-        gsap.set(blob, {
-          x: Math.random() * 300 - 150,
-          y: Math.random() * 300 - 150,
-          scale: 0.8 + Math.random() * 0.4
-        });
-        gsap.to(blob, {
-          x: `+=${Math.random() * 100 - 50}`,
-          y: `+=${Math.random() * 100 - 50}`,
-          scale: 0.9 + Math.random() * 0.3,
-          opacity: 0.5 + Math.random() * 0.3,
-          duration: 8 + index * 2,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: index * 1.5
-        });
-      });
-    }
     
     if (titleRef.current) {
       tl.fromTo(
@@ -472,15 +448,6 @@ const GoogleReadySection = () => {
         ref={sectionRef}
         className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12' : 'pb-8'} ${hasMounted && !isMobile ? 'pt-12' : 'pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
-        <div 
-          ref={backgroundRef}
-          className="absolute inset-0 z-0 overflow-hidden"
-        >
-          <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-[150px] top-[-25%] right-[-15%] opacity-40"></div>
-          <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-[130px] bottom-[-25%] left-[15%] opacity-35"></div>
-          <div className="glow-blob absolute w-[450px] h-[450px] rounded-full bg-pink-500/10 blur-[100px] top-[50%] left-[-15%] opacity-30"></div>
-        </div>
-        
         <div 
           className="absolute inset-0 z-0 opacity-[0.025] pointer-events-none"
           style={{

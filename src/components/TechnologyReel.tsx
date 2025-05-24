@@ -192,51 +192,50 @@ const TechnologyReel = () => {
   const duplicatedTechnologies = [...technologies, ...technologies];
 
   return (
-    <div className="w-screen bg-transparent py-8 md:py-12 lg:py-20 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-900/5 via-purple-800/3 to-purple-900/5 z-0"></div>
+    <div className="w-screen bg-transparent py-6 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
       
-      <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-10">
-        <h3 className="text-xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-3 lg:mb-4 text-white">
+      <div className="relative z-10 text-center mb-6 md:mb-6 lg:mb-10">
+        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 md:mb-3 lg:mb-4 text-white">
           <span className="bg-gradient-to-r from-accent to-accent-blue bg-clip-text text-transparent">
             Technologies
           </span> We Work With
         </h3>
-        <p className="text-white/60 max-w-2xl mx-auto px-4 md:px-6 text-xs md:text-sm lg:text-base">
+        <p className="text-white/60 max-w-2xl mx-auto px-6 md:px-6 text-sm md:text-sm lg:text-base">
           We employ a range of technologies and techniques to build a custom product that will boost your business
         </p>
       </div>
       
       <div className="overflow-hidden">
         <div className="tech-reel-animation">
-          <div className="flex flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-16 px-2 sm:px-4 md:px-8 min-w-max py-4">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-${index}`}
                 className="flex flex-col items-center group"
               >
                 <div 
-                  className="p-1 sm:p-2 md:p-3 rounded-xl transition-all duration-300 border border-transparent hover:border-accent/30 hover:bg-zinc-800/80 hover:shadow-lg hover:shadow-accent/30 hover:transform hover:-translate-y-2"
+                  className="p-2 sm:p-2 md:p-3 rounded-xl transition-all duration-300 border border-transparent hover:border-accent/30 hover:bg-zinc-800/80 hover:shadow-lg hover:shadow-accent/30 hover:transform hover:-translate-y-2"
                 >
                   {tech.icon}
                 </div>
-                <span className="text-white/80 text-[10px] sm:text-xs md:text-sm font-medium mt-1 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light">
+                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-2 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
                   {tech.name}
                 </span>
               </div>
             ))}
           </div>
-          <div className="flex flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-16 px-2 sm:px-4 md:px-8 min-w-max py-4">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-copy-${index}`}
                 className="flex flex-col items-center group"
               >
                 <div 
-                  className="p-1 sm:p-2 md:p-3 rounded-xl transition-all duration-300 border border-transparent hover:border-accent/30 hover:bg-zinc-800/80 hover:shadow-lg hover:shadow-accent/30 hover:transform hover:-translate-y-2"
+                  className="p-2 sm:p-2 md:p-3 rounded-xl transition-all duration-300 border border-transparent hover:border-accent/30 hover:bg-zinc-800/80 hover:shadow-lg hover:shadow-accent/30 hover:transform hover:-translate-y-2"
                 >
                   {tech.icon}
                 </div>
-                <span className="text-white/80 text-[10px] sm:text-xs md:text-sm font-medium mt-1 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light">
+                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-2 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
                   {tech.name}
                 </span>
               </div>

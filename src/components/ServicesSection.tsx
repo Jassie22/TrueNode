@@ -294,7 +294,7 @@ const ServicesSection = () => {
       >
         {/* Glow blobs - added blue tones */}
         <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-accent/5 blur-[120px] top-[-10%] left-[30%] opacity-30"></div>
-        <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-[#1B6CF2]/8 blur-[100px] bottom-[-20%] right-[20%] opacity-30"></div>
+        <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-accent-magenta/4 blur-[100px] bottom-[-20%] right-[20%] opacity-20"></div>
         <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-accent-magenta/5 blur-[80px] top-[50%] left-[10%] opacity-25"></div>
       </div>
       

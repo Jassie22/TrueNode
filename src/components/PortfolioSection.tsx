@@ -461,9 +461,9 @@ const DesktopProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) =>
         />
         
         {/* Title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/85 to-transparent">
           <h3 className="text-xl font-bold text-white mb-1">{project.title}</h3>
-          <span className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full">
+          <span className="inline-block bg-accent text-white text-xs px-3 py-1.5 rounded-full">
             {project.category}
           </span>
         </div>
@@ -578,7 +578,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
         </button>
       
         <motion.h3 custom={0} variants={textContentVariants} className="text-xl font-bold text-white mb-1">{project.title}</motion.h3>
-        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full mb-3">
+        <motion.span custom={1} variants={textContentVariants} className="inline-block bg-accent text-white text-xs px-3 py-1.5 rounded-full mb-3">
           {project.category}
         </motion.span>
         
@@ -762,9 +762,9 @@ const MobileProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => 
         />
         
         {/* Title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/85 to-transparent">
           <h3 className="text-xl font-bold text-white mb-1">{project.title}</h3>
-          <span className="inline-block bg-accent/30 text-accent-light text-xs px-3 py-1.5 rounded-full mb-2">
+          <span className="inline-block bg-accent text-white text-xs px-3 py-1.5 rounded-full mb-2">
             {project.category}
           </span>
           
@@ -835,7 +835,7 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
             {/* Project Details */}
             <div className="bg-gray-900 p-6 rounded-b-xl shadow-xl">
               <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-              <span className="inline-block bg-accent/30 text-accent-light text-sm px-3 py-1.5 rounded-full mb-4">
+              <span className="inline-block bg-accent text-white text-sm px-3 py-1.5 rounded-full mb-4">
                 {project.category}
               </span>
             
