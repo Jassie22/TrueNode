@@ -337,9 +337,10 @@ const MemoryGame = () => {
     <div 
       ref={gameWrapperRef}
       className={`
-        relative flex flex-col items-center justify-center 
-        w-full h-full mx-auto
-        bg-dark/20 rounded-lg overflow-hidden p-2 sm:p-3 md:p-4 
+        relative flex flex-col items-center
+        w-full max-w-md mx-auto
+        h-[450px] max-h-[450px]
+        bg-dark/20 rounded-lg overflow-hidden px-4 pb-4
         text-white text-center
         ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none !max-w-full !max-h-full !h-screen bg-dark/20' : ''}
       `}
@@ -348,15 +349,15 @@ const MemoryGame = () => {
       {isMobile && gameState !== GameState.Welcome && (
         <button 
           onClick={toggleFullscreen}
-          className="absolute top-1 right-1 sm:top-2 sm:right-2 p-1 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
+          className="absolute top-1 right-2 p-0.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
           title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         >
           {isFullscreen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
             </svg>
           )}
@@ -366,81 +367,99 @@ const MemoryGame = () => {
       {gameState === GameState.Welcome && (
         <>
           {!showInstructionsScreen ? (
-            <div className="flex flex-col items-center justify-center h-full px-1 sm:px-2 md:px-4">
-              <h1 className="text-base sm:text-lg md:text-2xl font-bold leading-tight mb-2 sm:mb-3 text-center max-w-full">
+            <div className="flex flex-col items-center justify-center h-full px-4">
+              <h1 className="text-3xl font-bold leading-tight mb-4 text-center">
                 Bored?<br />Play a game!
               </h1>
               <button 
                 onClick={() => setShowInstructionsScreen(true)}
-                className="text-xs sm:text-sm md:text-lg bg-purple-600 hover:bg-purple-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 rounded-lg font-medium"
+                className="text-lg bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium"
               >
                 View Instructions
               </button>
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center h-full px-1 sm:px-2 md:px-4 py-1 sm:py-2 overflow-hidden">
-              <h3 className="text-base sm:text-lg md:text-2xl font-bold mb-1 sm:mb-2 md:mb-4 text-white drop-shadow-lg text-center">How to Play</h3>
-              <ul className="text-[10px] sm:text-xs md:text-lg text-white/90 mb-2 sm:mb-3 md:mb-6 space-y-0.5 sm:space-y-1 md:space-y-2 text-left w-full max-w-[95%] sm:max-w-xs mx-auto px-0 sm:px-1 md:px-2">
+            <div className="flex flex-col h-full px-4 py-2 overflow-hidden">
+              <h3 className="text-2xl font-bold mb-4 text-white text-center">How to Play</h3>
+              <ul className="text-lg text-white/90 mb-3 space-y-2 text-left flex-1">
                 <li className="flex items-start">
-                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
-                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Click cards to flip them over.</span>
+                  <span className="text-accent mr-3 mt-0.5 flex-shrink-0">•</span>
+                  <span>Click cards to flip them over.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
-                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Find and match pairs of identical cards.</span>
+                  <span className="text-accent mr-3 mt-0.5 flex-shrink-0">•</span>
+                  <span>Find and match pairs of identical cards.</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-accent mr-1 sm:mr-2 md:mr-3 mt-0.5 text-[8px] sm:text-xs md:text-lg flex-shrink-0">&#8226;</span>
-                  <span className="leading-tight text-[10px] sm:text-xs md:text-lg">Match all pairs to win!</span>
+                  <span className="text-accent mr-3 mt-0.5 flex-shrink-0">•</span>
+                  <span>Match all pairs to win!</span>
                 </li>
               </ul>
               {(bestScore !== null || bestTime !== null || bestMoves !== null) && (
-                <div className="my-1 sm:my-3 md:my-6 p-1.5 sm:p-2 md:p-3 bg-white/10 rounded-lg border border-white/20 w-full max-w-[95%] sm:max-w-xs">
-                  <h4 className="text-[9px] sm:text-xs md:text-sm font-semibold text-white/80 mb-0.5 sm:mb-1 md:mb-2">🏆 Records</h4>
-                  <div className="space-y-0.5 sm:space-y-1 text-[8px] sm:text-xs md:text-sm">
+                <div className="mb-3 p-0.5 bg-white/10 rounded-lg border border-white/20">
+                  <h4 className="text-base font-semibold text-white/80 mb-2">🏆 Records</h4>
+                  <div className="space-y-1 text-base">
                     {bestScore !== null && <p className="text-white"><span className="font-bold text-yellow-400">Score:</span> {bestScore}</p>}
                     {bestTime !== null && <p className="text-white"><span className="font-bold text-green-400">Time:</span> {formatTime(bestTime)}</p>}
                     {bestMoves !== null && <p className="text-white"><span className="font-bold text-blue-400">Moves:</span> {bestMoves}</p>}
                   </div>
                 </div>
               )}
-              <button 
-                onClick={initializeGame} 
-                className="w-full max-w-[95%] sm:max-w-xs mx-auto px-2 sm:px-4 md:px-8 py-1.5 sm:py-2 md:py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg shadow-lg hover:shadow-xl text-xs sm:text-sm md:text-lg focus:outline-none focus:ring-4 focus:ring-accent-dark focus:ring-opacity-70 mb-1 sm:mb-2 md:mb-3"
-              >
-                Start Game
-              </button>
-              <button 
-                onClick={() => setShowInstructionsScreen(false)}
-                className="px-2 sm:px-3 md:px-5 py-0.5 sm:py-1 md:py-1.5 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg text-[10px] sm:text-xs md:text-sm"
-              >
-                Back
-              </button>
+              <div className="mt-auto space-y-3">
+                <button 
+                  onClick={initializeGame} 
+                  className="w-full px-6 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg text-lg"
+                >
+                  Start Game
+                </button>
+              </div>
             </div>
           )}
         </>
       )}
 
       {gameState === GameState.Playing && (
-        <>
-          <div className="flex justify-between items-center w-full text-[9px] mb-2 px-1">
-            <span>Moves: <span className="font-bold text-yellow-400">{moves}</span></span>
-            <span>Time: <span className="font-bold text-green-400">{formatTime(gameTime)}</span></span>
+        <div className="flex flex-col w-full h-full">
+          <div className="flex justify-between items-center w-full text-sm mb-2">
+            <div className="flex items-center gap-4">
+              <span>Moves: <span className="font-bold text-yellow-400">{moves}</span></span>
+              <span>Time: <span className="font-bold text-green-400">{formatTime(gameTime)}</span></span>
+            </div>
+            <div className="flex gap-2">
+              <button 
+                onClick={initializeGameAndResetWelcome}
+                className="p-2 bg-white/10 hover:bg-white/20 text-white rounded transition-colors"
+                title="Restart Game"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              </button>
+              <button 
+                onClick={handleBackToMenu}
+                className="p-2 bg-white/10 hover:bg-white/20 text-white rounded transition-colors"
+                title="Back to Menu"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </button>
+            </div>
           </div>
           <div 
             ref={cardGridRef} 
-            className={`grid grid-cols-4 gap-2 w-full flex-1 mb-2 ${
-              isFullscreen && isMobile ? '!gap-3 p-4' : ''
+            className={`grid grid-cols-4 gap-px w-full flex-1 max-h-[320px] ${
+              isFullscreen && isMobile ? '!gap-3 p-0.5' : ''
             }`}
           >
             {cards.map(card => (
               <div
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
-                className={`aspect-square rounded-md flex items-center justify-center text-lg cursor-pointer transition-all duration-300 preserve-3d shadow-md ${
-                  card.flipped || card.matched ? 'bg-accent/30 rotate-y-180' : 'bg-bg-darker hover:bg-accent/10'
-                } ${card.matched ? 'opacity-70 ring-2 ring-green-400/50' : ''} ${
-                  isFullscreen && isMobile ? '!text-2xl' : ''
+                className={`aspect-square max-h-[90px] rounded-md flex items-center justify-center text-lg cursor-pointer transition-all duration-300 preserve-3d shadow-sm ${
+                  card.flipped || card.matched ? 'bg-purple-600/70 border border-purple-400/50 rotate-y-180' : 'bg-gray-600/20 border border-white/10'
+                } ${card.matched ? 'opacity-70 ring-1 ring-green-400/50' : ''} ${
+                  isFullscreen && isMobile ? '!text-2xl !max-h-none' : ''
                 }`}
               >
                 <div className={`transition-opacity duration-200 ${card.flipped || card.matched ? 'opacity-100' : 'opacity-0'} backface-hidden rotate-y-180`}>
@@ -449,32 +468,18 @@ const MemoryGame = () => {
               </div>
             ))}
           </div>
-          <div className="flex gap-1">
-            <button 
-              onClick={initializeGameAndResetWelcome}
-              className="text-[9px] bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded flex-1"
-            >
-              Restart
-            </button>
-            <button 
-              onClick={handleBackToMenu}
-              className="text-[9px] bg-white/10 hover:bg-white/20 text-white px-2 py-1 rounded flex-1"
-            >
-              Menu
-            </button>
-          </div>
-        </>
+        </div>
       )}
 
       {gameState === GameState.Complete && (
-        <>
-          <h3 className="text-3xl font-bold mb-4 you-won-text-purple">
+        <div className="flex flex-col items-center justify-center h-full px-4">
+          <h3 className="text-3xl font-bold mb-3 you-won-text-purple">
             You Won!
           </h3>
           
           {/* Achievements */}
           {(achievements.newHighScore || achievements.newFastestTime || achievements.newBestMoves) && (
-            <div className="mb-4 space-y-1 text-base">
+            <div className="mb-3 space-y-1 text-base">
               {achievements.newHighScore && (
                 <div className="text-yellow-400 font-bold">✅ New High Score!</div>
               )}
@@ -487,24 +492,24 @@ const MemoryGame = () => {
             </div>
           )}
 
-          <div className="mb-4 space-y-1 text-lg">
+          <div className="mb-3 space-y-1 text-base">
             <div>Score: <span className="font-semibold text-yellow-400">{score}</span></div>
             <div>Moves: <span className="font-semibold text-blue-400">{moves}</span></div>
             <div>Time: <span className="font-semibold text-green-400">{formatTime(gameTime)}</span></div>
           </div>
           
           {(bestTime !== null || bestScore !== null || bestMoves !== null) && (
-            <div className="mb-4 text-sm text-white/70 border-t border-white/20 pt-2">
+            <div className="mb-3 text-sm text-white/70 border-t border-white/20 pt-2">
               {bestScore !== null && <div>Best Score: <span className="text-yellow-400 font-semibold">{bestScore}</span></div>}
               {bestTime !== null && <div>Best Time: <span className="text-green-400 font-semibold">{formatTime(bestTime)}</span></div>}
               {bestMoves !== null && <div>Best Moves: <span className="text-blue-400 font-semibold">{bestMoves}</span></div>}
             </div>
           )}
           
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 w-full">
             <button 
               onClick={initializeGameAndResetWelcome}
-              className="text-lg bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium"
+              className="text-base bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium"
             >
               Play Again
             </button>
@@ -515,7 +520,7 @@ const MemoryGame = () => {
               Back to Menu
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
