@@ -55,14 +55,15 @@ const MemoryGame = () => {
     if (!hasTriggeredConfetti) {
       confetti({
         origin: { x: 0.5, y: 0 },
-        particleCount: 250,
-        spread: 160,
-        startVelocity: 35,
+        particleCount: 400,
+        spread: 180,
+        startVelocity: 45,
         zIndex: 999,
-        ticks: 240, // ~4 seconds duration
+        ticks: 300,
         colors: ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd'],
-        gravity: 0.6,
-        drift: 0
+        gravity: 0.8,
+        drift: 0,
+        scalar: 1.2
       });
       setHasTriggeredConfetti(true);
     }
@@ -367,7 +368,7 @@ const MemoryGame = () => {
       {gameState === GameState.Welcome && (
         <>
           {!showInstructionsScreen ? (
-            <div className="flex flex-col items-center justify-center h-full px-4">
+            <div className="flex flex-col items-center justify-center h-full px-4 -mt-8">
               <h1 className="text-3xl font-bold leading-tight mb-4 text-center">
                 Bored?<br />Play a game!
               </h1>
@@ -380,8 +381,8 @@ const MemoryGame = () => {
             </div>
           ) : (
             <div className="flex flex-col h-full px-4 py-2 overflow-hidden">
-              <h3 className="text-2xl font-bold mb-4 text-white text-center">How to Play</h3>
-              <ul className="text-lg text-white/90 mb-3 space-y-2 text-left flex-1">
+              <h3 className="text-2xl font-bold mb-3 text-white text-center">How to Play</h3>
+              <ul className="text-lg text-white/90 mb-0 space-y-2 text-left">
                 <li className="flex items-start">
                   <span className="text-accent mr-3 mt-0.5 flex-shrink-0">•</span>
                   <span>Click cards to flip them over.</span>
@@ -396,7 +397,7 @@ const MemoryGame = () => {
                 </li>
               </ul>
               {(bestScore !== null || bestTime !== null || bestMoves !== null) && (
-                <div className="mb-3 p-0.5 bg-white/10 rounded-lg border border-white/20">
+                <div className="mb-2 p-0.5 bg-white/10 rounded-lg border border-white/20 mt-1">
                   <h4 className="text-base font-semibold text-white/80 mb-2">🏆 Records</h4>
                   <div className="space-y-1 text-base">
                     {bestScore !== null && <p className="text-white"><span className="font-bold text-yellow-400">Score:</span> {bestScore}</p>}
@@ -405,7 +406,7 @@ const MemoryGame = () => {
                   </div>
                 </div>
               )}
-              <div className="mt-auto space-y-3">
+              <div className="mt-4 space-y-3">
                 <button 
                   onClick={initializeGame} 
                   className="w-full px-6 py-3 bg-gradient-to-r from-accent to-accent-blue hover:from-accent hover:to-accent-blue text-white font-semibold rounded-lg text-lg"
@@ -419,8 +420,8 @@ const MemoryGame = () => {
       )}
 
       {gameState === GameState.Playing && (
-        <div className="flex flex-col w-full h-full">
-          <div className="flex justify-between items-center w-full text-sm mb-2">
+        <div className="flex flex-col w-full h-full px-2">
+          <div className="flex justify-between items-center w-full text-sm mb-1">
             <div className="flex items-center gap-4">
               <span>Moves: <span className="font-bold text-yellow-400">{moves}</span></span>
               <span>Time: <span className="font-bold text-green-400">{formatTime(gameTime)}</span></span>
