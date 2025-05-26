@@ -759,7 +759,14 @@ const ChatbotPopup = () => {
         ${conversationHistory}
         User: ${inputValue}
         You are a smart, helpful assistant for a digital solutions company called TrueNode.
-        IMPORTANT: Your tone should be friendly, approachable, and chatty. Feel free to use a bit more conversational language and aim for responses that are engaging, though still try to be reasonably concise (2-4 sentences is good).
+        
+        CRITICAL RESPONSE RULES:
+        1. Keep responses to 2-4 sentences MAXIMUM - be concise and direct
+        2. Add 1-2 relevant emojis occasionally to make responses friendly (but don't overuse them)
+        3. Be conversational but brief - get to the point quickly
+        4. Never include "Assistant:" prefix in your responses
+        
+        Your tone should be friendly, approachable, and chatty. Feel free to use a bit more conversational language and aim for responses that are engaging, though still try to be reasonably concise (2-4 sentences is good).
         Your job is to help visitors understand what TrueNode offers and build interest in the company's services.
         Avoid technical jargon unless the user asks for technical details.
         
@@ -784,12 +791,7 @@ const ChatbotPopup = () => {
         Project Approach:
         ${companyInfo.approach}
         
-        Respond helpfully and professionally. Your responses can be a bit longer now, around 2-4 sentences, to be more conversational.
-        
-        IMPORTANT: 
-        1. Never include "Assistant:" prefix in your responses
-        2. Be conversational. You can gently guide users towards making an inquiry if their messages indicate a clear need for your services, but do so naturally after addressing their immediate questions.
-        3. If the user is asking about costs, pricing, specific project details, or showing interest in services, focus on answering their question first and avoid pushing them to make a formal request.
+        REMEMBER: Maximum 2-4 sentences, add occasional emojis, be helpful but concise.
         
         Your response:
       `;
@@ -810,7 +812,7 @@ const ChatbotPopup = () => {
           ],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 800,
+            maxOutputTokens: 300,
           }
         })
       });
@@ -954,7 +956,7 @@ const ChatbotPopup = () => {
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl border border-white/20 cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300"
+          className="bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl border border-white/20 cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300 chat-bubble-popup"
           onClick={() => setIsOpen(true)}
           style={{
             animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 2s ease-in-out 1s infinite'
@@ -992,7 +994,7 @@ const ChatbotPopup = () => {
         </button>
       )}
 
-      {/* Chat popup - enhanced and modern */}
+      {/* Chat popup - reverted to original styling */}
       <div 
         className={`absolute bottom-0 right-0 w-[360px] h-[580px] md:w-[420px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform ${
           isOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
@@ -1005,13 +1007,6 @@ const ChatbotPopup = () => {
         {/* Chat header with close button inside */}
         <div className="bg-gradient-to-r from-accent/90 to-accent-light/90 backdrop-blur-md p-4 rounded-t-2xl flex items-center justify-between border-b border-white/10">
           <div className="flex items-center">
-            <div className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center backdrop-blur-sm mr-3 border border-white/20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path d="M12 16v-4"></path>
-                <path d="M12 8h.01"></path>
-              </svg>
-            </div>
             <div>
               <h3 className="font-semibold text-white text-lg tracking-wide">TrueNode AI</h3>
               <p className="text-white/80 text-sm">How can I help you today?</p>
@@ -1246,7 +1241,7 @@ const ChatbotPopup = () => {
   );
 };
 
-// Add CSS keyframes for animations
+// Add CSS keyframes for animations and speech bubble styling
 const styles = `
   @keyframes slideInBounce {
     0% {
@@ -1270,6 +1265,36 @@ const styles = `
     50% {
       transform: translateY(-8px);
     }
+  }
+
+  .chat-bubble-popup {
+    position: relative;
+  }
+
+  .chat-bubble-popup::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-top: 15px solid #06b6d4;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .chat-bubble-popup::before {
+    content: '';
+    position: absolute;
+    bottom: -17px;
+    right: 18px;
+    width: 0;
+    height: 0;
+    border-left: 17px solid transparent;
+    border-right: 17px solid transparent;
+    border-top: 17px solid rgba(255, 255, 255, 0.2);
+    z-index: -1;
   }
 `;
 
