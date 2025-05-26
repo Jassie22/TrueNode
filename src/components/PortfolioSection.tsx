@@ -617,6 +617,7 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
 const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showModal, setShowModal] = useState(false);
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right'>('left');
   const swipeRef = useRef<HTMLDivElement>(null);
   
   // Touch handling for mobile swiping
@@ -649,11 +650,19 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
   };
   
   const prevProject = () => {
-    setActiveIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+    setSwipeDirection('right');
+    // Use setTimeout to ensure direction is set before index change
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
+    }, 0);
   };
   
   const nextProject = () => {
-    setActiveIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+    setSwipeDirection('left');
+    // Use setTimeout to ensure direction is set before index change
+    setTimeout(() => {
+      setActiveIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
+    }, 0);
   };
   
   return (
@@ -670,9 +679,15 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ opacity: 0, x: 100 }}
+              initial={{ 
+                opacity: 0, 
+                x: swipeDirection === 'left' ? 100 : -100 
+              }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
+              exit={{ 
+                opacity: 0, 
+                x: swipeDirection === 'left' ? -100 : 100 
+              }}
               transition={{ duration: 0.3 }}
               className="w-full max-w-sm mx-auto"
             >
@@ -694,37 +709,19 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
               className={`h-3 rounded-full transition-all duration-300 ease-in-out ${
                 activeIndex === index ? "bg-accent w-8" : "bg-white/20 w-3 hover:bg-white/40"
               }`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                if (index > activeIndex) {
+                  setSwipeDirection('left');
+                } else if (index < activeIndex) {
+                  setSwipeDirection('right');
+                }
+                setTimeout(() => setActiveIndex(index), 0);
+              }}
               aria-label={`Go to project ${index + 1}`}
             />
           ))}
         </div>
       )}
-      
-      {/* Navigation buttons */}
-      <div className="flex justify-between mt-6">
-        <button
-          onClick={prevProject}
-          className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-lg transition-colors flex items-center"
-          aria-label="Previous project"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span>Previous</span>
-        </button>
-        
-        <button
-          onClick={nextProject}
-          className="bg-black/30 hover:bg-black/50 text-white p-3 rounded-lg transition-colors flex items-center"
-          aria-label="Next project"
-        >
-          <span>Next</span>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
       
       {/* Full screen modal for mobile */}
       <AnimatePresence>
