@@ -382,7 +382,7 @@ const ServicesSection = () => {
               <ServiceCard
                 service={service}
                 active={activeService === index}
-                expanded={isMobile ? true : expandedService === index} // Auto-expand on mobile
+                expanded={expandedService === index}
                 onHover={() => handleServiceHover(index)}
                 onLeave={handleServiceLeave}
                 onToggleExpand={() => toggleExpandService(index)}
