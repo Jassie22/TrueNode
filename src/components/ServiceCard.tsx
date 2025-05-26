@@ -100,8 +100,8 @@ const ServiceCard = ({
       gsap.to(card, {
         rotateY: rotateY,
         rotateX: rotateX,
-        duration: 0.3,
-        ease: 'power2.out',
+        duration: 0.5,
+        ease: 'power3.out',
         transformPerspective: 1000,
         transformOrigin: 'center'
       });
@@ -111,8 +111,8 @@ const ServiceCard = ({
         x: x - 100,
         y: y - 100,
         opacity: 0.15,
-        duration: 0.3,
-        ease: 'power2.out'
+        duration: 0.5,
+        ease: 'power3.out'
       });
     };
     
@@ -121,14 +121,14 @@ const ServiceCard = ({
       gsap.to(card, {
         rotateY: 0,
         rotateX: 0,
-        duration: 0.5,
-        ease: 'power3.out'
+        duration: 0.7,
+        ease: 'power4.out'
       });
       
       if (glowRef.current) {
         gsap.to(glowRef.current, {
           opacity: 0,
-          duration: 0.3
+          duration: 0.5
         });
       }
     };
@@ -156,8 +156,8 @@ const ServiceCard = ({
       gsap.to(cardRef.current, {
         y: -10,
         scale: 1.02,
-        duration: 0.4,
-        ease: 'power2.out',
+        duration: 0.6,
+        ease: 'power3.out',
         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1), 0 0 20px rgba(160, 32, 240, 0.15)',
         backgroundColor: 'rgba(30, 30, 40, 0.9)',
         borderColor: 'rgba(160, 32, 240, 0.25)'
@@ -167,16 +167,16 @@ const ServiceCard = ({
       gsap.to(iconRef.current, {
         scale: 1.15,
         y: -3,
-        duration: 0.4,
-        ease: 'power2.out'
+        duration: 0.6,
+        ease: 'power3.out'
       });
     } else {
       // Collapse card with smoother animation
       gsap.to(cardRef.current, {
         y: 0,
         scale: 1,
-        duration: 0.4,
-        ease: 'power2.out',
+        duration: 0.6,
+        ease: 'power3.out',
         boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
         backgroundColor: 'rgba(25, 25, 35, 0.5)',
         borderColor: 'rgba(255, 255, 255, 0.05)'
@@ -186,8 +186,8 @@ const ServiceCard = ({
       gsap.to(iconRef.current, {
         scale: 1,
         y: 0,
-        duration: 0.4,
-        ease: 'power2.out'
+        duration: 0.6,
+        ease: 'power3.out'
       });
     }
   }, [active, expanded, isMobile]);
@@ -260,54 +260,52 @@ const ServiceCard = ({
           <p className="text-white/70 text-sm leading-relaxed mb-3">{service.description}</p>
         )}
         
-        {/* Service details - show on desktop (when active/expanded) or mobile (always, but limited to 3 unless expanded) */}
-        {((!isMobile && (active || expanded)) || isMobile) && (
-          <div className="mt-4">
-            <h4 className="text-white/90 text-base font-medium mb-2">Key Features:</h4>
-            <ul ref={detailsRef} className="space-y-2">
-              {visibleDetails.map((detail, index) => (
-                <li key={index} className="text-white/70 text-sm flex items-start">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-accent mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>{detail}</span>
-                </li>
-              ))}
-            </ul>
-            
-            {/* Show More button for mobile */}
-            {hasMoreDetails && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleExpand();
-                }}
-                className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
-              >
-                Show More ({service.details.length - 3} more)
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        {/* Service details - show on desktop (always) or mobile (always, but limited to 3 unless expanded) */}
+        <div className="mt-4">
+          <h4 className="text-white/90 text-base font-medium mb-2">Key Features:</h4>
+          <ul ref={detailsRef} className="space-y-2">
+            {visibleDetails.map((detail, index) => (
+              <li key={index} className="text-white/70 text-sm flex items-start">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-accent mr-2 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-              </button>
-            )}
-            
-            {/* Show Less button for mobile when expanded */}
-            {isMobile && expanded && service.details.length > 3 && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleExpand();
-                }}
-                className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
-              >
-                Show Less
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 rotate-180" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            )}
-          </div>
-        )}
+                <span>{detail}</span>
+              </li>
+            ))}
+          </ul>
+          
+          {/* Show More button for mobile */}
+          {hasMoreDetails && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleExpand();
+              }}
+              className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
+            >
+              Show More ({service.details.length - 3} more)
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+          
+          {/* Show Less button for mobile when expanded */}
+          {isMobile && expanded && service.details.length > 3 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleExpand();
+              }}
+              className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
+            >
+              Show Less
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 rotate-180" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
