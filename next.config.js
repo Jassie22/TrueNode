@@ -3,6 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'export',
   trailingSlash: true,
+  // Enable basic compression
+  compress: true,
+  poweredByHeader: false,
   // Configure unoptimized images to prevent Image Optimization API errors
   images: {
     unoptimized: true
