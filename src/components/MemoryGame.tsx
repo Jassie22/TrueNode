@@ -26,7 +26,6 @@ const MemoryGame = () => {
   const gameWrapperRef = useRef<HTMLDivElement>(null); // Ref for the main game wrapper
   const cardGridRef = useRef<HTMLDivElement>(null); // Ref for the card grid
   const [isMobile, setIsMobile] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [cards, setCards] = useState<Card[]>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState<number>(0);
@@ -127,11 +126,6 @@ const MemoryGame = () => {
     timerRef.current = setInterval(() => {
       setGameTime(Math.floor((Date.now() - startTime) / 1000));
     }, 1000);
-
-    // Optional: Exit fullscreen if game is restarted from complete/playing state while fullscreen
-    if (isFullscreen && typeof document.exitFullscreen === 'function') {
-      // document.exitFullscreen(); // Uncomment to enable exiting fullscreen on restart
-    }
   };
 
   // Handle card click
@@ -286,18 +280,12 @@ const MemoryGame = () => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
 
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
       window.removeEventListener('resize', checkMobile);
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, []);
 
@@ -309,18 +297,6 @@ const MemoryGame = () => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const toggleFullscreen = () => {
-    if (!gameWrapperRef.current) return;
-
-    if (!document.fullscreenElement) {
-      gameWrapperRef.current.requestFullscreen().catch(err => {
-        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-      });
-    } else {
-      document.exitFullscreen();
-    }
   };
 
   const initializeGameAndResetWelcome = () => {
@@ -343,28 +319,8 @@ const MemoryGame = () => {
         h-[450px] max-h-[450px]
         bg-dark/20 rounded-lg overflow-hidden px-4 pb-4
         text-white text-center
-        ${isFullscreen && isMobile ? 'fixed inset-0 z-50 rounded-none !max-w-full !max-h-full !h-screen bg-dark/20' : ''}
       `}
     >
-      {/* Fullscreen toggle button - only on mobile and not on any welcome screen variant */}
-      {isMobile && gameState !== GameState.Welcome && (
-        <button 
-          onClick={toggleFullscreen}
-          className="absolute top-1 right-2 p-0.5 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-20"
-          title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-        >
-          {isFullscreen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 0h-4m4 0l-5-5" />
-            </svg>
-          )}
-        </button>
-      )}
-
       {gameState === GameState.Welcome && (
         <>
           {!showInstructionsScreen ? (
@@ -449,9 +405,7 @@ const MemoryGame = () => {
           </div>
           <div 
             ref={cardGridRef} 
-            className={`grid grid-cols-4 gap-px w-full flex-1 max-h-[320px] ${
-              isFullscreen && isMobile ? '!gap-3 p-0.5' : ''
-            }`}
+            className={`grid grid-cols-4 gap-px w-full flex-1 max-h-[320px]`}
           >
             {cards.map(card => (
               <div
@@ -459,9 +413,7 @@ const MemoryGame = () => {
                 onClick={() => handleCardClick(card.id)}
                 className={`aspect-square max-h-[90px] rounded-md flex items-center justify-center text-lg cursor-pointer transition-all duration-300 preserve-3d shadow-sm ${
                   card.flipped || card.matched ? 'bg-purple-600/70 border border-purple-400/50 rotate-y-180' : 'bg-gray-600/20 border border-white/10'
-                } ${card.matched ? 'opacity-70 ring-1 ring-green-400/50' : ''} ${
-                  isFullscreen && isMobile ? '!text-2xl !max-h-none' : ''
-                }`}
+                } ${card.matched ? 'opacity-70 ring-1 ring-green-400/50' : ''}`}
               >
                 <div className={`transition-opacity duration-200 ${card.flipped || card.matched ? 'opacity-100' : 'opacity-0'} backface-hidden rotate-y-180`}>
                   {card.content}
