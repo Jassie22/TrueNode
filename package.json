@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3308",
-    "clean": "rimraf out",
-    "build": "npm run clean && next build",
-    "build:gzip": "npm run clean && next build && node scripts/gzip-compress.js",
+    "build": "next build",
+    "build:gzip": "next build && node scripts/gzip-compress.js",
     "gzip": "node scripts/gzip-compress.js",
     "start": "next start",
     "lint": "next lint"
@@ -39,7 +38,6 @@
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.0.0",
     "postcss": "^8.4.30",
-    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.2.2"
   }
