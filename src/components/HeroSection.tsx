@@ -145,7 +145,7 @@ const HeroSection = () => {
           headingRef.current.appendChild(srHeading);
           
           const subtitleContainer = document.createElement('div');
-          subtitleContainer.className = `text-[4.5vw] sm:text-[3.8vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-tight tracking-normal relative overflow-visible mt-4 md:mt-6 text-white/90 opacity-0 max-w-[95%] sm:max-w-[85%] mb-12 md:mb-16 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
+          subtitleContainer.className = `text-[4.5vw] sm:text-[3.8vw] md:text-[2.5vw] lg:text-[2.2vw] xl:text-[2vw] font-bold leading-tight tracking-normal relative overflow-visible mt-4 md:mt-6 text-white/90 opacity-0 max-w-[95%] sm:max-w-[85%] mb-3 md:mb-4 text-center md:text-left mx-auto md:mx-0 ${isMobile ? 'hero-subtitle-mobile' : ''}`;
           subtitleContainer.innerHTML = `Custom <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Websites</span>. Smart <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">Apps</span>.<br>AI That Works for <span class="text-[#23B5D3] font-bold ${isMobile ? '' : 'cursor-pointer hover:underline'} transition-all" data-nav="services">You</span>.`;
           headingRef.current.appendChild(subtitleContainer);
           
@@ -191,15 +191,11 @@ const HeroSection = () => {
           }
           
           const secondLineWords = secondLineContainer.querySelectorAll('span');
+          // Animate both "Your" and "Business" words together
           masterTl.to(
-            secondLineWords[0],
-            { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+            secondLineWords,
+            { y: 0, opacity: 1, duration: 0.4, ease: "power3.out", stagger: 0.02 },
             '+=0.1' // Chain after first line with a small delay
-          );
-          masterTl.to(
-            secondLineWords[1],
-            { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
-            '+=0.05' // Chain after "Your"
           );
           masterTl.to(
             subtitleContainer,
@@ -331,18 +327,18 @@ const HeroSection = () => {
             </div>
 
             {/* Container for CTAs and New Stats - Ref for potential group animation */}
-            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-between gap-12 md:gap-16 mt-6 md:mt-8">
+            <div ref={ctaContainerRef} className="w-full flex flex-col md:flex-row items-center md:items-start md:justify-between gap-12 md:gap-16 mt-1 md:mt-2">
               {/* CTA Buttons Group */}
-              <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0 mt-2 md:mt-4">
+              <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0 mt-1 md:mt-1">
                 <CalendlyWidget
                   buttonText="Book a Free Consultation"
                   className="group relative inline-flex items-center justify-center px-10 py-4 sm:px-12 sm:py-5 text-lg sm:text-xl font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto"
                 />
               </div>
 
-              {/* Stats section */}
+              {/* Stats section - positioned to align vertically with "Your Business" */}
               {hasMounted && (
-                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-8 md:-mt-32 opacity-0">
+                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-8 md:-mt-32 lg:-mt-36 xl:-mt-40 md:self-start opacity-0">
                   <HeroStats />
                 </div>
               )}

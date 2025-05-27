@@ -338,10 +338,7 @@ const ContactSection = () => {
         ref={backgroundRef}
         className="absolute inset-0 z-0 overflow-hidden"
       >
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-primary to-bg-darker opacity-70"></div>
-        <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-accent/5 blur-[100px] top-[-10%] right-[-10%] opacity-40"></div>
-        <div className="glow-blob absolute w-[500px] h-[500px] rounded-full bg-accent-blue/3 blur-[120px] bottom-[-20%] left-[-10%] opacity-20"></div>
-        <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-accent-magenta/5 blur-[80px] top-[40%] right-[30%] opacity-20"></div>
+
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">

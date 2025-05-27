@@ -44,6 +44,7 @@ const HeroStats = () => {
   const statsContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const individualStatRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const [animationsTriggered, setAnimationsTriggered] = useState<Record<string, boolean>>({});
   
   // Touch handling for mobile swipe
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -68,11 +69,13 @@ const HeroStats = () => {
     const isLeftSwipe = distance > 50;
     const isRightSwipe = distance < -50;
 
-    if (isLeftSwipe && activeIndex < statsData.length - 1) {
-      setActiveIndex(activeIndex + 1);
+    if (isLeftSwipe) {
+      // Swipe left: go to next stat, or loop to first if at last
+      setActiveIndex(prevIndex => (prevIndex + 1) % statsData.length);
     }
-    if (isRightSwipe && activeIndex > 0) {
-      setActiveIndex(activeIndex - 1);
+    if (isRightSwipe) {
+      // Swipe right: go to previous stat, or loop to last if at first
+      setActiveIndex(prevIndex => prevIndex === 0 ? statsData.length - 1 : prevIndex - 1);
     }
   };
 
@@ -80,71 +83,58 @@ const HeroStats = () => {
     if (typeof window !== 'undefined') {
       gsap.registerPlugin(ScrollTrigger);
 
+      // Make stats visible immediately without ScrollTrigger
       if (statsContainerRef.current) {
-        gsap.fromTo(
-          statsContainerRef.current,
-          { opacity: 0, y: 50 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: statsContainerRef.current,
-              start: 'top bottom-=100px',
-              toggleActions: 'play none none none',
-            },
-          }
-        );
-
-        statsData.forEach((stat) => {
-          const statEl = individualStatRefs.current[stat.id];
-          const valueEl = statEl?.querySelector('.stat-value'); // Add a class to the value element
-
-          if (statEl && valueEl) {
-            gsap.fromTo(
-              statEl,
-              { opacity: 0, scale: 0.8, y: 30 },
-              {
-                opacity: 1,
-                scale: 1,
-                y: 0,
-                duration: 0.5,
-                ease: 'back.out(1.4)',
-                scrollTrigger: {
-                  trigger: statEl,
-                  start: 'top bottom-=150px',
-                  toggleActions: 'play none none none',
-                  onEnter: () => {
-                    // Number count-up animation
-                    const targetValue = parseFloat(stat.value.replace(/[^\d.-]/g, ''));
-                    const isPercentage = stat.value.includes('%');
-                    const isMultiplier = stat.value.toLowerCase().includes('x');
-                    
-                    let counter = { val: 0 };
-                    gsap.to(counter, {
-                      val: targetValue,
-                      duration: 1.5,
-                      ease: 'power2.out',
-                      onUpdate: () => {
-                        if (isPercentage) {
-                          valueEl.textContent = Math.ceil(counter.val) + '%';
-                        } else if (isMultiplier) {
-                          valueEl.textContent = counter.val.toFixed(0) + 'x'; // Assuming integer for '2x' type
-                        } else {
-                          valueEl.textContent = Math.ceil(counter.val).toString();
-                        }
-                      },
-                    });
-                  }
-                },
-              }
-            );
-          }
-        });
+        gsap.set(statsContainerRef.current, { opacity: 1, y: 0 });
       }
+
+      // Set up individual stat animations and count-up
+      statsData.forEach((stat) => {
+        const statEl = individualStatRefs.current[stat.id];
+        const valueEl = statEl?.querySelector('.stat-value');
+
+        if (statEl && valueEl) {
+          // Make stats visible immediately
+          gsap.set(statEl, { opacity: 1, scale: 1, y: 0 });
+
+          // Function to run the count-up animation
+          const runCountUpAnimation = () => {
+            if (animationsTriggered[stat.id]) return; // Prevent multiple runs
+            
+            setAnimationsTriggered(prev => ({ ...prev, [stat.id]: true }));
+            
+            const targetValue = parseFloat(stat.value.replace(/[^\d.-]/g, ''));
+            const isPercentage = stat.value.includes('%');
+            const isMultiplier = stat.value.toLowerCase().includes('x');
+            
+            let counter = { val: 0 };
+            gsap.to(counter, {
+              val: targetValue,
+              duration: 2,
+              ease: 'power2.out',
+              delay: 0.5, // Small delay to let the hero text load first
+              onUpdate: () => {
+                if (isPercentage) {
+                  valueEl.textContent = Math.ceil(counter.val) + '%';
+                } else if (isMultiplier) {
+                  valueEl.textContent = counter.val.toFixed(0) + 'x';
+                } else {
+                  valueEl.textContent = Math.ceil(counter.val).toString();
+                }
+              },
+            });
+          };
+
+          // Trigger count-up animation after a short delay (when hero loads)
+          setTimeout(() => {
+            if (!animationsTriggered[stat.id]) {
+              runCountUpAnimation();
+            }
+          }, 1000); // Delay to let hero text animations complete first
+        }
+      });
     }
-  }, []);
+  }, [animationsTriggered]);
 
   // Effect for auto-sliding on mobile
   useEffect(() => {
@@ -162,7 +152,7 @@ const HeroStats = () => {
   }, []);
   
   return (
-    <div ref={statsContainerRef} className="w-full md:max-w-xs lg:max-w-sm mx-auto px-4 md:mx-0 md:px-0">
+    <div ref={statsContainerRef} className="w-full md:max-w-xs lg:max-w-sm xl:max-w-md mx-auto px-4 md:mx-0 md:px-0">
       {/* Desktop: Vertical List - no boxes, more compact */}
       <div className="hidden md:flex flex-col items-start gap-4 lg:gap-5">
         {statsData.map((stat) => (
@@ -172,7 +162,7 @@ const HeroStats = () => {
             className={`transition-all duration-300 transform w-full flex items-start gap-4`}
           >
             <div className={`stat-value text-3xl lg:text-4xl font-bold ${stat.mainColor} text-shadow-sm flex-shrink-0 min-w-[4rem] lg:min-w-[5rem]`}>{stat.value}</div>
-            <p className="text-xs lg:text-sm text-white/80 leading-snug flex-1 pt-1">{stat.description}</p>
+            <p className="text-base lg:text-lg text-white/80 leading-snug flex-1 pt-1">{stat.description}</p>
           </div>
         ))}
       </div>
