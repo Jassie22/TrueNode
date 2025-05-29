@@ -1,0 +1,11 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="flutter-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#02569B"/>
+      <stop offset="100%" style="stop-color:#0075C2"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#flutter-gradient)" d="M12.3 64l16.5-16.5L64 12.3l51.7 51.7L99.2 80.5 64 45.3z"/>
+  <path fill="#40C4FF" d="M64 45.3l35.2 35.2L80.5 99.2L64 82.7l-16.5 16.5L64 115.7l51.7-51.7L99.2 47.5z"/>
+  <path fill="#01579B" d="M80.5 99.2L64 82.7l16.5-16.5z"/>
+</svg> 
