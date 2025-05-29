@@ -8,6 +8,8 @@ import Link from 'next/link';
 const technologies = [
   { name: 'React', color: '#61DAFB', icon: '/tech-icons/react.svg' },
   { name: 'Next.js', color: '#000000', icon: '/tech-icons/nextjs.svg' },
+  { name: 'React Native', color: '#61DAFB', icon: '/tech-icons/reactnative.svg' },
+  { name: 'Flutter', color: '#02569B', icon: '/tech-icons/flutter.svg' },
   { name: 'Swift', color: '#FA7343', icon: '/tech-icons/swift.svg' },
   { name: 'Kotlin', color: '#7F52FF', icon: '/tech-icons/kotlin.svg' },
   { name: 'Node.js', color: '#539E43', icon: '/tech-icons/nodejs.svg' },
@@ -18,23 +20,31 @@ const technologies = [
   { name: 'CSS3', color: '#1572B6', icon: '/tech-icons/css3.svg' },
   { name: 'Vue.js', color: '#4FC08D', icon: '/tech-icons/vuejs.svg' },
   { name: 'Angular', color: '#DD0031', icon: '/tech-icons/angular.svg' },
+  { name: 'Svelte', color: '#FF3E00', icon: '/tech-icons/svelte.svg' },
   { name: 'Express.js', color: '#000000', icon: '/tech-icons/expressjs.svg' },
+  { name: 'GraphQL', color: '#E10098', icon: '/tech-icons/graphql.svg' },
   { name: 'PostgreSQL', color: '#336791', icon: '/tech-icons/postgresql.svg' },
   { name: 'MySQL', color: '#00618A', icon: '/tech-icons/mysql.svg' },
   { name: 'MongoDB', color: '#47A248', icon: '/tech-icons/mongodb.svg' },
+  { name: 'Redis', color: '#DC382D', icon: '/tech-icons/redis.svg' },
+  { name: 'Supabase', color: '#3ECF8E', icon: '/tech-icons/supabase.svg' },
+  { name: 'Prisma', color: '#2D3748', icon: '/tech-icons/prisma.svg' },
   { name: 'AWS', color: '#FF9900', icon: '/tech-icons/aws.svg' },
   { name: 'Kubernetes', color: '#326CE5', icon: '/tech-icons/kubernetes.svg' },
   { name: 'Docker', color: '#0db7ed', icon: '/tech-icons/docker.svg' },
   { name: 'Tailwind CSS', color: '#38B2AC', icon: '/tech-icons/tailwindcss.svg' },
+  { name: 'Vite', color: '#41D1FF', icon: '/tech-icons/vite.svg' },
   { name: 'Figma', color: '#F24E1E', icon: '/tech-icons/figma.svg' },
   { name: 'Git', color: '#F05032', icon: '/tech-icons/git.svg' },
   { name: 'GitHub', color: '#181717', icon: '/tech-icons/github.svg' },
   { name: 'Vercel', color: '#000000', icon: '/tech-icons/vercel.svg' },
+  { name: 'Stripe', color: '#635BFF', icon: '/tech-icons/stripe.svg' },
   { name: 'TensorFlow', color: '#FF6F00', icon: '/tech-icons/tensorflow.svg' },
   { name: 'PyTorch', color: '#EE4C2C', icon: '/tech-icons/pytorch.svg' },
   { name: 'OpenAI', color: '#412991', icon: '/tech-icons/openai.svg' },
   { name: 'Hugging Face', color: '#FFD21E', icon: '/tech-icons/huggingface.svg' },
   { name: 'LangChain', color: '#1C3C3C', icon: '/tech-icons/langchain.svg' },
+  { name: 'n8n', color: '#EA4B71', icon: '/tech-icons/n8n.svg' },
   { name: 'Three.js', color: '#000000', icon: '/tech-icons/threejs.svg' },
   { name: 'npm', color: '#CB3837', icon: '/tech-icons/npm.svg' },
   { name: 'Plotly', color: '#3d4c73', icon: '/tech-icons/plotly.svg' }
@@ -79,7 +89,7 @@ export default function SVGViewerPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-gray-800 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-blue-400">Total Icons</h3>
             <p className="text-2xl font-bold">{technologies.length}</p>
@@ -89,7 +99,11 @@ export default function SVGViewerPage() {
             <p className="text-2xl font-bold">{filteredTechnologies.length}</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-purple-400">ViewBox</h3>
+            <h3 className="text-lg font-semibold text-purple-400">Categories</h3>
+            <p className="text-sm text-gray-300">Web • Mobile • AI • DevOps</p>
+          </div>
+          <div className="bg-gray-800 p-4 rounded-lg">
+            <h3 className="text-lg font-semibold text-yellow-400">ViewBox</h3>
             <p className="text-lg font-mono">0 0 128 128</p>
           </div>
         </div>
@@ -100,7 +114,7 @@ export default function SVGViewerPage() {
             <div
               key={index}
               onClick={() => setSelectedTech(tech)}
-              className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-all duration-300 cursor-pointer group"
+              className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-all duration-300 cursor-pointer group border border-gray-700 hover:border-gray-600"
             >
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -133,12 +147,12 @@ export default function SVGViewerPage() {
 
         {/* Selected Tech Details */}
         {selectedTech && (
-          <div className="bg-gray-800 p-6 rounded-lg">
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
             <div className="flex items-start justify-between mb-4">
               <h2 className="text-2xl font-bold">{selectedTech.name} Details</h2>
               <button
                 onClick={() => setSelectedTech(null)}
-                className="text-gray-400 hover:text-white"
+                className="text-gray-400 hover:text-white transition-colors"
               >
                 ✕
               </button>
@@ -147,7 +161,7 @@ export default function SVGViewerPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Large Icon */}
               <div className="flex flex-col items-center space-y-4">
-                <div className="w-32 h-32 flex items-center justify-center bg-gray-900 rounded-lg">
+                <div className="w-32 h-32 flex items-center justify-center bg-gray-900 rounded-lg border border-gray-600">
                   <Image
                     src={selectedTech.icon}
                     alt={`${selectedTech.name} icon`}
@@ -194,7 +208,7 @@ export default function SVGViewerPage() {
 
                 <div>
                   <h4 className="text-lg font-semibold text-purple-400 mb-2">Usage</h4>
-                  <div className="bg-gray-900 p-3 rounded text-xs font-mono overflow-x-auto">
+                  <div className="bg-gray-900 p-3 rounded text-xs font-mono overflow-x-auto border border-gray-600">
                     <div className="text-gray-400">// React/Next.js</div>
                     <div className="text-blue-300">import Image from 'next/image';</div>
                     <br />
@@ -213,8 +227,9 @@ export default function SVGViewerPage() {
 
         {/* Footer */}
         <div className="mt-12 text-center text-gray-500 text-sm">
-          <p>All SVG icons are stored in <code className="bg-gray-800 px-2 py-1 rounded">/public/tech-icons/</code></p>
+          <p>All SVG icons are stored in <code className="bg-gray-800 px-2 py-1 rounded border border-gray-700">/public/tech-icons/</code></p>
           <p className="mt-2">Icons are optimized with consistent viewBox dimensions and official brand colors</p>
+          <p className="mt-2 text-xs">Categories: Web Development • Mobile Development • AI/ML • DevOps • Databases • Cloud Services</p>
         </div>
       </div>
     </div>

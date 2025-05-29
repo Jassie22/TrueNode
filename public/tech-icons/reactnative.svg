@@ -1,0 +1,14 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="rn-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#61DAFB"/>
+      <stop offset="100%" style="stop-color:#21D4FD"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="11.4" fill="url(#rn-gradient)"/>
+  <ellipse cx="64" cy="64" rx="55" ry="20" fill="none" stroke="url(#rn-gradient)" stroke-width="3"/>
+  <ellipse cx="64" cy="64" rx="55" ry="20" fill="none" stroke="url(#rn-gradient)" stroke-width="3" transform="rotate(60 64 64)"/>
+  <ellipse cx="64" cy="64" rx="55" ry="20" fill="none" stroke="url(#rn-gradient)" stroke-width="3" transform="rotate(120 64 64)"/>
+  <path fill="url(#rn-gradient)" d="M64 16c-4 0-8 1.6-11 4.4l-2.8 2.8C46.4 27 44 31.6 44 36.4v18.8c0 4.8 2.4 9.4 6.2 13.2l2.8 2.8c3 2.8 7 4.4 11 4.4s8-1.6 11-4.4l2.8-2.8c3.8-3.8 6.2-8.4 6.2-13.2V36.4c0-4.8-2.4-9.4-6.2-13.2l-2.8-2.8C72 17.6 68 16 64 16z"/>
+  <path fill="white" d="M64 24c2.4 0 4.6.9 6.2 2.5l2.8 2.8c2.3 2.3 3.6 5.4 3.6 8.7v18.8c0 3.3-1.3 6.4-3.6 8.7l-2.8 2.8c-1.6 1.6-3.8 2.5-6.2 2.5s-4.6-.9-6.2-2.5l-2.8-2.8c-2.3-2.3-3.6-5.4-3.6-8.7V36.4c0-3.3 1.3-6.4 3.6-8.7l2.8-2.8C59.4 24.9 61.6 24 64 24z"/>
+</svg> 

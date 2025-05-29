@@ -1,0 +1,16 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="supabase-gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3ECF8E"/>
+      <stop offset="100%" style="stop-color:#3ECF8E"/>
+    </linearGradient>
+    <linearGradient id="supabase-gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3ECF8E"/>
+      <stop offset="100%" style="stop-color:#1A7A4A"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#supabase-gradient1)" d="M64 8c-12.15 0-23.27 4.92-31.24 12.88L20.88 32.76C12.92 40.73 8 51.85 8 64s4.92 23.27 12.88 31.24l11.88 11.88C40.73 115.08 51.85 120 64 120s23.27-4.92 31.24-12.88l11.88-11.88C115.08 87.27 120 76.15 120 64s-4.92-23.27-12.88-31.24L95.24 20.88C87.27 12.92 76.15 8 64 8z"/>
+  <path fill="url(#supabase-gradient2)" d="M77.5 32H50.5c-10.22 0-18.5 8.28-18.5 18.5v27c0 10.22 8.28 18.5 18.5 18.5h27c10.22 0 18.5-8.28 18.5-18.5v-27C96 40.28 87.72 32 77.5 32z"/>
+  <path fill="white" d="M64 88L48 72h32L64 88z"/>
+  <path fill="white" d="M64 40L80 56H48L64 40z"/>
+</svg> 

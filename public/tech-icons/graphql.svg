@@ -1,0 +1,19 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="graphql-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E10098"/>
+      <stop offset="100%" style="stop-color:#E10098"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#graphql-gradient)" d="M64 8L22.627 32v64L64 120l41.373-24V32L64 8z"/>
+  <path fill="white" d="M64 16l33.993 19.692v52.616L64 108l-33.993-19.692V35.692L64 16zm0 8L38.205 40.462v47.076L64 104l25.795-16.462V40.462L64 24z"/>
+  <circle cx="64" cy="64" r="8" fill="url(#graphql-gradient)"/>
+  <circle cx="38.205" cy="40.462" r="6" fill="url(#graphql-gradient)"/>
+  <circle cx="89.795" cy="40.462" r="6" fill="url(#graphql-gradient)"/>
+  <circle cx="38.205" cy="87.538" r="6" fill="url(#graphql-gradient)"/>
+  <circle cx="89.795" cy="87.538" r="6" fill="url(#graphql-gradient)"/>
+  <circle cx="64" cy="24" r="6" fill="url(#graphql-gradient)"/>
+  <circle cx="64" cy="104" r="6" fill="url(#graphql-gradient)"/>
+  <path fill="url(#graphql-gradient)" d="M64 32L83.795 44.462L64 56L44.205 44.462L64 32z"/>
+  <path fill="url(#graphql-gradient)" d="M64 72L83.795 83.538L64 96L44.205 83.538L64 72z"/>
+</svg> 
