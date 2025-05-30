@@ -162,9 +162,15 @@ const PortfolioSection = () => {
       {/* Section content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-            Our <span className="text-accent">Portfolio</span>
-          </h2>
+          <div className="relative">
+            {/* Purple accent line */}
+            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
+            
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white"
+                style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
+              Our <span className="text-accent">Portfolio</span>
+            </h2>
+          </div>
           <p className="text-lg text-white/80 max-w-2xl mx-auto">
             Showcasing our design and development capabilities through concept projects.
           </p>

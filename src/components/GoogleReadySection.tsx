@@ -458,10 +458,14 @@ const GoogleReadySection = () => {
         {/* Desktop Title Section */}
         {!isMobile && (
           <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 md:px-8 text-center mb-0">
-            <div className="max-w-4xl mx-auto">
+            <div className="relative">
+              {/* Purple accent line */}
+              <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
+              
               <h2
                 ref={titleRef}
                 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white"
+                style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
               >
                 Our <span className="text-accent">SEO</span> Checklist
               </h2>
@@ -518,12 +522,18 @@ const GoogleReadySection = () => {
             <div className="relative z-10 mx-auto px-4 max-w-sm">
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl">
                 {/* Mobile Title and Counter inside the box */}
-                <h2
-                  ref={titleRef}
-                  className="text-3xl font-bold mb-4 text-white text-center"
-                >
-                  Our <span className="text-accent">SEO</span> Checklist
-                </h2>
+                <div className="relative">
+                  {/* Purple accent line */}
+                  <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
+                  
+                  <h2
+                    ref={titleRef}
+                    className="text-3xl font-bold mb-4 text-white text-center"
+                    style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
+                  >
+                    Our <span className="text-accent">SEO</span> Checklist
+                  </h2>
+                </div>
                 
                 <div className="flex items-center justify-center mb-6">
                   <span 

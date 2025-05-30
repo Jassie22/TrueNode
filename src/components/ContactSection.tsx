@@ -59,11 +59,15 @@ const ContactSection = () => {
             gsap.set(gameContentRef.current, { y: 40, opacity: 0 });
           }
 
-          // Remove the timeout and start animations immediately
+          // Ensure form container is visible immediately
+          if (formContentRef.current) {
+            gsap.set(formContentRef.current, { opacity: 1 });
+          }
+
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: 'top 85%', // Start slightly earlier
+              start: 'top 85%',
               end: 'center center',
               toggleActions: 'play none none none'
             }
@@ -344,10 +348,11 @@ const ContactSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">
         <div className="max-w-4xl mx-auto text-center mb-16">
           <div className="relative z-30 py-6 px-4">
-            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-glow"></div>
+            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
             <h2 
               ref={titleRef}
               className="text-4xl md:text-5xl font-bold mb-4 text-white"
+              style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
             >
               Get in <span className="text-accent">Touch</span>
             </h2>
