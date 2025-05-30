@@ -108,21 +108,27 @@ const HeroStats = () => {
             const isMultiplier = stat.value.toLowerCase().includes('x');
             
             let counter = { val: 0 };
-            gsap.to(counter, {
-              val: targetValue,
-              duration: 2,
-              ease: 'power2.out',
-              delay: 0.5, // Small delay to let the hero text load first
-              onUpdate: () => {
-                if (isPercentage) {
-                  valueEl.textContent = Math.ceil(counter.val) + '%';
-                } else if (isMultiplier) {
-                  valueEl.textContent = counter.val.toFixed(0) + 'x';
-                } else {
-                  valueEl.textContent = Math.ceil(counter.val).toString();
-                }
-              },
-            });
+            const startTime = Date.now();
+            const animate = () => {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / 2000, 1); // 2 seconds duration
+              const easedProgress = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+              const counterValue = Math.floor(easedProgress * targetValue);
+              
+              if (isPercentage) {
+                valueEl.textContent = Math.ceil(counterValue) + '%';
+              } else if (isMultiplier) {
+                valueEl.textContent = counterValue.toFixed(0) + 'x';
+              } else {
+                valueEl.textContent = Math.ceil(counterValue).toString();
+              }
+              
+              if (progress < 1) {
+                requestAnimationFrame(animate);
+              }
+            };
+
+            animate();
           };
 
           // Trigger count-up animation after a short delay (when hero loads)

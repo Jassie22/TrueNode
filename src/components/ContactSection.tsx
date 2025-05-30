@@ -1,9 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { FormData, FormErrors } from '@/types/form';
+import { cn } from '@/lib/utils';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import CalendlyWidget from './CalendlyWidget';
 import MemoryGame from './MemoryGame';
 import { event as gaEvent } from '@/lib/gtag';
 

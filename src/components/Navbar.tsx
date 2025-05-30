@@ -1,15 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-import CalendlyWidget from './CalendlyWidget';
+import Image from 'next/image';
+// import CalendlyWidget from './CalendlyWidget'; // Removed unused import
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [hasMounted, setHasMounted] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -23,10 +24,8 @@ const Navbar = () => {
     const handleScroll = () => {
       // Debounce scroll events to prevent flickering
       clearTimeout(scrollTimeout);
-      setIsScrolling(true);
       
       scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
       }, 150);
 
       const scrollY = window.scrollY;

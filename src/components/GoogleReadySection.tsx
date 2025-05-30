@@ -205,7 +205,6 @@ const GoogleReadySection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
-  const backgroundRef = useRef<HTMLDivElement>(null);
   const starsContainerRef = useRef<HTMLDivElement>(null);
   const lanesContainerRef = useRef<HTMLDivElement>(null);
   
@@ -485,7 +484,7 @@ const GoogleReadySection = () => {
                 ref={descriptionRef}
                 className="text-lg md:text-xl text-white/70 font-light max-w-3xl mx-auto"
               >
-                Unlock your website's full potential. Our 96-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
+                Unlock your website&apos;s full potential. Our 96-point SEO checklist meticulously covers every angle, from technical precision to content strategy, ensuring your digital presence is primed for peak performance and visibility.
               </p>
             </div>
           </div>

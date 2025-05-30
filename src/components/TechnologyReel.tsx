@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 
 // Technology data with external SVG file paths

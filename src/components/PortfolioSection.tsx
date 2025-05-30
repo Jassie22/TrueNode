@@ -348,8 +348,6 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       >
         <div className="flex space-x-6 px-8">
           {infiniteProjects.map((project, index) => {
-            const projectIndex = index % projects.length;
-            const currentProjectIndex = currentCenterIndex % projects.length;
             const isCentered = selectedProject === null && index === currentCenterIndex;
             
             let cardClassName = 'flex-shrink-0 relative transition-all duration-500 ease-out ';

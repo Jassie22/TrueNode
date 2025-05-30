@@ -1,6 +1,7 @@
 'use client';
 
-import Image from 'next/image';
+import React from 'react';
+// import Image from 'next/image'; // Removed unused import
 import Hero from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import PortfolioSection from '@/components/PortfolioSection';
