@@ -446,7 +446,7 @@ const GoogleReadySection = () => {
       <section
         id="seo-checklist-dynamic"
         ref={sectionRef}
-        className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12 pt-2' : 'pb-8 pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
+        className={`relative bg-transparent overflow-hidden ${isMobile ? 'pb-12 pt-0' : 'pb-8 pt-4'} ${hasMounted ? 'seo-section-fade-in' : 'opacity-0'}`}
       >
         <div 
           className="absolute inset-0 z-0 opacity-[0.025] pointer-events-none"
@@ -491,7 +491,7 @@ const GoogleReadySection = () => {
           </div>
         )}
         
-        <div className={`relative w-full ${!isMobile ? 'mt-0' : 'mt-8'}`}>
+        <div className={`relative w-full ${!isMobile ? 'mt-0' : ''}`}>
           {hasMounted && !isMobile && (
             <div className="desktop-lanes-container relative py-6 bg-black/60 backdrop-blur-md overflow-hidden shadow-lg border-y border-white/10">
               <div 
@@ -569,8 +569,8 @@ const GoogleReadySection = () => {
           )}
           
           {!hasMounted && isMobile && (
-            <div className="relative z-10 mx-auto px-4 max-w-sm mt-8">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl opacity-50">
+            <div className="relative z-10 mx-auto px-4 max-w-sm">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 shadow-xl">
                 <div className="h-8 bg-white/20 rounded w-3/4 mx-auto mb-4"></div>
                 <div className="h-6 bg-white/20 rounded w-1/2 mx-auto mb-6"></div>
                 <div className="h-4 bg-white/20 rounded w-full mx-auto mb-3"></div>

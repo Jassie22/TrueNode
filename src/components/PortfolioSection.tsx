@@ -243,12 +243,14 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       if (carouselRef.current) {
         const { CARD_WIDTH, CARD_SPACING } = CAROUSEL_CONFIG;
         const containerWidth = carouselRef.current.clientWidth;
-        const immediateScrollLeft = (CARD_WIDTH + CARD_SPACING) * (newIndex + 1) - (containerWidth / 2) + (CARD_WIDTH / 2);
-        carouselRef.current.scrollTo({ left: immediateScrollLeft, behavior: 'auto' });
+        const immediateScrollLeft = (CARD_WIDTH + CARD_SPACING) * newIndex - (containerWidth / 2) + (CARD_WIDTH / 2);
+        carouselRef.current.scrollTo({ left: Math.max(0, immediateScrollLeft), behavior: 'auto' });
       }
+      // Small delay before centering to ensure position is set
+      setTimeout(() => centerCard(newIndex), 50);
+    } else {
+      centerCard(newIndex);
     }
-    
-    centerCard(newIndex);
   };
 
   const scrollRight = () => {
@@ -263,12 +265,14 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       if (carouselRef.current) {
         const { CARD_WIDTH, CARD_SPACING } = CAROUSEL_CONFIG;
         const containerWidth = carouselRef.current.clientWidth;
-        const immediateScrollLeft = (CARD_WIDTH + CARD_SPACING) * (newIndex - 1) - (containerWidth / 2) + (CARD_WIDTH / 2);
-        carouselRef.current.scrollTo({ left: immediateScrollLeft, behavior: 'auto' });
+        const immediateScrollLeft = (CARD_WIDTH + CARD_SPACING) * newIndex - (containerWidth / 2) + (CARD_WIDTH / 2);
+        carouselRef.current.scrollTo({ left: Math.max(0, immediateScrollLeft), behavior: 'auto' });
       }
+      // Small delay before centering to ensure position is set
+      setTimeout(() => centerCard(newIndex), 50);
+    } else {
+      centerCard(newIndex);
     }
-    
-    centerCard(newIndex);
   };
 
   // Improved card click handler with proper centering for expansion
@@ -345,7 +349,8 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
         <div className="flex space-x-6 px-8">
           {infiniteProjects.map((project, index) => {
             const projectIndex = index % projects.length;
-            const isCentered = selectedProject === null && projectIndex === currentCenterIndex;
+            const currentProjectIndex = currentCenterIndex % projects.length;
+            const isCentered = selectedProject === null && index === currentCenterIndex;
             
             let cardClassName = 'flex-shrink-0 relative transition-all duration-500 ease-out ';
             if (selectedProject === project.id) {
@@ -358,7 +363,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
 
             return (
               <motion.div 
-                key={project.id}
+                key={`${project.id}-${index}`}
                 className={cardClassName}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -393,7 +398,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                         project={project} 
                         onClick={(e) => {
                           if (e) e.stopPropagation();
-                          handleCardClick(project.id, projectIndex);
+                          handleCardClick(project.id, index);
                         }} 
                       />
                     </motion.div>

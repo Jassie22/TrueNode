@@ -136,7 +136,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-bg-darker text-text-primary font-satoshi">
+      <body className="bg-bg-darker text-text-primary font-satoshi" suppressHydrationWarning={true}>
         {/* Google Analytics tracking component */}
         <Suspense fallback={null}>
           <GoogleAnalytics />
