@@ -91,11 +91,47 @@ const ChatbotPopup = () => {
   const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
   const [hasInitialized, setHasInitialized] = useState(false);
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(0);
   
   const popupRef = useRef<HTMLDivElement>(null);
   const chatBubbleRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Detect keyboard open/close on mobile
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    const initialHeight = window.innerHeight;
+    setViewportHeight(initialHeight);
+    
+    const handleResize = () => {
+      if (typeof window === 'undefined') return;
+      const currentHeight = window.innerHeight;
+      const heightDiff = initialHeight - currentHeight;
+      
+      // If height difference is significant (>150px), keyboard is likely open
+      const keyboardOpen = heightDiff > 150;
+      setIsKeyboardOpen(keyboardOpen);
+      setViewportHeight(currentHeight);
+    };
+    
+    // Use both resize and visualViewport for better detection
+    window.addEventListener('resize', handleResize);
+    
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    }
+    
+    return () => {
+      if (typeof window === 'undefined') return;
+      window.removeEventListener('resize', handleResize);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   // Reset chat function
   const resetChat = () => {
@@ -514,7 +550,7 @@ const ChatbotPopup = () => {
       const nextField = document.createElement('input');
       nextField.type = 'hidden';
       nextField.name = '_next';
-      nextField.value = window.location.href;
+      nextField.value = typeof window !== 'undefined' ? window.location.href : '';
       
       // Append fields to form
       form.appendChild(nameField);
@@ -648,8 +684,18 @@ const ChatbotPopup = () => {
     // If in form builder mode, handle form input
     if (showFormBuilder) {
       handleFormInput();
-      // Refocus input after handling form input
-      setTimeout(() => inputRef.current?.focus(), 0);
+      // Keep focus on input and don't close keyboard
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          // Prevent keyboard from closing by setting focus again
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, 100);
+        }
+      }, 0);
       return;
     }
 
@@ -736,6 +782,13 @@ const ChatbotPopup = () => {
         setTimeout(() => {
           startFormBuilder(inputValue);
         }, 1000);
+        
+        // Keep focus on input
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }, 1500);
         
         return;
       }
@@ -871,8 +924,18 @@ const ChatbotPopup = () => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
-      // Refocus input after AI response
-      setTimeout(() => inputRef.current?.focus(), 0);
+      // Keep focus on input after AI response and don't close keyboard
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          // Extra focus to prevent keyboard closing
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, 100);
+        }
+      }, 0);
     }
   };
 
@@ -994,14 +1057,22 @@ const ChatbotPopup = () => {
         </button>
       )}
 
-      {/* Chat popup - improved mobile positioning */}
+      {/* Chat popup - improved mobile positioning with keyboard handling */}
       <div 
-        className={`absolute bottom-0 right-0 w-[95vw] max-w-[360px] md:w-[420px] h-[85vh] max-h-[580px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform md:translate-x-0 translate-x-[calc(-50vw+50%+1rem)] ${
+        className={`absolute right-0 w-[95vw] max-w-[360px] md:w-[420px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform md:translate-x-0 translate-x-[calc(-50vw+50%+1rem)] ${
           isOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
         }`}
         style={{ 
           transformOrigin: 'bottom right',
-          willChange: 'transform, opacity'
+          willChange: 'transform, opacity',
+          // Adjust position based on keyboard state for mobile
+          bottom: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? '10px' : '0px',
+          height: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? 
+            `${Math.min(viewportHeight - 20, 580)}px` : 
+            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : '650px',
+          maxHeight: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? 
+            `${Math.min(viewportHeight - 20, 580)}px` : 
+            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : '650px'
         }}
       >
         {/* Chat header with close button inside */}
@@ -1202,15 +1273,38 @@ const ChatbotPopup = () => {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (handleSendMessage(), setTimeout(() => inputRef.current?.focus(), 0))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSendMessage();
+                  // Don't blur the input to keep keyboard open
+                  setTimeout(() => {
+                    if (inputRef.current) {
+                      inputRef.current.focus();
+                    }
+                  }, 50);
+                }
+              }}
               placeholder={showFormBuilder ? "Type your response..." : "Type your message..."}
               className="w-full bg-zinc-800/90 border border-gray-700/50 rounded-lg py-2.5 pl-4 pr-12 text-white focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/30 transition-all"
               disabled={isTyping || isSubmitting}
               ref={inputRef}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              spellCheck="false"
             />
             
             <button 
-              onClick={handleSendMessage}
+              onClick={() => {
+                handleSendMessage();
+                // Keep focus on input
+                setTimeout(() => {
+                  if (inputRef.current) {
+                    inputRef.current.focus();
+                  }
+                }, 50);
+              }}
               disabled={!inputValue.trim() || isTyping || isSubmitting}
               className="absolute right-2 p-1.5 bg-accent hover:bg-accent-hover text-white rounded-full transition-colors disabled:opacity-50 disabled:hover:bg-accent flex items-center justify-center"
               aria-label="Send message"

@@ -163,15 +163,15 @@ const PortfolioSection = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <div className="relative">
-            {/* Purple accent line */}
-            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
+            {/* Purple accent line - improved mobile visibility */}
+            <div className="absolute h-1 w-24 sm:w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-6 sm:-translate-y-8 shadow-glow z-10"></div>
             
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white"
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white pt-3 sm:pt-4"
                 style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
               Our <span className="text-accent">Portfolio</span>
             </h2>
           </div>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-white/80 max-w-2xl mx-auto">
             Showcasing our design and development capabilities through concept projects.
           </p>
         </div>
@@ -185,7 +185,11 @@ const PortfolioSection = () => {
             These concept projects demonstrate our approach and capabilities. Ready to discuss your custom project?
           </p>
           <button
-            onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Calendly) {
+                window.Calendly.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'});
+              }
+            }}
             className="px-8 py-3 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-accent/25 hover:scale-105 hidden md:inline-block"
           >
             Discuss Your Project

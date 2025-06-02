@@ -351,11 +351,11 @@ const TeamSection = () => {
         <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="relative z-30 py-6 px-4">
             {/* Purple accent line */}
-            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-glow"></div>
+            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-8 shadow-glow"></div>
             
             <h2 
               ref={titleRef}
-              className="text-4xl md:text-5xl font-bold mb-4 text-white"
+              className="text-4xl md:text-5xl font-bold mb-4 text-white pt-4"
               style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
             >
               Our <span className="text-accent">Team</span>

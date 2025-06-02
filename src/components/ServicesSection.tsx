@@ -347,12 +347,12 @@ const ServicesSection = () => {
           <div className="relative z-30 py-6 px-4">
             {/* Remove dark overlay with glowing border */}
             
-            {/* Purple accent line */}
-            <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-glow"></div>
+            {/* Purple accent line - improved mobile visibility */}
+            <div className="absolute h-1 w-24 sm:w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-6 sm:-translate-y-8 shadow-glow z-10"></div>
             
             <h2 
               ref={titleRef}
-              className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-glow text-white"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 drop-shadow-glow text-white pt-3 sm:pt-4"
               style={{ textShadow: '0 0 8px rgba(144, 58, 231, 0.3)', opacity: 1 }}
             >
               Our <span className="text-accent text-shadow-lg">Services</span>
@@ -361,7 +361,7 @@ const ServicesSection = () => {
             <div className="overflow-hidden">
               <p 
                 ref={descriptionRef}
-                className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed"
+                className="text-base sm:text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-light leading-relaxed"
                 style={{ opacity: 0.8 }}
               >
                 Tailored digital solutions crafted with precision to elevate your business presence and performance.
@@ -443,7 +443,11 @@ const ServicesSection = () => {
             </p>
           </div>
           <button
-            onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Calendly) {
+                window.Calendly.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'});
+              }
+            }}
             className="px-8 py-4 bg-gradient-to-r from-accent to-[#1B6CF2] hover:from-accent-light hover:to-[#3D82F3] text-white font-medium rounded-lg transition-all duration-300 shadow-glow-accent hidden md:inline-block"
           >
             Schedule Free Consultation
