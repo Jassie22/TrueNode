@@ -504,7 +504,7 @@ const ContactSection = () => {
                             </a>
                           </label>
                         </div>
-                        <div className="relative group w-full mb-6">
+                        <div className="relative group w-full mb-12">
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-accent-blue rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200 animate-pulse"></div>
                           <button
                             type="submit"

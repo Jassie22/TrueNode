@@ -434,7 +434,7 @@ const ServicesSection = () => {
         )}
         
         {/* CTA section */}
-        <div className="mt-20 text-center">
+        <div className="mt-4 text-center">
           <div className="overflow-hidden mb-6">
             <p 
               className="text-white/70 max-w-2xl mx-auto transform transition-all duration-700 animate-fade-in-up hidden md:block"
