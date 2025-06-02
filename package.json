@@ -8,26 +8,23 @@
     "build:gzip": "next build && node scripts/gzip-compress.js",
     "gzip": "node scripts/gzip-compress.js",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build",
+    "find-unused": "unimported",
+    "find-unused-exports": "ts-unused-exports tsconfig.json"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
-    "@react-three/drei": "^9.94.0",
-    "@react-three/fiber": "^8.15.16",
-    "@types/three": "^0.176.0",
     "canvas-confetti": "^1.9.3",
     "framer-motion": "^12.11.4",
     "gsap": "^3.12.5",
-    "gsap-trial": "^3.12.7",
     "next": "^15.3.3",
     "nodemailer": "^7.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^5.0.1",
-    "react-intersection-observer": "^9.16.0",
     "three": "^0.176.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.3.3",
     "@tailwindcss/typography": "^0.5.16",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.0.0",
@@ -39,6 +36,8 @@
     "eslint-config-next": "^14.0.0",
     "postcss": "^8.4.30",
     "tailwindcss": "^3.4.0",
-    "typescript": "^5.2.2"
+    "ts-unused-exports": "^11.0.1",
+    "typescript": "^5.2.2",
+    "unimported": "^1.31.0"
   }
 }

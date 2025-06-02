@@ -21,7 +21,7 @@ interface Service {
   subServices: SubService[];
 }
 
-export interface ServiceCardProps {
+interface ServiceCardProps {
   service: Service;
   active: boolean;
   expanded: boolean;

@@ -1,0 +1,22 @@
+{
+  "entry": [
+    "src/app/**/*.{js,jsx,ts,tsx}",
+    "src/components/**/*.{js,jsx,ts,tsx}",
+    "src/lib/**/*.{js,jsx,ts,tsx}",
+    "next.config.js",
+    "tailwind.config.js"
+  ],
+  "extensions": [".js", ".jsx", ".ts", ".tsx"],
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/out/**",
+    "**/*.d.ts"
+  ],
+  "ignoreUnresolved": [
+    "react/jsx-runtime"
+  ],
+  "showPreview": true,
+  "showUnused": true,
+  "showUnresolved": true
+} 
