@@ -91,6 +91,19 @@ section:not(:first-child) {
   padding-top: 6rem;
 }
 
+/* Remove top padding on mobile for all sections */
+@media (max-width: 767px) {
+  section {
+    padding-top: 0;
+    padding-bottom: 1rem;
+  }
+  
+  section:not(:first-child) {
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+
 /* Remove the harsh bottom edge with a gradient fade */
 section::after {
   content: "";

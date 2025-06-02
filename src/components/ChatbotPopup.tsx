@@ -996,11 +996,11 @@ const ChatbotPopup = () => {
 
       {/* Chat popup - reverted to original styling */}
       <div 
-        className={`absolute bottom-0 right-0 w-[360px] h-[580px] md:w-[420px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform ${
+        className={`absolute bottom-0 right-0 md:right-0 md:bottom-0 left-1/2 md:left-auto transform -translate-x-1/2 md:translate-x-0 w-[360px] h-[580px] md:w-[420px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out ${
           isOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
         }`}
         style={{ 
-          transformOrigin: 'bottom right',
+          transformOrigin: 'bottom center md:bottom-right',
           willChange: 'transform, opacity'
         }}
       >

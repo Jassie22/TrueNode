@@ -620,7 +620,7 @@ const ContactSection = () => {
                   </div>
                 </div>
               </div>
-              <div className="rounded-xl border border-white/10 flex-grow">
+              <div className="rounded-xl border border-white/10 flex-grow hidden md:block">
                 <div className="h-full" ref={gameContentRef} style={{ opacity: 1 }}>
                   <MemoryGame />
                 </div>
