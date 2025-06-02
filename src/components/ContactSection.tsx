@@ -354,7 +354,7 @@ const ContactSection = () => {
             <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
             <h2 
               ref={titleRef}
-              className="text-4xl md:text-5xl font-bold mb-4 text-white"
+              className="text-4xl md:text-5xl font-bold mb-4 text-white opacity-100"
               style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
             >
               Get in <span className="text-accent">Touch</span>
@@ -362,7 +362,7 @@ const ContactSection = () => {
             <div className="overflow-hidden">
               <p 
                 ref={descriptionRef}
-                className="text-lg md:text-xl text-white/60 font-light max-w-2xl mx-auto"
+                className="text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto opacity-100"
               >
                 Have a project in mind? We'd love to hear from you and discuss how we can help bring your vision to reality.
               </p>
@@ -373,7 +373,7 @@ const ContactSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 gap-y-16 relative" ref={formContentRef}>
           <div className="lg:mr-5">
             <div className="enquiry-form-gradient-border">
-              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 shadow-lg h-full relative">
+              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 pb-16 shadow-lg h-full relative">
                 <div className="relative z-10" ref={formInnerRef} style={{ opacity: 1 }}>
                   <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
                   {!formSubmitted ? (

@@ -951,7 +951,7 @@ const ChatbotPopup = () => {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 md:right-4 md:bottom-4 left-4 md:left-auto z-[60] flex flex-col items-end md:items-end items-center">
+    <div className="fixed bottom-4 right-4 z-[60] flex flex-col items-end">
       {/* Chat bubble */}
       {showChatBubble && !isOpen && (
         <div 
@@ -996,7 +996,7 @@ const ChatbotPopup = () => {
 
       {/* Chat popup - improved mobile positioning */}
       <div 
-        className={`absolute bottom-0 right-0 md:right-0 md:bottom-0 w-[95vw] max-w-[360px] md:w-[420px] h-[85vh] max-h-[580px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform ${
+        className={`absolute bottom-0 right-0 w-[95vw] max-w-[360px] md:w-[420px] h-[85vh] max-h-[580px] md:h-[650px] bg-black/80 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl flex flex-col transition-all duration-300 ease-out transform md:translate-x-0 translate-x-[calc(-50vw+50%+1rem)] ${
           isOpen ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
         }`}
         style={{ 
