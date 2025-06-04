@@ -354,7 +354,7 @@ const ServicesSection = () => {
             <h2 
               ref={titleRef}
               className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 drop-shadow-glow text-white pt-3 sm:pt-4"
-              style={{ textShadow: '0 0 8px rgba(144, 58, 231, 0.3)', opacity: 1 }}
+              style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)', opacity: 1 }}
             >
               Our <span className="text-accent text-shadow-lg">Services</span>
             </h2>

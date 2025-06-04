@@ -302,7 +302,7 @@ const HeroSection = () => {
       {/* Eye-catching animation at the top - moved lower */}
       <div 
         ref={attentionGrabberRef}
-        className="absolute top-[15%] left-0 right-0 h-32 pointer-events-none z-10 flex justify-center items-center overflow-visible"
+        className="absolute top-[15%] left-0 right-0 h-32 pointer-events-none z-10 justify-center items-center overflow-visible hidden md:flex"
       >
         <div className="attention-element w-16 h-16 sm:w-36 sm:h-36 bg-accent/10 rounded-full absolute aspect-square" style={{ left: '10%' }}></div>
         <div className="attention-element w-14 h-14 sm:w-28 sm:h-28 bg-accent-blue/20 rounded-full absolute aspect-square" style={{ left: '25%' }}></div>

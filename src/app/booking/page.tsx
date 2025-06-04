@@ -493,36 +493,127 @@ const BookingPage = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center"
+              className="text-center max-w-4xl mx-auto"
             >
-              <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-8 mb-8">
-                <div className="w-20 h-20 bg-green-500/20 rounded-full mx-auto flex items-center justify-center mb-6">
-                  <svg className="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {/* Success Icon and Animation */}
+              <div className="relative mb-8">
+                <div className="w-32 h-32 bg-gradient-to-br from-green-400/20 to-green-600/30 rounded-full mx-auto flex items-center justify-center mb-6 relative overflow-hidden backdrop-blur-sm border border-green-400/30">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-green-600/20 rounded-full animate-pulse"></div>
+                  <svg className="w-16 h-16 text-green-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                 </div>
-                <h2 className="text-3xl font-bold mb-4">Meeting Scheduled!</h2>
-                <p className="text-white/80 mb-6">
-                  Perfect! Your consultation has been automatically added to our calendars. You'll receive a confirmation email with the meeting link and details.
+              </div>
+
+              {/* Main Success Message */}
+              <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/60 backdrop-blur-lg rounded-2xl p-8 md:p-12 mb-8 border border-white/10 shadow-2xl">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-green-100 to-green-200 bg-clip-text text-transparent">
+                  🎉 Meeting Scheduled Successfully!
+                </h2>
+                <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+                  Perfect! Your consultation has been automatically added to our calendars. 
+                  <span className="text-green-400 font-semibold"> We're excited to discuss your project with you!</span>
                 </p>
-                <div className="bg-accent/10 border border-accent/30 rounded-lg p-4 mb-6">
-                  <p className="text-sm">
-                    <strong>What's Next:</strong><br />
-                    • Check your email for the calendar invitation<br />
-                    • The Google Meet link will be included<br />
-                    • We'll review your project details before our call<br />
-                    • Come prepared with any questions or additional requirements
-                  </p>
+                
+                {/* What Happens Next Section */}
+                <div className="bg-gradient-to-r from-accent/10 to-accent-blue/10 border border-accent/30 rounded-xl p-6 md:p-8 mb-8">
+                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
+                    <svg className="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    What Happens Next
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-sm">1</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium mb-1">📧 Confirmation Email</p>
+                        <p className="text-white/70 text-sm">Check your inbox for the calendar invitation with Google Meet link</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-sm">2</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium mb-1">📋 Project Review</p>
+                        <p className="text-white/70 text-sm">We'll review your project details before our call</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-sm">3</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium mb-1">💬 Strategic Discussion</p>
+                        <p className="text-white/70 text-sm">30-minute focused conversation about your goals and requirements</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-sm">4</span>
+                      </div>
+                      <div>
+                        <p className="text-white font-medium mb-1">📊 Custom Proposal</p>
+                        <p className="text-white/70 text-sm">Tailored recommendations and next steps for your project</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Preparation Tips */}
+                <div className="bg-gradient-to-r from-purple-500/10 to-blue-500/10 border border-purple-400/20 rounded-xl p-6 mb-8">
+                  <h4 className="text-lg font-semibold text-white mb-4 flex items-center">
+                    <svg className="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                    </svg>
+                    Come Prepared With
+                  </h4>
+                  <div className="text-white/80 text-sm space-y-2">
+                    <p>• Any questions about our services or approach</p>
+                    <p>• Specific examples or inspiration for your project</p>
+                    <p>• Timeline preferences and budget considerations</p>
+                    <p>• Current challenges you're facing with your digital presence</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/" className="px-6 py-3 bg-accent hover:bg-accent/90 text-white font-medium rounded-lg transition-all duration-300">
-                  Return to Homepage
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link 
+                  href="/" 
+                  className="group px-8 py-4 bg-gradient-to-r from-accent to-accent-light hover:from-accent-light hover:to-accent text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2 w-full sm:w-auto"
+                >
+                  <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                  </svg>
+                  <span>Return to Homepage</span>
                 </Link>
-                <Link href="/services" className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-lg transition-all duration-300">
-                  Explore Our Services
-                </Link>
+                <button
+                  onClick={() => {
+                    window.location.href = '/#services';
+                  }}
+                  className="group px-8 py-4 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center space-x-2 w-full sm:w-auto"
+                >
+                  <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                  </svg>
+                  <span>Explore Our Services</span>
+                </button>
+              </div>
+
+              {/* Additional Contact Info */}
+              <div className="mt-12 p-6 bg-black/30 backdrop-blur-sm rounded-xl border border-white/5">
+                <p className="text-white/60 text-sm mb-2">Need to reschedule or have questions?</p>
+                <p className="text-white/80">
+                  Contact us at{' '}
+                  <a href="mailto:info@truenode.co.uk" className="text-accent hover:text-accent-light transition-colors font-medium">
+                    info@truenode.co.uk
+                  </a>
+                  {' '}or call us directly
+                </p>
               </div>
             </motion.div>
           )}
