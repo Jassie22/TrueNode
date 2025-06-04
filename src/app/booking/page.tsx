@@ -167,6 +167,16 @@ const BookingPage = () => {
 
   const sendBookingNotification = async (calendlyData: any) => {
     try {
+      // Create hidden iframe to prevent redirect (like in chatbot)
+      let iframe = document.getElementById('hidden-form-iframe-booking') as HTMLIFrameElement;
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'hidden-form-iframe-booking';
+        iframe.name = 'hidden-form-iframe-booking';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+
       // Send additional project details to your email
       const notificationData = {
         ...formData,
@@ -181,6 +191,7 @@ const BookingPage = () => {
       form.method = 'POST';
       form.action = BOOKING_CONFIG.FORMSUBMIT_ENDPOINT;
       form.style.display = 'none';
+      form.target = 'hidden-form-iframe-booking'; // Target the hidden iframe
       
       Object.entries(notificationData).forEach(([key, value]) => {
         const input = document.createElement('input');
@@ -209,9 +220,22 @@ const BookingPage = () => {
       captchaField.value = 'false';
       form.appendChild(captchaField);
       
+      // Prevent redirect by targeting the hidden iframe
+      const nextField = document.createElement('input');
+      nextField.type = 'hidden';
+      nextField.name = '_next';
+      nextField.value = window.location.href;
+      form.appendChild(nextField);
+      
       document.body.appendChild(form);
       form.submit();
-      document.body.removeChild(form);
+      
+      // Clean up form after submission
+      setTimeout(() => {
+        if (document.body.contains(form)) {
+          document.body.removeChild(form);
+        }
+      }, 1000);
     } catch (error) {
       console.error('Error sending booking notification:', error);
     }

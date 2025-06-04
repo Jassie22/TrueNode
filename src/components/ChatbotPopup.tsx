@@ -1019,7 +1019,7 @@ const ChatbotPopup = () => {
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl border border-white/20 cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300 chat-bubble-popup"
+          className="bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300 chat-bubble-popup"
           onClick={() => setIsOpen(true)}
           style={{
             animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 2s ease-in-out 1s infinite'
