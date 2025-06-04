@@ -87,7 +87,6 @@ export default function RootLayout({
         <link rel="preload" href="/fonts/satoshi-500.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="preload" href="/fonts/satoshi-700.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="stylesheet" href="/fonts/satoshi.css" />
-        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
         
         {/* Organization Schema (JSON-LD) for SEO */}
         <script
@@ -143,12 +142,6 @@ export default function RootLayout({
         </Suspense>
         
         {/* GSAP scripts */}
-        
-        {/* Calendly script */}
-        <Script 
-          src="https://assets.calendly.com/assets/external/widget.js" 
-          strategy="lazyOnload"
-        />
         
         {/* Performance measurement script */}
         <Script id="performance-script">

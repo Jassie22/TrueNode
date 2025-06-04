@@ -7,6 +7,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import MemoryGame from './MemoryGame';
 import { event as gaEvent } from '@/lib/gtag';
+import Link from 'next/link';
 
 const ContactSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -788,16 +789,12 @@ const ContactSection = () => {
                       </div>
                     </div>
                     <div className="border-t border-white/10 pt-3 mt-4">
-                      <button 
-                        onClick={() => {
-                          if (typeof window !== 'undefined' && window.Calendly) {
-                            window.Calendly.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'});
-                          }
-                        }}
-                        className="w-full py-2.5 px-4 text-white text-sm font-medium rounded-xl bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 shadow-lg"
+                      <Link 
+                        href="/booking"
+                        className="w-full py-2.5 px-4 text-white text-sm font-medium rounded-xl bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 shadow-lg block text-center"
                       >
                         Book a Free Consultation
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>

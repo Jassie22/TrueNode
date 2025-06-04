@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ServiceCard from './ServiceCard';
+import Link from 'next/link';
 
 // Service data with detailed bullet points
 const mainServices = [
@@ -442,16 +443,12 @@ const ServicesSection = () => {
               Not sure which service is right for your specific needs? Let's discuss your project in detail.
             </p>
           </div>
-          <button
-            onClick={() => {
-              if (typeof window !== 'undefined' && window.Calendly) {
-                window.Calendly.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'});
-              }
-            }}
+          <Link
+            href="/booking"
             className="px-8 py-4 bg-gradient-to-r from-accent to-[#1B6CF2] hover:from-accent-light hover:to-[#3D82F3] text-white font-medium rounded-lg transition-all duration-300 shadow-glow-accent hidden md:inline-block"
           >
             Schedule Free Consultation
-          </button>
+          </Link>
         </div>
       </div>
     </section>

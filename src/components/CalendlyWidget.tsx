@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import Script from 'next/script';
+import { useRouter } from 'next/navigation';
 import gsap from 'gsap';
 
 interface CalendlyWidgetProps {
@@ -10,14 +10,10 @@ interface CalendlyWidgetProps {
 }
 
 const CalendlyWidget = ({ className = '', buttonText = 'Schedule time with me' }: CalendlyWidgetProps) => {
-  const buttonRef = useRef<HTMLAnchorElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // This ensures Calendly is defined when the component mounts
-    if (typeof window !== 'undefined' && window.Calendly) {
-      console.log('Calendly is loaded and ready');
-    }
-
     // Create eye-catching button animation without wiggle
     if (buttonRef.current) {
       // Enhanced pulsing glow animation
@@ -50,66 +46,29 @@ const CalendlyWidget = ({ className = '', buttonText = 'Schedule time with me' }
     }
   }, []);
 
-  const openCalendly = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    
-    // Add click animation
-    if (buttonRef.current) {
-      gsap.to(buttonRef.current, {
-        scale: 0.95,
-        duration: 0.1,
-        onComplete: () => {
-          gsap.to(buttonRef.current, {
-            scale: 1.05,
-            duration: 0.2
-          });
-        }
-      });
-    }
-    
-    if (typeof window !== 'undefined' && window.Calendly) {
-      window.Calendly.initPopupWidget({
-        url: 'https://calendly.com/jasmeendahak03/30min'
-      });
-      return false;
-    }
+  const handleBookingClick = () => {
+    // Navigate immediately without waiting for animations
+    router.push('/booking');
   };
 
   return (
-    <>
-      {/* Calendly CSS */}
-      <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
-      
-      {/* Calendly JS */}
-      <Script
-        src="https://assets.calendly.com/assets/external/widget.js"
-        strategy="lazyOnload"
-      />
-      
-      {/* Enhanced Calendly link with improved gradient and size */}
-      <a 
+    <>      
+      {/* Enhanced booking navigation button with improved gradient and size */}
+      <button 
         ref={buttonRef}
-        href="#" 
-        onClick={openCalendly}
+        onClick={handleBookingClick}
         className={`calendly-open ${className} relative px-8 py-4 text-lg font-bold text-white rounded-full bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 w-full sm:w-auto text-center`}
         style={{ transform: 'translateZ(0)', willChange: 'transform, box-shadow' }}
       >
         <span className="relative z-10 flex items-center justify-center">
           {buttonText}
           <svg className="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
         </span>
-      </a>
+      </button>
     </>
   );
 };
-
-// Add type definition for the Calendly global object
-declare global {
-  interface Window {
-    Calendly: any;
-  }
-}
 
 export default CalendlyWidget; 

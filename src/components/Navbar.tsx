@@ -183,15 +183,15 @@ const Navbar = () => {
           </a>
           
           {/* Contact Button with wiggle and glow effects */}
-          <button
-            onClick={() => window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'})}
+          <Link
+            href="/booking"
             className="px-6 py-2.5 text-white rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] shadow-lg relative overflow-hidden group"
             aria-label="Book a free consultation call"
           >
             Book a Call
             <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out pointer-events-none"></span>
-          </button>
+          </Link>
         </div>
         
         {/* Mobile Menu Button - Enhanced */}
@@ -276,11 +276,9 @@ const Navbar = () => {
           </a>
           
           {/* Contact Button - mobile */}
-          <button
-            onClick={() => {
-              window.Calendly?.initPopupWidget({url: 'https://calendly.com/jasmeendahak03/30min'});
-              setMobileMenuOpen(false);
-            }}
+          <Link
+            href="/booking"
+            onClick={() => setMobileMenuOpen(false)}
             className="w-full text-white bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] px-5 py-3 rounded-lg font-medium transition-all duration-300 mt-4 flex items-center justify-center gap-2"
             aria-label="Book a free consultation call"
             tabIndex={mobileMenuOpen ? 0 : -1}
@@ -289,7 +287,7 @@ const Navbar = () => {
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
             </svg>
             Book a Call
-          </button>
+          </Link>
         </div>
       </div>
       
