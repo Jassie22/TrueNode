@@ -297,6 +297,13 @@ const HeroSection = () => {
         <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>
         <div className="glow-blob absolute w-[800px] h-[800px] rounded-full bg-accent-blue/5 blur-[150px] bottom-[20%] right-[5%] opacity-50"></div>
         <div className="glow-blob absolute w-[600px] h-[600px] rounded-full bg-purple-500/5 blur-[100px] top-[50%] right-[30%] opacity-40"></div>
+        
+        {/* Mobile-specific purple glow elements */}
+        <div className="md:hidden">
+          <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-purple-500/8 blur-[80px] top-[20%] left-[15%] opacity-60"></div>
+          <div className="glow-blob absolute w-[350px] h-[350px] rounded-full bg-accent/6 blur-[70px] bottom-[30%] right-[10%] opacity-50"></div>
+          <div className="glow-blob absolute w-[300px] h-[300px] rounded-full bg-purple-600/7 blur-[60px] top-[60%] left-[20%] opacity-45"></div>
+        </div>
       </div>
       
       {/* Eye-catching animation at the top - moved lower */}

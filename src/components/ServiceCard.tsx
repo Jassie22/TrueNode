@@ -63,14 +63,13 @@ const ServiceCard = ({
     };
   }, []);
 
-  // Details to display - always show 3 by default, only expand on active/expanded
+  // Details to display - show all details on mobile, limit on desktop hover
   const maxVisibleDetails = isMobile 
-    ? (expanded ? service.details.length : 3)
+    ? service.details.length
     : (active || expanded) ? service.details.length : 3;
   
   // Separate visible and hidden details
   const visibleDetails = service.details.slice(0, maxVisibleDetails);
-  const hasMoreDetails = isMobile && service.details.length > maxVisibleDetails && !expanded;
   
   // Handle initial animation and hover effects
   useEffect(() => {
@@ -273,38 +272,6 @@ const ServiceCard = ({
               </li>
             ))}
           </ul>
-          
-          {/* Show More button for mobile */}
-          {hasMoreDetails && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleExpand();
-              }}
-              className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
-            >
-              Show More ({service.details.length - 3} more)
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
-          
-          {/* Show Less button for mobile when expanded */}
-          {isMobile && expanded && service.details.length > 3 && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleExpand();
-              }}
-              className="mt-3 text-accent text-sm font-medium hover:text-accent-light transition-colors duration-200 flex items-center"
-            >
-              Show Less
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 rotate-180" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          )}
         </div>
       </div>
     </div>
