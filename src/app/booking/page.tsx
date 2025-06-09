@@ -269,7 +269,7 @@ const BookingPage = () => {
             <>
               {/* Header */}
               <div className="text-center mb-12">
-                <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-8 shadow-glow"></div>
+                <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-8 md:-translate-y-8 -translate-y-4 shadow-glow"></div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 pt-4"
                     style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
                   Book Your <span className="text-accent">Free Consultation</span>
@@ -472,9 +472,11 @@ const BookingPage = () => {
                     
                     {/* Calendly inline widget using simple HTML approach */}
                     <div 
-                      className="calendly-inline-widget bg-white rounded-lg overflow-hidden"
+                      className="calendly-inline-widget bg-white rounded-lg overflow-hidden mx-auto w-full max-w-full h-[500px] md:h-[600px]"
                       data-url={BOOKING_CONFIG.CALENDLY_URL}
-                      style={{ minWidth: '320px', height: '700px' }}
+                      style={{ 
+                        minWidth: '320px'
+                      }}
                     ></div>
 
                     <div className="mt-6 flex justify-start">

@@ -337,7 +337,7 @@ const ContactSection = () => {
         <div className="relative" ref={formContentRef}>
           <div className="block lg:hidden">
             <div className="enquiry-form-gradient-border">
-              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 pb-20 shadow-lg h-full relative">
+              <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 pb-8 md:pb-20 shadow-lg h-full relative">
                 <div className="relative z-10" ref={formInnerRef} style={{ opacity: 1 }}>
                   <h3 className="text-3xl font-bold mb-6 text-white text-center">Send a message</h3>
                   {!formSubmitted ? (
@@ -468,7 +468,7 @@ const ContactSection = () => {
                             </a>
                           </label>
                         </div>
-                        <div className="relative group w-full mb-12">
+                        <div className="relative group w-full mb-6 md:mb-12">
                           <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-accent-blue rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200 animate-pulse"></div>
                           <button
                             type="submit"
@@ -515,7 +515,7 @@ const ContactSection = () => {
           <div className="hidden lg:grid lg:grid-cols-2 gap-10">
             <div className="lg:mr-5">
               <div className="enquiry-form-gradient-border">
-                <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 pb-20 shadow-lg h-full relative">
+                <div className="rounded-xl bg-dark/20 backdrop-blur-sm p-6 sm:p-8 pb-8 md:pb-20 shadow-lg h-full relative">
                   <div className="relative z-10" ref={formInnerRef} style={{ opacity: 1 }}>
                     <h3 className="text-3xl lg:text-4xl font-bold mb-6 text-white text-center lg:text-left">Send a message</h3>
                     {!formSubmitted ? (
@@ -646,7 +646,7 @@ const ContactSection = () => {
                               </a>
                             </label>
                           </div>
-                          <div className="relative group w-full mb-12">
+                          <div className="relative group w-full mb-6 md:mb-12">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-accent to-accent-blue rounded-lg blur opacity-60 group-hover:opacity-100 transition duration-200 animate-pulse"></div>
                             <button
                               type="submit"
