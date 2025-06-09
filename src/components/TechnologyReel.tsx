@@ -60,14 +60,14 @@ const TechnologyReel = () => {
           {/* Purple accent line */}
           <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
           
-          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-white leading-tight"
+          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-white leading-tight text-center"
               style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
             <span className="bg-gradient-to-r from-accent to-accent-blue bg-clip-text text-transparent">
               Technologies
             </span> We Work With
           </h3>
         </div>
-        <p className="text-white/60 max-w-2xl mx-auto px-4 text-xs sm:text-sm md:text-base leading-relaxed">
+        <p className="text-white/60 max-w-2xl mx-auto px-4 text-xs sm:text-sm md:text-base leading-relaxed text-center">
           We employ a range of technologies and techniques to build a custom product that will boost your business
         </p>
       </div>

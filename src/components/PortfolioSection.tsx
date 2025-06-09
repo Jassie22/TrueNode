@@ -864,9 +864,9 @@ const MobileModal: React.FC<ExpandedCardProps> = ({ project, onClose }) => {
               {/* Technologies Section */}
               <div>
                 <h4 className="text-xl font-semibold text-white mb-4">Technologies Used</h4>
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2">
                   {project.technologies.map((tech, index) => (
-                    <span key={index} className="bg-accent/30 text-accent-light border border-accent/20 px-4 py-2 rounded-full text-lg font-medium">
+                    <span key={index} className="bg-accent/30 text-accent-light border border-accent/20 px-3 py-1.5 rounded-full text-sm font-medium">
                       {tech}
                     </span>
                   ))}

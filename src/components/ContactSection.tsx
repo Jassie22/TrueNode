@@ -47,34 +47,24 @@ const ContactSection = () => {
         gsap.registerPlugin(ScrollTrigger);
 
         const ctx = gsap.context(() => {
+          // Ensure elements are visible immediately
           if (titleRef.current) {
-            gsap.set(titleRef.current, { y: 40, opacity: 0 });
+            titleRef.current.style.opacity = '1';
           }
           if (descriptionRef.current) {
-            gsap.set(descriptionRef.current, { y: 30, opacity: 0 });
+            descriptionRef.current.style.opacity = '1';
           }
-          // Only hide the form inner content, keeping the border visible
           if (formInnerRef.current) {
-            gsap.set(formInnerRef.current, { y: 40, opacity: 0 });
+            formInnerRef.current.style.opacity = '1';
           }
           if (gameContentRef.current) {
-            gsap.set(gameContentRef.current, { y: 40, opacity: 0 });
+            gameContentRef.current.style.opacity = '1';
           }
-
-          // Ensure form container is visible immediately
           if (formContentRef.current) {
-            gsap.set(formContentRef.current, { opacity: 1 });
+            formContentRef.current.style.opacity = '1';
           }
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 85%',
-              end: 'center center',
-              toggleActions: 'play none none none'
-            }
-          });
-
+          // Simple background blob animation
           if (backgroundRef.current) {
             const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
             blobs.forEach((blob, index) => {
@@ -97,45 +87,19 @@ const ContactSection = () => {
             });
           }
 
-          tl.fromTo(
-            titleRef.current,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }
-          );
-          tl.fromTo(
-            descriptionRef.current,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 0.7, duration: 0.5 },
-            '-=0.3'
-          );
-          // Animate the form and game content with stagger - ensure they become visible
-          tl.fromTo(
-            [formInnerRef.current, gameContentRef.current],
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out', stagger: 0.1 },
-            '-=0.3'
-          );
-          ScrollTrigger.refresh();
-
         }, sectionRef);
-
-        // Fallback to ensure content is visible if animations don't work
-        const fallbackTimer = setTimeout(() => {
-          if (formInnerRef.current) {
-            formInnerRef.current.style.opacity = '1';
-          }
-          if (gameContentRef.current) {
-            gameContentRef.current.style.opacity = '1';
-          }
-        }, 2000);
 
         return () => {
           ctx.revert();
-          clearTimeout(fallbackTimer);
         };
         
       } catch (error) {
         console.warn('Error in ContactSection animations:', error);
+        // Fallback to ensure visibility
+        if (titleRef.current) titleRef.current.style.opacity = '1';
+        if (descriptionRef.current) descriptionRef.current.style.opacity = '1';
+        if (formInnerRef.current) formInnerRef.current.style.opacity = '1';
+        if (gameContentRef.current) gameContentRef.current.style.opacity = '1';
       }
     }
   }, []);
@@ -355,14 +319,14 @@ const ContactSection = () => {
             <h2 
               ref={titleRef}
               className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white opacity-100 pt-3 sm:pt-4"
-              style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
+              style={{ textShadow: '0 0 8px rgba(144, 58, 231, 0.3)' }}
             >
               Get in <span className="text-accent">Touch</span>
             </h2>
             <div className="overflow-hidden">
               <p 
                 ref={descriptionRef}
-                className="text-base sm:text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto opacity-100"
+                className="text-base sm:text-lg md:text-xl text-white/80 font-light max-w-2xl mx-auto opacity-80"
               >
                 Have a project in mind? We'd love to hear from you and discuss how we can help bring your vision to reality.
               </p>

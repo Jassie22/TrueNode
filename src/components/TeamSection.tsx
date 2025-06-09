@@ -81,8 +81,21 @@ const TeamSection = () => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        // Animate background blobs
-        let blobAnimations: gsap.core.Tween[] = []; // Store blob animations
+        // Ensure elements are visible immediately
+        if (titleRef.current) {
+          titleRef.current.style.opacity = '1';
+        }
+        if (descriptionRef.current) {
+          descriptionRef.current.style.opacity = '1';
+        }
+        if (teamMemberRefs.current && teamMemberRefs.current.length > 0) {
+          teamMemberRefs.current.forEach(ref => {
+            if (ref) ref.style.opacity = '1';
+          });
+        }
+
+        // Simple background blob animation only
+        let blobAnimations: gsap.core.Tween[] = [];
         if (backgroundRef.current) {
           const blobs = backgroundRef.current.querySelectorAll('.glow-blob');
           
@@ -104,94 +117,31 @@ const TeamSection = () => {
               ease: "sine.inOut",
               delay: index * 1.5
             });
-            blobAnimations.push(anim); // Add to array
+            blobAnimations.push(anim);
           });
         }
-        
-        // Immediately set initial animation states for title, description, and cards
-        if (titleRef.current) {
-          gsap.set(titleRef.current, { y: 40, opacity: 0 });
-        }
-        if (descriptionRef.current) {
-          gsap.set(descriptionRef.current, { y: 30, opacity: 0 });
-        }
-        if (teamMemberRefs.current && teamMemberRefs.current.length > 0) {
-          gsap.set(teamMemberRefs.current, { y: 60, opacity: 0, scale: 0.9 });
-        }
-        
-        const animationTimeout = setTimeout(() => { // Added setTimeout
-          // Create animation timeline
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: 'top 75%',
-              end: 'center center',
-              toggleActions: 'play none none reverse'
-            }
-          });
-          
-          // Animate title
-          tl.fromTo(
-            titleRef.current,
-            { y: 40, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' }
-          );
-          
-          // Animate description
-          tl.fromTo(
-            descriptionRef.current,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 0.7, duration: 0.8 },
-            '-=0.5'
-          );
-          
-          // Animate team member cards with staggered entrance
-          tl.fromTo(
-            teamMemberRefs.current,
-            { 
-              y: 60, 
-              opacity: 0,
-              scale: 0.9
-            },
-            {
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              duration: 0.8,
-              stagger: 0.15,
-              ease: 'back.out(1.2)'
-            },
-            '-=0.4'
-          );
-          ScrollTrigger.refresh(); // Explicitly refresh ScrollTrigger
-        }, 100); // 100ms delay, can be adjusted
         
         // Cleanup function
         return () => {
-          clearTimeout(animationTimeout); // Clear timeout
-          // tl.kill(); // tl might not be defined here if timeout doesn't run, handled by ScrollTrigger.getAll()
-          blobAnimations.forEach(anim => anim.kill()); // Kill individual blob animations
+          blobAnimations.forEach(anim => anim.kill());
           teamMemberRefs.current.forEach(memberRef => {
-            if (memberRef) gsap.killTweensOf(memberRef); // Kill tweens on team member cards
+            if (memberRef) gsap.killTweensOf(memberRef);
           });
           if (slideContainerRef.current) {
-            gsap.killTweensOf(slideContainerRef.current); // Kill tweens on the mobile slide container
+            gsap.killTweensOf(slideContainerRef.current);
           }
-          // Kill all ScrollTriggers created by this component
-          // This is a more robust way to ensure all related ScrollTriggers are removed
-          ScrollTrigger.getAll().forEach((trigger: ScrollTrigger) => {
-            if (trigger.trigger === sectionRef.current || 
-                (titleRef.current && trigger.trigger === titleRef.current) ||
-                (descriptionRef.current && trigger.trigger === descriptionRef.current) ||
-                teamMemberRefs.current.some(ref => ref === trigger.trigger)
-            ) {
-              trigger.kill();
-            }
-          });
         };
         
       } catch (error) {
         console.warn('Error in TeamSection animations:', error);
+        // Fallback to ensure visibility
+        if (titleRef.current) titleRef.current.style.opacity = '1';
+        if (descriptionRef.current) descriptionRef.current.style.opacity = '1';
+        if (teamMemberRefs.current) {
+          teamMemberRefs.current.forEach(ref => {
+            if (ref) ref.style.opacity = '1';
+          });
+        }
       }
     }
   }, []);
@@ -356,7 +306,7 @@ const TeamSection = () => {
             <h2 
               ref={titleRef}
               className="text-4xl md:text-5xl font-bold mb-4 text-white pt-4"
-              style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}
+              style={{ textShadow: '0 0 8px rgba(144, 58, 231, 0.3)' }}
             >
               Our <span className="text-accent">Team</span>
             </h2>
