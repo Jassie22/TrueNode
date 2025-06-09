@@ -293,8 +293,8 @@ const HeroSection = () => {
         ref={backgroundRef}
         className="absolute inset-0 z-0 overflow-visible"
       >
-        {/* Mobile-specific subtle purple background overlay */}
-        <div className="md:hidden absolute inset-0 bg-gradient-to-br from-purple-900/10 via-purple-800/5 to-purple-900/8 opacity-60"></div>
+        {/* Mobile-specific subtle purple background overlay - enhanced */}
+        <div className="md:hidden absolute inset-0 bg-gradient-to-br from-purple-900/15 via-purple-800/10 to-purple-900/12 opacity-80"></div>
         
         {/* Glow blobs - Made larger and moved lower */}
         <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>
@@ -303,9 +303,9 @@ const HeroSection = () => {
         
         {/* Mobile-specific purple glow elements */}
         <div className="md:hidden">
-          <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-purple-500/8 blur-[80px] top-[20%] left-[15%] opacity-60"></div>
-          <div className="glow-blob absolute w-[350px] h-[350px] rounded-full bg-accent/6 blur-[70px] bottom-[30%] right-[10%] opacity-50"></div>
-          <div className="glow-blob absolute w-[300px] h-[300px] rounded-full bg-purple-600/7 blur-[60px] top-[60%] left-[20%] opacity-45"></div>
+          <div className="glow-blob absolute w-[400px] h-[400px] rounded-full bg-purple-500/12 blur-[80px] top-[20%] left-[15%] opacity-70"></div>
+          <div className="glow-blob absolute w-[350px] h-[350px] rounded-full bg-accent/8 blur-[70px] bottom-[30%] right-[10%] opacity-60"></div>
+          <div className="glow-blob absolute w-[300px] h-[300px] rounded-full bg-purple-600/10 blur-[60px] top-[60%] left-[20%] opacity-55"></div>
         </div>
       </div>
       
@@ -348,7 +348,7 @@ const HeroSection = () => {
 
               {/* Stats section - positioned to align vertically with "Your Business" */}
               {hasMounted && (
-                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-4 md:-mt-32 lg:-mt-36 xl:-mt-40 md:self-start opacity-0">
+                <div id="hero-stats-wrapper" className="w-full md:w-auto md:pl-8 lg:pl-12 mt-0 md:-mt-32 lg:-mt-36 xl:-mt-40 md:self-start opacity-0">
                   <HeroStats />
                 </div>
               )}

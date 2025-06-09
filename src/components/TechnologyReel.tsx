@@ -53,7 +53,7 @@ const TechnologyReel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   
   return (
-    <div className="w-screen bg-transparent py-6 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
+    <div className="w-screen bg-transparent pt-6 pb-0 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
       
       <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-8 px-4">
         <div className="relative">
@@ -74,7 +74,7 @@ const TechnologyReel = () => {
       
       <div className="overflow-hidden">
         <div className="tech-reel-animation">
-          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-6">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-3 md:py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-${index}`}
@@ -98,7 +98,7 @@ const TechnologyReel = () => {
               </div>
             ))}
           </div>
-          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-6">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-3 md:py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-copy-${index}`}
