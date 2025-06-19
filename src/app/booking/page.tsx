@@ -472,10 +472,11 @@ const BookingPage = () => {
                     
                     {/* Calendly inline widget using simple HTML approach */}
                     <div 
-                      className="calendly-inline-widget bg-white rounded-lg overflow-hidden mx-auto w-full max-w-full h-[500px] md:h-[600px]"
+                      className="calendly-inline-widget bg-white rounded-lg overflow-hidden mx-auto w-full max-w-[95vw] md:max-w-4xl h-[500px] md:h-[600px]"
                       data-url={BOOKING_CONFIG.CALENDLY_URL}
                       style={{ 
-                        minWidth: '320px'
+                        minWidth: '320px',
+                        maxWidth: '100%'
                       }}
                     ></div>
 
@@ -499,67 +500,67 @@ const BookingPage = () => {
             >
               {/* Success Icon and Animation */}
               <div className="relative mb-8">
-                <div className="w-32 h-32 bg-gradient-to-br from-green-400/20 to-green-600/30 rounded-full mx-auto flex items-center justify-center mb-6 relative overflow-hidden backdrop-blur-sm border border-green-400/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 to-green-600/20 rounded-full animate-pulse"></div>
-                  <svg className="w-16 h-16 text-green-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-purple-400/20 to-purple-600/30 rounded-full mx-auto flex items-center justify-center mb-6 relative overflow-hidden backdrop-blur-sm border border-purple-400/30">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-purple-600/20 rounded-full animate-pulse"></div>
+                  <svg className="w-12 h-12 md:w-16 md:h-16 text-purple-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
                   </svg>
                 </div>
               </div>
 
               {/* Main Success Message */}
-              <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/60 backdrop-blur-lg rounded-2xl p-8 md:p-12 mb-8 border border-white/10 shadow-2xl">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-green-100 to-green-200 bg-clip-text text-transparent">
+              <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/60 backdrop-blur-lg rounded-2xl p-6 md:p-8 lg:p-12 mb-8 border border-white/10 shadow-2xl">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-purple-100 to-purple-200 bg-clip-text text-transparent">
                   🎉 Meeting Scheduled Successfully!
                 </h2>
-                <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed">
+                <p className="text-lg md:text-xl lg:text-2xl text-white/90 mb-8 leading-relaxed">
                   Perfect! Your consultation has been automatically added to our calendars. 
-                  <span className="text-green-400 font-semibold"> We're excited to discuss your project with you!</span>
+                  <span className="text-purple-400 font-semibold"> We're excited to discuss your project with you!</span>
                 </p>
                 
                 {/* What Happens Next Section */}
-                <div className="bg-gradient-to-r from-accent/10 to-accent-blue/10 border border-accent/30 rounded-xl p-6 md:p-8 mb-8">
-                  <h3 className="text-2xl font-bold text-white mb-6 flex items-center">
-                    <svg className="w-6 h-6 mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-gradient-to-r from-accent/10 to-accent-blue/10 border border-accent/30 rounded-xl p-4 md:p-6 lg:p-8 mb-6 md:mb-8">
+                  <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6 flex items-center">
+                    <svg className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                     What Happens Next
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 text-left">
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-accent font-bold text-sm">1</span>
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-xs md:text-sm">1</span>
                       </div>
                       <div>
-                        <p className="text-white font-medium mb-1">📧 Confirmation Email</p>
-                        <p className="text-white/70 text-sm">Check your inbox for the calendar invitation with Google Meet link</p>
+                        <p className="text-white font-medium mb-1 text-sm md:text-base">📧 Confirmation Email</p>
+                        <p className="text-white/70 text-xs md:text-sm">Check your inbox for the calendar invitation with Google Meet link</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-accent font-bold text-sm">2</span>
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-xs md:text-sm">2</span>
                       </div>
                       <div>
-                        <p className="text-white font-medium mb-1">📋 Project Review</p>
-                        <p className="text-white/70 text-sm">We'll review your project details before our call</p>
+                        <p className="text-white font-medium mb-1 text-sm md:text-base">📋 Project Review</p>
+                        <p className="text-white/70 text-xs md:text-sm">We'll review your project details before our call</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-accent font-bold text-sm">3</span>
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-xs md:text-sm">3</span>
                       </div>
                       <div>
-                        <p className="text-white font-medium mb-1">💬 Strategic Discussion</p>
-                        <p className="text-white/70 text-sm">30-minute focused conversation about your goals and requirements</p>
+                        <p className="text-white font-medium mb-1 text-sm md:text-base">💬 Strategic Discussion</p>
+                        <p className="text-white/70 text-xs md:text-sm">30-minute focused conversation about your goals and requirements</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <div className="w-8 h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-accent font-bold text-sm">4</span>
+                      <div className="w-6 h-6 md:w-8 md:h-8 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-accent font-bold text-xs md:text-sm">4</span>
                       </div>
                       <div>
-                        <p className="text-white font-medium mb-1">📊 Custom Proposal</p>
-                        <p className="text-white/70 text-sm">Tailored recommendations and next steps for your project</p>
+                        <p className="text-white font-medium mb-1 text-sm md:text-base">📊 Custom Proposal</p>
+                        <p className="text-white/70 text-xs md:text-sm">Tailored recommendations and next steps for your project</p>
                       </div>
                     </div>
                   </div>
