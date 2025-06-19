@@ -97,10 +97,10 @@ const HeroSection = () => {
           headingRef.current.innerHTML = ''; // Clear any SSR content before building
           
           const firstLineContainer = document.createElement('h1');
-          firstLineContainer.className = 'text-[18vw] sm:text-[16vw] md:text-[15vw] lg:text-[15vw] xl:text-[14vw] font-bold leading-none tracking-tighter mb-6 md:mb-8 relative overflow-visible text-center md:text-left max-w-full';
+          firstLineContainer.className = 'text-[16vw] sm:text-[15vw] md:text-[14vw] lg:text-[13vw] xl:text-[12vw] font-bold leading-none tracking-tighter mb-6 md:mb-8 relative overflow-visible text-center md:text-left max-w-full';
           
           const secondLineContainer = document.createElement('div');
-          secondLineContainer.className = 'text-[11vw] sm:text-[9vw] md:text-[8vw] lg:text-[7vw] xl:text-[7vw] font-bold leading-none tracking-tighter relative overflow-visible mb-8 md:mb-12 text-center md:text-left max-w-full';
+          secondLineContainer.className = 'text-[11vw] sm:text-[10vw] md:text-[8vw] lg:text-[7vw] xl:text-[6vw] font-bold leading-none tracking-tighter relative overflow-visible mb-8 md:mb-12 text-center md:text-left max-w-full';
           secondLineContainer.id = 'business-text';
           businessTextElement = secondLineContainer;
           
@@ -286,7 +286,7 @@ const HeroSection = () => {
     <section 
       id="hero" 
       ref={sectionRef}
-      className="min-h-[120vh] flex flex-col items-center justify-center pt-32 pb-20 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
+      className="h-screen md:flex-1 flex flex-col items-center justify-center pt-[calc(6rem+env(safe-area-inset-top))] md:pt-32 pb-0 md:pb-20 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
     >
       {/* Animated background with blobs */}
       <div 
@@ -321,7 +321,7 @@ const HeroSection = () => {
         <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute aspect-square" style={{ left: '40%', top: '70%' }}></div>
       </div>
       
-      <div className="container mx-auto px-8 sm:px-12 md:px-16 lg:px-20 relative z-10">
+      <div className="container mx-auto px-8 sm:px-12 md:px-16 lg:px-20 relative z-20">
         {/* Main content area with left-aligned layout */}
         <div className="flex flex-col items-start w-full">
           {/* Left column: Heading, Subtitle, and CTA Button */}
@@ -329,7 +329,7 @@ const HeroSection = () => {
             {/* Heading area - now contains semantic h1 */}
             <div 
               ref={headingRef}
-              className="overflow-visible"
+              className="overflow-visible mt-16 md:mt-0"
               role="heading"
               aria-level={1}
             >
@@ -342,7 +342,7 @@ const HeroSection = () => {
               <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0 mt-8 md:mt-1 mb-4 md:mb-0">
                 <CalendlyWidget
                   buttonText="Book a Free Consultation"
-                  className="group relative inline-flex items-center justify-center px-10 py-4 sm:px-12 sm:py-5 text-lg sm:text-xl font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto"
+                  className="group relative inline-flex items-center justify-center px-4 py-2.5 sm:px-6 md:px-10 lg:px-12 text-sm sm:text-base md:text-lg lg:text-xl font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto whitespace-nowrap"
                 />
               </div>
 
@@ -360,7 +360,7 @@ const HeroSection = () => {
       {/* Decorative Accent Block - kept for visual consistency */}
       <div 
         ref={accentBlockRef}
-        className="absolute inset-0 z-0 overflow-visible"
+        className="absolute inset-0 z-0 overflow-visible hidden md:block"
       >
         {/* Glow blobs - Made larger and moved lower */}
         <div className="glow-blob absolute w-[700px] h-[700px] rounded-full bg-accent/5 blur-[120px] top-[30%] left-[10%] opacity-60"></div>

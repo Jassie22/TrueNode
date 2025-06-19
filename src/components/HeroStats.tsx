@@ -174,7 +174,7 @@ const HeroStats = () => {
       </div>
 
       {/* Mobile: Horizontal Carousel - updated for better UX */}
-      <div className="md:hidden w-full overflow-hidden relative">
+      <div className="md:hidden w-full overflow-hidden relative pb-6">
         <div 
           className="flex transition-transform duration-500 ease-in-out"
           style={{ 

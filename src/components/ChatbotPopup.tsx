@@ -162,7 +162,7 @@ const ChatbotPopup = () => {
 
   // Scroll to bottom of messages when new message is added
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   };
 
   useEffect(() => {
@@ -708,29 +708,6 @@ const ChatbotPopup = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
-    
-    // Show a notification banner at the top of the page
-    const notificationBanner = document.createElement('div');
-    notificationBanner.className = 'fixed top-0 left-0 right-0 bg-accent text-white py-2 px-4 text-center z-[10000] shadow-md';
-    notificationBanner.textContent = 'Message received! Our assistant is processing your request...';
-    notificationBanner.style.transform = 'translateY(-100%)';
-    document.body.appendChild(notificationBanner);
-    
-    // Animate the banner sliding down
-    setTimeout(() => {
-      notificationBanner.style.transition = 'transform 0.3s ease-out';
-      notificationBanner.style.transform = 'translateY(0)';
-    }, 10);
-    
-    // Remove the notification after 3 seconds
-    setTimeout(() => {
-      notificationBanner.style.transform = 'translateY(-100%)';
-      setTimeout(() => {
-        if (document.body.contains(notificationBanner)) {
-          document.body.removeChild(notificationBanner);
-        }
-      }, 300);
-    }, 3000);
     
     // Hide quick options when user starts typing their own message
     setShowQuickOptions(false);
@@ -1280,12 +1257,18 @@ const ChatbotPopup = () => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
                   handleSendMessage();
-                  // Don't blur the input to keep keyboard open
+                  // Keep keyboard open by maintaining focus
                   setTimeout(() => {
                     if (inputRef.current) {
                       inputRef.current.focus();
+                      // Prevent keyboard from closing by setting focus again
+                      setTimeout(() => {
+                        if (inputRef.current) {
+                          inputRef.current.focus();
+                        }
+                      }, 50);
                     }
-                  }, 50);
+                  }, 0);
                 }
               }}
               placeholder={showFormBuilder ? "Type your response..." : "Type your message..."}
