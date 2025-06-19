@@ -321,7 +321,7 @@ const HeroSection = () => {
         <div className="attention-element w-8 h-8 sm:w-16 sm:h-16 bg-white/10 rounded-full absolute aspect-square" style={{ left: '40%', top: '70%' }}></div>
       </div>
       
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-8 sm:px-12 md:px-16 lg:px-20 relative z-10">
         {/* Main content area with left-aligned layout */}
         <div className="flex flex-col items-start w-full">
           {/* Left column: Heading, Subtitle, and CTA Button */}

@@ -1019,10 +1019,11 @@ const ChatbotPopup = () => {
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-gradient-to-r from-purple-600 via-blue-500 to-cyan-400 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative backdrop-blur-sm hover:shadow-xl transition-all duration-300 chat-bubble-popup"
+          className="bg-purple-600 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative border border-purple-400/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 chat-bubble-popup backdrop-blur-sm"
           onClick={() => setIsOpen(true)}
           style={{
-            animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 2s ease-in-out 1s infinite'
+            animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 4s ease-in-out 1s infinite',
+            boxShadow: '0 25px 50px -12px rgba(147, 51, 234, 0.25), 0 0 0 1px rgba(147, 51, 234, 0.1)'
           }}
         >
           {/* Close button for chat bubble */}
@@ -1031,7 +1032,7 @@ const ChatbotPopup = () => {
               e.stopPropagation(); // Prevent opening the chat
               setShowChatBubble(false);
             }}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-gray-600 hover:bg-gray-500 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-gray-400 hover:bg-gray-500 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
             aria-label="Close chat bubble"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1039,8 +1040,10 @@ const ChatbotPopup = () => {
             </svg>
           </button>
 
-          <p className="text-sm md:text-base font-medium">✨ Ready to transform your digital presence? Let's chat!</p>
-          <p className="text-xs mt-2 opacity-80">Tap to explore what's possible</p>
+          <div>
+            <p className="text-sm font-medium">Need help with your project?</p>
+            <p className="text-xs mt-1 opacity-80">Let's discuss how we can help you succeed online</p>
+          </div>
         </div>
       )}
       
@@ -1069,18 +1072,18 @@ const ChatbotPopup = () => {
           bottom: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? '10px' : '0px',
           height: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? 
             `${Math.min(viewportHeight - 20, 580)}px` : 
-            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : '650px',
+            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : '85vh',
           maxHeight: isKeyboardOpen && typeof window !== 'undefined' && window.innerWidth < 768 ? 
             `${Math.min(viewportHeight - 20, 580)}px` : 
-            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : '650px'
+            typeof window !== 'undefined' && window.innerWidth < 768 ? '85vh' : 'min(85vh, 800px)'
         }}
       >
         {/* Chat header with close button inside */}
-        <div className="bg-gradient-to-r from-accent/90 to-accent-light/90 backdrop-blur-md p-4 rounded-t-2xl flex items-center justify-between border-b border-white/10">
+        <div className="bg-gradient-to-r from-accent/90 to-accent-light/90 backdrop-blur-md p-3 rounded-t-2xl flex items-center justify-between border-b border-white/10">
           <div className="flex items-center">
             <div>
-              <h3 className="font-semibold text-white text-lg tracking-wide">TrueNode AI</h3>
-              <p className="text-white/80 text-sm">How can I help you today?</p>
+              <h3 className="font-semibold text-white text-base tracking-wide">TrueNode AI</h3>
+              <p className="text-white/80 text-xs">How can I help you today?</p>
             </div>
           </div>
           <div className="flex items-center">
@@ -1088,10 +1091,10 @@ const ChatbotPopup = () => {
             {(messages.length > 1 || showFormBuilder) && (
               <button 
                 onClick={resetChat}
-                className="hover:bg-white/10 rounded-full p-2 transition-colors mr-2 text-white/70 hover:text-white"
+                className="hover:bg-white/10 rounded-full p-1.5 transition-colors mr-2 text-white/70 hover:text-white"
                 aria-label="Reset chat"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 2v6h6"></path>
                   <path d="M3 8L8 3"></path>
                   <path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path>
@@ -1104,10 +1107,10 @@ const ChatbotPopup = () => {
             {/* Close button moved here inside the header */}
             <button 
               onClick={() => setIsOpen(false)}
-              className="hover:bg-white/10 rounded-full p-2 transition-colors"
+              className="hover:bg-white/10 rounded-full p-1.5 transition-colors"
               aria-label="Minimize chat"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </button>
@@ -1122,7 +1125,7 @@ const ChatbotPopup = () => {
               className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div 
-                className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                className={`max-w-[75%] rounded-2xl px-3 py-2.5 ${
                   message.role === 'user' 
                     ? 'bg-gradient-to-r from-accent to-accent-light text-white shadow-lg border border-white/10' 
                     : 'bg-white/10 backdrop-blur-sm text-white/95 shadow-lg border border-white/5'
@@ -1140,12 +1143,12 @@ const ChatbotPopup = () => {
           {showQuickOptions && (
             <div className="p-3 border-t border-gray-100/10">
               <p className="text-xs text-gray-400 mb-2">I'm interested in:</p>
-              <div className="flex flex-wrap gap-2 mb-2">
+              <div className="flex flex-wrap gap-1.5 mb-2">
                 {quickOptions.map(option => (
                   <button
                     key={option.id}
                     onClick={() => handleQuickOptionClick(option.prompt)}
-                    className="px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/10 to-accent-blue/10 text-white/80 text-xs border border-accent/20 hover:from-accent/20 hover:to-accent-blue/20 hover:border-accent/30 hover:text-white transition-all duration-300"
+                    className="px-2.5 py-1 rounded-full bg-gradient-to-r from-accent/10 to-accent-blue/10 text-white/80 text-xs border border-accent/20 hover:from-accent/20 hover:to-accent-blue/20 hover:border-accent/30 hover:text-white transition-all duration-300"
                   >
                     {option.text}
                   </button>
@@ -1157,7 +1160,7 @@ const ChatbotPopup = () => {
                   className="flex items-center gap-1 text-accent hover:text-accent-light text-sm bg-accent/10 hover:bg-accent/20 px-4 py-1.5 rounded-lg transition-all duration-300 border border-accent/20"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                   Create formal inquiry
                 </button>
@@ -1209,7 +1212,7 @@ const ChatbotPopup = () => {
           
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-[#2A2A2A] text-white rounded-2xl p-4 max-w-[85%] shadow-md">
+              <div className="bg-[#2A2A2A] text-white rounded-2xl p-3 max-w-[75%] shadow-md">
                 <div className="flex space-x-2">
                   <div className="w-2.5 h-2.5 rounded-full bg-white/60 animate-pulse"></div>
                   <div className="w-2.5 h-2.5 rounded-full bg-white/60 animate-pulse delay-100"></div>
@@ -1357,7 +1360,7 @@ const styles = `
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-8px);
+      transform: translateY(-4px);
     }
   }
 
@@ -1368,26 +1371,26 @@ const styles = `
   .chat-bubble-popup::after {
     content: '';
     position: absolute;
-    bottom: -15px;
+    bottom: -8px;
     right: 20px;
     width: 0;
     height: 0;
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-top: 15px solid #06b6d4;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #9333ea;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
   }
 
   .chat-bubble-popup::before {
     content: '';
     position: absolute;
-    bottom: -17px;
+    bottom: -10px;
     right: 18px;
     width: 0;
     height: 0;
-    border-left: 17px solid transparent;
-    border-right: 17px solid transparent;
-    border-top: 17px solid rgba(255, 255, 255, 0.2);
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #7c3aed;
     z-index: -1;
   }
 `;
