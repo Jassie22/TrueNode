@@ -286,7 +286,7 @@ const HeroSection = () => {
     <section 
       id="hero" 
       ref={sectionRef}
-      className="h-screen md:flex-1 flex flex-col items-center justify-center pt-[calc(6rem+env(safe-area-inset-top))] md:pt-32 pb-0 md:pb-20 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
+      className="h-screen md:min-h-[120vh] flex flex-col items-center justify-center pt-[calc(6rem+env(safe-area-inset-top))] md:pt-32 pb-0 md:pb-20 relative overflow-hidden section-fluid-motion fade-in-section section-overlap-bottom"
     >
       {/* Animated background with blobs */}
       <div 
