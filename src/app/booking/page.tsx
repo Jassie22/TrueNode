@@ -498,16 +498,6 @@ const BookingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               className="text-center max-w-4xl mx-auto"
             >
-              {/* Success Icon and Animation */}
-              <div className="relative mb-8">
-                <div className="w-24 h-24 md:w-32 md:h-32 bg-gradient-to-br from-purple-400/20 to-purple-600/30 rounded-full mx-auto flex items-center justify-center mb-6 relative overflow-hidden backdrop-blur-sm border border-purple-400/30">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 to-purple-600/20 rounded-full animate-pulse"></div>
-                  <svg className="w-12 h-12 md:w-16 md:h-16 text-purple-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                  </svg>
-                </div>
-              </div>
-
               {/* Main Success Message */}
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/60 backdrop-blur-lg rounded-2xl p-6 md:p-8 lg:p-12 mb-8 border border-white/10 shadow-2xl">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-purple-100 to-purple-200 bg-clip-text text-transparent">
@@ -615,7 +605,6 @@ const BookingPage = () => {
                   <a href="mailto:info@truenode.co.uk" className="text-accent hover:text-accent-light transition-colors font-medium">
                     info@truenode.co.uk
                   </a>
-                  {' '}or call us directly
                 </p>
               </div>
             </motion.div>
