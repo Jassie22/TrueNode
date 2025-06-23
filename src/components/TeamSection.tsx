@@ -283,7 +283,7 @@ const TeamSection = () => {
     <section 
       id="team"
       ref={sectionRef}
-      className="py-16 relative bg-transparent overflow-hidden enhanced-glow magenta-glow section-fluid-motion fade-in-section section-overlap-top"
+      className="py-12 sm:py-16 relative bg-transparent overflow-hidden enhanced-glow magenta-glow section-fluid-motion fade-in-section section-overlap-top"
     >
       {/* Animated background with blobs */}
       <div 
@@ -298,7 +298,7 @@ const TeamSection = () => {
       
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
+        <div className="max-w-3xl mx-auto text-center mb-10 sm:mb-16">
           <div className="relative z-30 py-6 px-4">
             {/* Purple accent line */}
             <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-8 shadow-glow"></div>

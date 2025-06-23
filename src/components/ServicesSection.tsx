@@ -288,7 +288,7 @@ const ServicesSection = () => {
     <section
       id="services"
       ref={sectionRef}
-      className="pt-24 pb-8 md:pb-12 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion section-overlap-top"
+      className="pt-16 sm:pt-24 pb-8 md:pb-12 relative bg-transparent overflow-hidden enhanced-glow section-fluid-motion section-overlap-top"
     >
       {/* SVG wave divider at the top */}
       <div className="absolute top-0 left-0 w-full overflow-hidden z-0 pointer-events-none">
@@ -344,7 +344,7 @@ const ServicesSection = () => {
       
       <div className="container mx-auto px-6 relative z-10 max-w-7xl">
         {/* Section title with improved visibility */}
-        <div className="max-w-4xl mx-auto mb-20 text-center">
+        <div className="max-w-4xl mx-auto mb-12 sm:mb-20 text-center">
           <div className="relative z-30 py-6 px-4">
             {/* Remove dark overlay with glowing border */}
             

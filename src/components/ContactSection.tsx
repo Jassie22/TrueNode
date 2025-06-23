@@ -302,7 +302,7 @@ const ContactSection = () => {
     <section
       id="contact"
       ref={sectionRef}
-      className="py-24 relative bg-primary overflow-hidden enhanced-glow"
+      className="py-16 sm:py-24 relative bg-primary overflow-hidden enhanced-glow"
     >
       <div 
         ref={backgroundRef}
@@ -312,7 +312,7 @@ const ContactSection = () => {
       </div>
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-6xl">
-        <div className="max-w-4xl mx-auto text-center mb-16">
+        <div className="max-w-4xl mx-auto text-center mb-8 sm:mb-16">
           <div className="relative z-30 py-6 px-4">
             <div className="absolute h-1 w-24 sm:w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-6 sm:-translate-y-8 shadow-glow z-10"></div>
             
