@@ -206,9 +206,10 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
   // Create infinite carousel array
   const infiniteProjects = [...projects, ...projects, ...projects];
   const initialProjectIndex = projects.length; // Start at middle set
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+  const [expandedCard, setExpandedCard] = useState<{id: number, index: number} | null>(null);
   const [currentCenterIndex, setCurrentCenterIndex] = useState<number>(initialProjectIndex);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
   
   // Improved center calculation accounting for expanded cards
   const centerCard = useCallback((index: number, isExpanding = false) => {
@@ -223,17 +224,22 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
     // Calculate scroll position considering the effective width
     const targetScrollLeft = (CARD_WIDTH + CARD_SPACING) * index - (containerWidth / 2) + (effectiveWidth / 2);
     
+    setIsScrolling(true);
     carouselRef.current.scrollTo({
       left: Math.max(0, targetScrollLeft),
       behavior: 'smooth'
     });
     
     setCurrentCenterIndex(index);
+    
+    // Clear scrolling flag after animation completes
+    setTimeout(() => setIsScrolling(false), 600);
   }, []);
 
   // Navigation functions with seamless infinite scrolling
   const scrollLeft = () => {
-    setSelectedProject(null);
+    if (isScrolling) return; // Prevent interaction during scroll
+    setExpandedCard(null);
     let newIndex = currentCenterIndex - 1;
     
     // If we're about to go below the first set, jump to the equivalent position in the last set
@@ -255,7 +261,8 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
   };
 
   const scrollRight = () => {
-    setSelectedProject(null);
+    if (isScrolling) return; // Prevent interaction during scroll
+    setExpandedCard(null);
     let newIndex = currentCenterIndex + 1;
     
     // If we're about to go beyond the last set, jump to the equivalent position in the first set
@@ -278,32 +285,47 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
 
   // Improved card click handler with proper centering for expansion
   const handleCardClick = (projectId: number, projectIndex: number) => {
-    // Always close any currently expanded card first
-    if (selectedProject !== null) {
-      setSelectedProject(null);
+    if (isScrolling) return; // Prevent clicks during scroll animation
+    
+    // If there's already an expanded card, close it first
+    if (expandedCard !== null) {
+      setExpandedCard(null);
+      // If clicking the same card that's expanded, just close it
+      if (expandedCard.id === projectId && expandedCard.index === projectIndex) {
+        return;
+      }
+      // Small delay before processing new card to allow close animation
+      setTimeout(() => handleCardClick(projectId, projectIndex), 300);
+      return;
     }
     
-    // If card is not centered, center it accounting for expansion width
+    // Always center the card first, then expand
     if (projectIndex !== currentCenterIndex) {
-      centerCard(projectIndex, true); // Pass true to indicate this is for expansion
+      // Card is not centered - center it first
+      centerCard(projectIndex, true);
       // Wait for centering animation to complete before expanding
-      setTimeout(() => setSelectedProject(projectId), 600);
+      setTimeout(() => {
+        if (!isScrolling) {
+          setExpandedCard({ id: projectId, index: projectIndex });
+        }
+      }, 650);
     } else {
-      // If already centered, expand immediately
-      setSelectedProject(projectId);
+      // Card is already centered - expand immediately
+      setExpandedCard({ id: projectId, index: projectIndex });
     }
   };
 
   // Initial centering on load
   useEffect(() => {
-    if (carouselRef.current && selectedProject === null) {
+    if (carouselRef.current && expandedCard === null) {
       setTimeout(() => centerCard(currentCenterIndex), 100);
     }
-  }, [centerCard, currentCenterIndex, selectedProject]);
+  }, [centerCard, currentCenterIndex, expandedCard]);
 
   // Function to handle dot click
   const handleDotClick = (index: number) => {
-    setSelectedProject(null);
+    if (isScrolling) return; // Prevent interaction during scroll
+    setExpandedCard(null);
     // Map to middle set for dot navigation
     const middleSetIndex = index + projects.length;
     centerCard(middleSetIndex);
@@ -311,7 +333,8 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
 
   // Function to handle card close
   const handleCardClose = () => {
-    setSelectedProject(null);
+    setExpandedCard(null);
+    setIsScrolling(false); // Ensure scrolling flag is cleared
   };
 
   return (
@@ -319,8 +342,9 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       {/* Navigation Arrows */}
       <button 
         onClick={scrollLeft}
-        className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all hover:scale-110 shadow-lg"
+        className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all hover:scale-110 shadow-lg"
         aria-label="Previous project"
+        disabled={isScrolling}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -329,8 +353,9 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       
       <button 
         onClick={scrollRight}
-        className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all hover:scale-110 shadow-lg"
+        className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 z-30 bg-black/50 hover:bg-black/70 text-white rounded-full p-3 transition-all hover:scale-110 shadow-lg"
         aria-label="Next project"
+        disabled={isScrolling}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -349,10 +374,11 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
       >
         <div className="flex space-x-6 px-8">
           {infiniteProjects.map((project, index) => {
-            const isCentered = selectedProject === null && index === currentCenterIndex;
+            const isCentered = expandedCard === null && index === currentCenterIndex;
+            const isExpanded = expandedCard !== null && expandedCard.id === project.id && expandedCard.index === index;
             
             let cardClassName = 'flex-shrink-0 relative transition-all duration-500 ease-out ';
-            if (selectedProject === project.id) {
+            if (isExpanded) {
               cardClassName += `w-[${CAROUSEL_CONFIG.EXPANDED_WIDTH}px] z-20`;
             } else if (isCentered) {
               cardClassName += `w-[${CAROUSEL_CONFIG.CARD_WIDTH}px] scale-110 -translate-y-8 shadow-2xl shadow-black/50 ring-2 ring-white/20 z-10 transform-gpu`;
@@ -370,7 +396,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                 layout="position"
               >
                 <AnimatePresence mode="wait">
-                  {selectedProject === project.id ? (
+                  {isExpanded ? (
                     <motion.div
                       key="expanded"
                       className="h-[525px]"
@@ -414,11 +440,14 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
         <div className="flex justify-center space-x-2 mt-8">
           {projects.map((project, index) => {
             const currentProjectIndex = currentCenterIndex % projects.length;
+            const isCurrentDot = index === currentProjectIndex;
+            const isExpandedDot = expandedCard !== null && expandedCard.id === project.id;
+            
             return (
               <button
                 key={`desktop-dot-${project.id}`}
                 className={`h-3 rounded-full transition-all duration-300 ease-in-out ${
-                  (selectedProject === project.id || (selectedProject === null && index === currentProjectIndex)) 
+                  (isExpandedDot || isCurrentDot) 
                     ? "bg-accent w-8" 
                     : "bg-white/20 w-3 hover:bg-white/40"
                 }`}
@@ -427,6 +456,7 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                   handleDotClick(index);
                 }}
                 aria-label={`Go to project ${project.title}`}
+                disabled={isScrolling}
               />
             );
           })}
@@ -500,9 +530,9 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
     visible: (i: number = 0) => ({
       opacity: 1,
       x: 0,
-      transition: { delay: i * 0.1, duration: 0.3, ease: "easeOut" },
+      transition: { delay: i * 0.05, duration: 0.2, ease: "easeOut" },
     }),
-    exit: { opacity: 0, x: -20, transition: { duration: 0.2 } }
+    exit: { opacity: 0, x: -20, transition: { duration: 0.15 } }
   };
 
   const listVariants = {
@@ -510,28 +540,28 @@ const ExpandedDesktopCard: React.FC<ExpandedCardProps> = ({ project, onClose }) 
       opacity: 1,
       transition: {
         when: "beforeChildren",
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
       },
     },
     hidden: {
       opacity: 0,
       transition: {
         when: "afterChildren",
-        staggerChildren: 0.05,
+        staggerChildren: 0.03,
         staggerDirection: -1,
       },
     },
     exit: {
       opacity: 0,
-      transition: { duration: 0.2 }
+      transition: { duration: 0.15 }
     }
   };
 
   const listItemVariants = {
-    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
-    hidden: { opacity: 0, x: 20, transition: { duration: 0.2, ease: "easeIn" } },
-    exit: { opacity: 0, x: -20, transition: { duration: 0.2, ease: "easeIn" } }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.2, ease: "easeOut" } },
+    hidden: { opacity: 0, x: 20, transition: { duration: 0.15, ease: "easeIn" } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.15, ease: "easeIn" } }
   };
 
   return (
