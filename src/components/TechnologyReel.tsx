@@ -55,12 +55,12 @@ const TechnologyReel = () => {
   return (
     <div className="w-screen bg-transparent pt-6 pb-0 md:py-12 lg:pt-20 lg:pb-0 overflow-hidden relative mx-[-1rem] transform left-1/2 right-1/2 -translate-x-1/2" ref={containerRef}>
       
-      <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-8 px-4">
-        <div className="relative">
+      <div className="relative z-10 text-center mb-4 md:mb-6 lg:mb-8 px-4 w-full flex flex-col items-center">
+        <div className="relative w-full flex justify-center">
           {/* Purple accent line */}
           <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-4 shadow-glow"></div>
           
-          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-white leading-tight text-center"
+          <h3 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-3 text-white leading-tight text-center w-full"
               style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
             <span className="bg-gradient-to-r from-accent to-accent-blue bg-clip-text text-transparent">
               Technologies
@@ -74,7 +74,7 @@ const TechnologyReel = () => {
       
       <div className="overflow-hidden">
         <div className="tech-reel-animation">
-          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-3 md:py-6">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-1 md:py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-${index}`}
@@ -88,17 +88,17 @@ const TechnologyReel = () => {
                     alt={`${tech.name} icon`}
                     width={64}
                     height={64}
-                    className="w-6 h-6 sm:w-7 sm:h-7 md:w-10 md:h-10 lg:w-16 lg:h-16"
+                    className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16"
                     style={{ filter: 'none' }}
                   />
                 </div>
-                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-2 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
+                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-0.5 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
                   {tech.name}
                 </span>
               </div>
             ))}
           </div>
-          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-3 md:py-6">
+          <div className="flex flex-row gap-6 sm:gap-6 md:gap-8 lg:gap-16 px-4 sm:px-4 md:px-8 min-w-max py-1 md:py-6">
             {technologies.map((tech, index) => (
               <div 
                 key={`tech-copy-${index}`}
@@ -112,11 +112,11 @@ const TechnologyReel = () => {
                     alt={`${tech.name} icon`}
                     width={64}
                     height={64}
-                    className="w-6 h-6 sm:w-7 sm:h-7 md:w-10 md:h-10 lg:w-16 lg:h-16"
+                    className="w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-16 lg:h-16"
                     style={{ filter: 'none' }}
                   />
                 </div>
-                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-2 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
+                <span className="text-white/80 text-xs sm:text-xs md:text-sm font-medium mt-0.5 md:mt-2 lg:mt-4 transition-all duration-300 group-hover:text-accent-light max-w-[80px] text-center leading-tight">
                   {tech.name}
                 </span>
               </div>

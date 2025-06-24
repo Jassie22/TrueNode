@@ -317,7 +317,7 @@ const MemoryGame = () => {
         relative flex flex-col items-center
         w-full max-w-md mx-auto
         h-[450px] max-h-[450px]
-        bg-dark/20 rounded-lg overflow-hidden px-4 pb-4
+        bg-dark/20 rounded-lg overflow-hidden px-4 pb-4 pt-6
         text-white text-center
       `}
     >

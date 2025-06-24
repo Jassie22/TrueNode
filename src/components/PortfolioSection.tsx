@@ -400,9 +400,9 @@ const DesktopCarousel: React.FC<CarouselProps> = ({ projects }) => {
                     <motion.div
                       key="expanded"
                       className="h-[525px]"
-                      initial={{ opacity: 0, width: "350px" }}
-                      animate={{ opacity: 1, width: "750px" }}
-                      exit={{ opacity: 0, width: "350px" }}
+                      initial={{ opacity: 0, width: `${CAROUSEL_CONFIG.CARD_WIDTH}px` }}
+                      animate={{ opacity: 1, width: `${CAROUSEL_CONFIG.EXPANDED_WIDTH}px` }}
+                      exit={{ opacity: 0, width: `${CAROUSEL_CONFIG.CARD_WIDTH}px` }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
                     >
                       <ExpandedDesktopCard 
@@ -665,6 +665,18 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   
   const minSwipeDistance = 50;
+  
+  // Preload all images when component mounts to prevent loading delays
+  useEffect(() => {
+    const preloadImages = () => {
+      projects.forEach(project => {
+        const img = document.createElement('img');
+        img.src = project.image;
+      });
+    };
+    
+    preloadImages();
+  }, [projects]);
   
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
