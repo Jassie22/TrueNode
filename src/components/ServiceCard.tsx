@@ -44,6 +44,7 @@ const ServiceCard = ({
   const detailsRef = useRef<HTMLUListElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileDetailsExpanded, setMobileDetailsExpanded] = useState(false);
   
   useEffect(() => {
     // Check if we're on mobile
@@ -63,14 +64,21 @@ const ServiceCard = ({
     };
   }, []);
 
-  // Details to display - show all details on mobile, limit on desktop hover
+  // Details to display - show only 3 on mobile initially, all on desktop hover
   const maxVisibleDetails = isMobile 
-    ? service.details.length
+    ? (mobileDetailsExpanded ? service.details.length : 3)
     : (active || expanded) ? service.details.length : 3;
   
   // Separate visible and hidden details
   const visibleDetails = service.details.slice(0, maxVisibleDetails);
-  
+  const hasMoreDetails = isMobile && service.details.length > 3;
+
+  // Handle mobile details expansion
+  const handleMobileDetailsToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMobileDetailsExpanded(!mobileDetailsExpanded);
+  };
+
   // Handle initial animation and hover effects
   useEffect(() => {
     if (!cardRef.current) return;
@@ -259,9 +267,28 @@ const ServiceCard = ({
           <p className="text-white/70 text-sm leading-relaxed mb-3">{service.description}</p>
         )}
         
-        {/* Service details - show on desktop (always) or mobile (always, but limited to 3 unless expanded) */}
+        {/* Service details */}
         <div className="mt-4">
-          <h4 className="text-white/90 text-base font-medium mb-2">Key Features:</h4>
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-white/90 text-base font-medium">Key Features:</h4>
+            {/* Mobile chevron indicator for bullet points */}
+            {isMobile && hasMoreDetails && (
+              <button
+                onClick={handleMobileDetailsToggle}
+                className="flex items-center justify-center w-6 h-6 rounded-full bg-white/10 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={`h-4 w-4 text-white/70 transition-transform duration-300 ${mobileDetailsExpanded ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            )}
+          </div>
           <ul ref={detailsRef} className="space-y-2">
             {visibleDetails.map((detail, index) => (
               <li key={index} className="text-white/70 text-sm flex items-start">
@@ -272,6 +299,15 @@ const ServiceCard = ({
               </li>
             ))}
           </ul>
+          {/* Show more/less text for mobile */}
+          {isMobile && hasMoreDetails && (
+            <button
+              onClick={handleMobileDetailsToggle}
+              className="text-accent/80 text-sm mt-2 hover:text-accent transition-colors duration-300"
+            >
+              {mobileDetailsExpanded ? 'Show less' : `Show ${service.details.length - 3} more`}
+            </button>
+          )}
         </div>
       </div>
     </div>
