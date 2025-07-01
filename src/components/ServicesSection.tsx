@@ -447,7 +447,7 @@ const ServicesSection = () => {
             href="/booking"
             className="px-8 py-4 bg-gradient-to-r from-accent to-[#1B6CF2] hover:from-accent-light hover:to-[#3D82F3] text-white font-medium rounded-lg transition-all duration-300 shadow-glow-accent hidden md:inline-block"
           >
-            Schedule Free Consultation
+            Discuss My Project
           </Link>
         </div>
       </div>

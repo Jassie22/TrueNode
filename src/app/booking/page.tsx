@@ -272,7 +272,7 @@ const BookingPage = () => {
                 <div className="absolute h-1 w-32 bg-accent rounded-full top-0 left-1/2 -translate-x-1/2 -translate-y-8 md:-translate-y-8 -translate-y-4 shadow-glow"></div>
                 <h1 className="text-4xl md:text-5xl font-bold mb-4 pt-4"
                     style={{ textShadow: '0 0 15px rgba(144, 58, 231, 0.5)' }}>
-                  Book Your <span className="text-accent">Free Consultation</span>
+                  Schedule My <span className="text-accent">Free Consultation</span>
                 </h1>
                 <p className="text-lg text-white/80 max-w-2xl mx-auto">
                   Schedule a 30-minute consultation to discuss your project needs. Automatically synced to our calendar.

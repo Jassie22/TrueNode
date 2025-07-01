@@ -186,9 +186,9 @@ const Navbar = () => {
           <Link
             href="/booking"
             className="px-6 py-2.5 text-white rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105 bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] shadow-lg relative overflow-hidden group"
-            aria-label="Book a free consultation call"
+            aria-label="Book my personal consultation call"
           >
-            Book a Call
+            Book My Call
             <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out pointer-events-none"></span>
           </Link>
@@ -280,13 +280,13 @@ const Navbar = () => {
             href="/booking"
             onClick={() => setMobileMenuOpen(false)}
             className="w-full text-white bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] px-5 py-3 rounded-lg font-medium transition-all duration-300 mt-4 flex items-center justify-center gap-2"
-            aria-label="Book a free consultation call"
+            aria-label="Book my personal consultation call"
             tabIndex={mobileMenuOpen ? 0 : -1}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
             </svg>
-            Book a Call
+            Book My Call
           </Link>
         </div>
       </div>

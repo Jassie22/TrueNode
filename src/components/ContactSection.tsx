@@ -757,7 +757,7 @@ const ContactSection = () => {
                         href="/booking"
                         className="w-full py-2.5 px-4 text-white text-sm font-medium rounded-xl bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] transition-all duration-300 shadow-lg block text-center"
                       >
-                        Book a Free Consultation
+                        Book My Consultation
                       </Link>
                     </div>
                   </div>

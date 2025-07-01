@@ -341,7 +341,7 @@ const HeroSection = () => {
               {/* CTA Buttons Group */}
               <div id="hero-cta-group" className="cta-buttons-group flex flex-col sm:flex-row items-center gap-4 md:gap-5 opacity-0 mt-8 md:mt-1 mb-4 md:mb-0">
                 <CalendlyWidget
-                  buttonText="Book a Free Consultation"
+                  buttonText="Schedule My Free Consultation"
                   className="group relative inline-flex items-center justify-center px-4 py-2.5 sm:px-6 md:px-10 lg:px-12 text-sm sm:text-base md:text-lg lg:text-xl font-medium text-white bg-accent hover:bg-accent-light rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-accent-light focus:ring-offset-2 focus:ring-offset-black overflow-hidden w-full sm:w-auto whitespace-nowrap"
                 />
               </div>

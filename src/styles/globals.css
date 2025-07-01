@@ -509,7 +509,7 @@ section::before {
     filter: drop-shadow(0 0 3px rgba(144, 58, 231, 0.5));
   }
 
-  /* Wiggle animation for "Book a Call" button */
+  /* Wiggle animation for "Book My Call" button */
   @keyframes wiggle {
     0%, 100% { transform: translateY(0) rotate(0); }
     25% { transform: translateY(-3px) rotate(-3deg); }
