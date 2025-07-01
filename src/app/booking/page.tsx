@@ -6,6 +6,8 @@ import gsap from 'gsap';
 import Link from 'next/link';
 import Script from 'next/script';
 import { BOOKING_CONFIG } from '@/config/booking';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
@@ -620,6 +622,8 @@ const BookingPage = () => {
           async
         />
       )}
+
+      <Footer />
     </>
   );
 };
