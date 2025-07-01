@@ -29,9 +29,7 @@ const nextConfig = {
   // Since we're using static export, API routes won't work natively
   // We'll need to modify our contact form to use a serverless function or third-party service
   // Allows devices on the same network to access the dev server
-  async rewrites() {
-    return [];
-  },
+  
   // Server configuration for network access
   webpack: (config, { isServer }) => {
     // Add your webpack config if needed
