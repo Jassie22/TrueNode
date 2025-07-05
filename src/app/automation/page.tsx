@@ -380,18 +380,9 @@ const AutomationPage = () => {
                     stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
                     strokeWidth={isActive ? "4" : "2"}
                     className={`transition-all duration-500 ${isActive ? 'drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]' : ''}`}
-                    markerEnd="url(#arrowhead)"
                   />
                 );
               })}
-              
-              {/* Arrow marker */}
-              <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="8" 
-                        refX="9" refY="4" orient="auto">
-                  <polygon points="0 0, 10 4, 0 8" fill="#8b5cf6" />
-                </marker>
-              </defs>
               
               {/* Render nodes */}
               {currentWorkflow.nodes.map((node, index) => {

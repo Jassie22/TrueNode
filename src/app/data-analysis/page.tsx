@@ -6,78 +6,78 @@ import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const WebsitePage = () => {
-  const [activeTab, setActiveTab] = useState('business');
+const DataAnalysisPage = () => {
+  const [activeTab, setActiveTab] = useState('insights');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [visibleStats, setVisibleStats] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  const websiteTypes = [
+  const analysisTypes = [
     {
-      id: 'business',
-      name: 'Business Websites',
-      description: 'Professional websites that establish credibility and drive conversions',
-      features: ['Custom Design', 'SEO Optimized', 'Mobile Responsive', 'Fast Loading', 'Contact Forms'],
+      id: 'insights',
+      name: 'Business Insights',
+      description: 'Transform raw data into actionable business intelligence',
+      features: ['Performance Metrics', 'Trend Analysis', 'Predictive Analytics', 'Custom Dashboards', 'Real-time Monitoring'],
       color: 'from-blue-500 to-purple-600',
-      image: '/images/business-website.jpg'
+      icon: '📊'
     },
     {
-      id: 'ecommerce',
-      name: 'E-commerce Stores',
-      description: 'Powerful online stores that convert visitors into customers',
-      features: ['Shopping Cart', 'Payment Integration', 'Inventory Management', 'User Accounts', 'Analytics'],
+      id: 'customer',
+      name: 'Customer Analytics',
+      description: 'Understand your customers better with comprehensive data analysis',
+      features: ['Behavior Analysis', 'Segmentation', 'Lifetime Value', 'Churn Prediction', 'Purchase Patterns'],
       color: 'from-green-500 to-teal-600',
-      image: '/images/ecommerce-website.jpg'
+      icon: '👥'
     },
     {
-      id: 'portfolio',
-      name: 'Portfolio Sites',
-      description: 'Stunning showcases that highlight your work and attract clients',
-      features: ['Gallery Layouts', 'Project Showcases', 'Client Testimonials', 'Contact Systems', 'Blog Integration'],
-      color: 'from-orange-500 to-pink-600',
-      image: '/images/portfolio-website.jpg'
+      id: 'financial',
+      name: 'Financial Analytics',
+      description: 'Optimize your financial performance with data-driven insights',
+      features: ['Revenue Analysis', 'Cost Optimization', 'Profit Margins', 'Budget Forecasting', 'ROI Tracking'],
+      color: 'from-orange-500 to-red-600',
+      icon: '💰'
     },
     {
-      id: 'landing',
-      name: 'Landing Pages',
-      description: 'High-converting pages designed for specific campaigns and goals',
-      features: ['A/B Testing', 'Lead Capture', 'Conversion Optimization', 'Analytics', 'Fast Performance'],
-      color: 'from-purple-500 to-blue-600',
-      image: '/images/landing-page.jpg'
+      id: 'operational',
+      name: 'Operational Analytics',
+      description: 'Streamline operations and improve efficiency through data analysis',
+      features: ['Process Optimization', 'Resource Allocation', 'Performance KPIs', 'Bottleneck Detection', 'Capacity Planning'],
+      color: 'from-purple-500 to-pink-600',
+      icon: '⚙️'
     }
   ];
 
-  const conceptMockups = [
+  const caseStudies = [
     {
-      title: 'Local Restaurant Concept',
-      before: 'Generic template with poor mobile experience',
-      after: 'Custom design optimized for online orders',
-      beforeImage: '/images/before-restaurant.jpg',
-      afterImage: '/images/after-restaurant.jpg'
+      title: 'E-commerce Revenue Optimization',
+      challenge: 'Declining conversion rates despite increased traffic',
+      solution: 'Comprehensive customer journey and funnel analysis',
+      result: 'Identified key drop-off points and optimization opportunities',
+      improvement: '35% increase in conversion rate'
     },
     {
-      title: 'Professional Services Concept',
-      before: 'Basic template with limited functionality',
-      after: 'Professional design with lead generation focus',
-      beforeImage: '/images/before-services.jpg',
-      afterImage: '/images/after-services.jpg'
+      title: 'SaaS Customer Retention',
+      challenge: 'High churn rate affecting growth',
+      solution: 'Predictive analytics for early churn detection',
+      result: 'Built early warning system for at-risk customers',
+      improvement: '42% reduction in churn rate'
     },
     {
-      title: 'E-commerce Store Concept',
-      before: 'Standard template with basic features',
-      after: 'Custom store with enhanced user experience',
-      beforeImage: '/images/before-store.jpg',
-      afterImage: '/images/after-store.jpg'
+      title: 'Manufacturing Efficiency',
+      challenge: 'Production bottlenecks and waste',
+      solution: 'Operational data analysis and process optimization',
+      result: 'Identified inefficiencies and resource allocation issues',
+      improvement: '28% increase in productivity'
     }
   ];
 
-  const technologies = [
-    { name: 'React', icon: '/tech-icons/react.svg', description: 'Modern, fast user interfaces' },
-    { name: 'Next.js', icon: '/tech-icons/nextjs.svg', description: 'Full-stack React framework' },
-    { name: 'TypeScript', icon: '/tech-icons/typescript.svg', description: 'Type-safe development' },
-    { name: 'Tailwind CSS', icon: '/tech-icons/tailwindcss.svg', description: 'Utility-first styling' },
-    { name: 'Node.js', icon: '/tech-icons/nodejs.svg', description: 'Server-side JavaScript' },
-    { name: 'MongoDB', icon: '/tech-icons/mongodb.svg', description: 'Flexible database solutions' }
+  const tools = [
+    { name: 'Python', icon: '/tech-icons/python.svg', description: 'Data analysis and modeling' },
+    { name: 'Tableau', icon: '/tech-icons/plotly.svg', description: 'Data visualization' },
+    { name: 'SQL', icon: '/tech-icons/postgresql.svg', description: 'Database querying' },
+    { name: 'Power BI', icon: '/tech-icons/plotly.svg', description: 'Business intelligence' },
+    { name: 'R', icon: '/tech-icons/python.svg', description: 'Statistical analysis' },
+    { name: 'Excel', icon: '/tech-icons/plotly.svg', description: 'Data manipulation' }
   ];
 
   // Counter animation hook
@@ -104,14 +104,14 @@ const WebsitePage = () => {
     return count;
   };
 
-  const stat1 = useCounter(24, 2000, visibleStats);
-  const stat2 = useCounter(7, 2500, visibleStats);
-  const stat3 = useCounter(98, 3000, visibleStats);
+  const stat1 = useCounter(500, 2000, visibleStats);
+  const stat2 = useCounter(12, 2500, visibleStats);
+  const stat3 = useCounter(95, 3000, visibleStats);
 
   // Auto-rotate slides
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % conceptMockups.length);
+      setCurrentSlide((prev) => (prev + 1) % caseStudies.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -145,13 +145,13 @@ const WebsitePage = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              Websites That{' '}
+              Turn Data into{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-                Work for You
+                Decisions
               </span>
             </h1>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-              Custom websites designed to grow your business, not just look pretty. Every site is built with purpose, performance, and results in mind.
+              Unlock the power of your data with comprehensive analytics that reveal insights, predict trends, and drive strategic business decisions.
             </p>
           </div>
           
@@ -161,28 +161,31 @@ const WebsitePage = () => {
               href="/booking"
               className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300 mr-4"
             >
-              Start Your Project
+              Start Analysis
             </Link>
-            <button className="inline-block px-8 py-4 border border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/10 rounded-xl font-semibold text-lg transition-all duration-300">
-              View Portfolio
-            </button>
+            <Link
+              href="/#portfolio"
+              className="inline-block px-8 py-4 border border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/10 rounded-xl font-semibold text-lg transition-all duration-300"
+            >
+              View Examples
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Website Types Section */}
+      {/* Analysis Types Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Website Types We{' '}
+            Analytics{' '}
             <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Specialize In
+              Solutions
             </span>
           </h2>
           
           {/* Tab Navigation */}
           <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {websiteTypes.map((type) => (
+            {analysisTypes.map((type) => (
               <button
                 key={type.id}
                 onClick={() => setActiveTab(type.id)}
@@ -198,7 +201,7 @@ const WebsitePage = () => {
           </div>
 
           {/* Active Tab Content */}
-          {websiteTypes.map((type) => (
+          {analysisTypes.map((type) => (
             <div
               key={type.id}
               className={`transition-all duration-500 ${
@@ -221,11 +224,11 @@ const WebsitePage = () => {
                 </div>
                 
                 <div className="relative">
-                  <div className={`w-full h-64 rounded-xl bg-gradient-to-br ${type.color} p-1`}>
+                  <div className={`w-full h-80 rounded-xl bg-gradient-to-br ${type.color} p-1`}>
                     <div className="w-full h-full bg-[#1a1a1a] rounded-xl flex items-center justify-center">
                       <div className="text-center">
-                        <div className="text-6xl mb-4">🌐</div>
-                        <p className="text-gray-400">Preview Coming Soon</p>
+                        <div className="text-8xl mb-4">{type.icon}</div>
+                        <p className="text-gray-400">Interactive Dashboard</p>
                       </div>
                     </div>
                   </div>
@@ -236,60 +239,57 @@ const WebsitePage = () => {
         </div>
       </section>
 
-      {/* Concept Mockups Showcase */}
+      {/* Case Studies */}
       <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Design{' '}
+            Success{' '}
             <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Concepts
+              Stories
             </span>
           </h2>
-          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
-            Explore our design concepts showing how we transform standard templates into custom, high-performing websites.
-          </p>
           
           <div className="relative">
-            {conceptMockups.map((example, index) => (
+            {caseStudies.map((study, index) => (
               <div
                 key={index}
                 className={`transition-all duration-500 ${
                   index === currentSlide ? 'block' : 'hidden'
                 }`}
               >
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="bg-[#1a1a1a] rounded-xl p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
-                      <h3 className="text-lg font-semibold">Standard Template</h3>
-                    </div>
-                    <p className="text-gray-400 mb-4">{example.before}</p>
-                    <div className="h-40 bg-gray-800 rounded-lg flex items-center justify-center">
-                      <span className="text-gray-500">Template Example</span>
-                    </div>
-                  </div>
+                <div className="bg-[#1a1a1a] rounded-xl p-8 mb-8">
+                  <h3 className="text-2xl font-bold mb-6">{study.title}</h3>
                   
-                  <div className="bg-[#1a1a1a] rounded-xl p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                      <h3 className="text-lg font-semibold">Custom Design</h3>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    <div>
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold mb-2 text-[#f59e0b]">Challenge</h4>
+                        <p className="text-gray-400">{study.challenge}</p>
+                      </div>
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold mb-2 text-[#8b5cf6]">Solution</h4>
+                        <p className="text-gray-400">{study.solution}</p>
+                      </div>
                     </div>
-                    <p className="text-gray-400 mb-4">{example.after}</p>
-                    <div className="h-40 bg-gradient-to-br from-[#8b5cf6]/20 to-[#06b6d4]/20 rounded-lg flex items-center justify-center">
-                      <span className="text-gray-300">Custom Concept</span>
+                    
+                    <div>
+                      <div className="mb-6">
+                        <h4 className="text-lg font-semibold mb-2 text-[#06b6d4]">Result</h4>
+                        <p className="text-gray-400">{study.result}</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-[#10b981]/20 to-[#10b981]/10 rounded-lg p-4">
+                        <h4 className="text-lg font-semibold mb-2 text-[#10b981]">Impact</h4>
+                        <p className="text-white font-semibold text-xl">{study.improvement}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                <div className="text-center mt-8">
-                  <h3 className="text-2xl font-bold">{example.title}</h3>
                 </div>
               </div>
             ))}
             
             {/* Slide indicators */}
             <div className="flex justify-center mt-8 space-x-2">
-              {conceptMockups.map((_, index) => (
+              {caseStudies.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
@@ -303,33 +303,33 @@ const WebsitePage = () => {
         </div>
       </section>
 
-      {/* Technologies Section */}
+      {/* Tools Section */}
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <h2 className="text-4xl font-bold text-center mb-12">
-            Built with{' '}
+            Professional{' '}
             <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Modern Technology
+              Tools
             </span>
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6">
-            {technologies.map((tech, index) => (
+            {tools.map((tool, index) => (
               <div
                 key={index}
                 className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center hover:border-[#8b5cf6]/50 transition-all duration-300"
               >
                 <div className="flex justify-center mb-4">
                   <Image
-                    src={tech.icon}
-                    alt={`${tech.name} icon`}
+                    src={tool.icon}
+                    alt={`${tool.name} icon`}
                     width={48}
                     height={48}
                     className="w-12 h-12"
                   />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{tech.name}</h3>
-                <p className="text-gray-400 text-sm">{tech.description}</p>
+                <h3 className="text-xl font-semibold mb-2">{tool.name}</h3>
+                <p className="text-gray-400 text-sm">{tool.description}</p>
               </div>
             ))}
           </div>
@@ -341,16 +341,16 @@ const WebsitePage = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <div className="text-5xl font-bold text-[#8b5cf6] mb-2">{stat1}/7</div>
-              <p className="text-gray-400">Support Available</p>
+              <div className="text-5xl font-bold text-[#8b5cf6] mb-2">{stat1}+</div>
+              <p className="text-gray-400">Data Points Analyzed</p>
             </div>
             <div>
               <div className="text-5xl font-bold text-[#06b6d4] mb-2">{stat2}+</div>
-              <p className="text-gray-400">Years in Development</p>
+              <p className="text-gray-400">Analytics Tools Mastered</p>
             </div>
             <div>
               <div className="text-5xl font-bold text-[#10b981] mb-2">{stat3}%</div>
-              <p className="text-gray-400">Performance Optimized</p>
+              <p className="text-gray-400">Insight Accuracy</p>
             </div>
           </div>
         </div>
@@ -360,16 +360,16 @@ const WebsitePage = () => {
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Ready to Transform Your Online Presence?
+            Ready to Unlock Your Data's Potential?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Let's discuss your website goals and create something amazing together.
+            Let's transform your raw data into actionable insights that drive real business results.
           </p>
           <Link
             href="/booking"
             className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300"
           >
-            Get Your Free Consultation
+            Start Your Data Analysis
           </Link>
         </div>
       </section>
@@ -379,4 +379,4 @@ const WebsitePage = () => {
   );
 };
 
-export default WebsitePage; 
+export default DataAnalysisPage; 

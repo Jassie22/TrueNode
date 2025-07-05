@@ -85,6 +85,7 @@ const mainServices = [
     title: 'Data Analysis',
     description: 'Transform your data into actionable insights for better business decisions.',
     icon: '/images/icons/data-icon.svg',
+    exploreMoreLink: '/data-analysis',
     details: [
       'Custom dashboards and data visualization',
       'Business intelligence implementation',
@@ -100,6 +101,7 @@ const mainServices = [
     title: 'Branding',
     description: 'Create a cohesive and memorable brand identity that resonates with your audience.',
     icon: '/images/icons/branding-icon.svg',
+    exploreMoreLink: '/branding',
     details: [
       'Logo design and brand guidelines',
       'Visual identity system development',
@@ -114,6 +116,7 @@ const mainServices = [
     title: 'Ecommerce',
     description: 'Build powerful online stores that convert visitors into customers.',
     icon: '/images/icons/ecommerce-icon.svg',
+    exploreMoreLink: '/ecommerce',
     details: [
       'Custom ecommerce platform development',
       'Shopping cart and checkout optimization',
