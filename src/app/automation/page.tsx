@@ -42,12 +42,12 @@ const AutomationPage = () => {
       name: 'E-commerce Automation',
       problem: "Manual order processing creates delays and errors",
       nodes: [
-        { id: 1, x: 50, y: 80, title: "Order", description: "New purchase", icon: "🛒" },
-        { id: 2, x: 200, y: 80, title: "Payment", description: "Process & verify", icon: "💳" },
-        { id: 3, x: 350, y: 80, title: "Inventory", description: "Update stock", icon: "📦" },
-        { id: 4, x: 500, y: 80, title: "Fulfillment", description: "Ship order", icon: "🚚" },
-        { id: 5, x: 350, y: 200, title: "Tracking", description: "Notify customer", icon: "📱" },
-        { id: 6, x: 200, y: 200, title: "Review", description: "Request feedback", icon: "⭐" }
+        { id: 1, x: 50, y: 80, title: "Order", description: "New purchase", icon: "" },
+        { id: 2, x: 200, y: 80, title: "Payment", description: "Process & verify", icon: "" },
+        { id: 3, x: 350, y: 80, title: "Inventory", description: "Update stock", icon: "" },
+        { id: 4, x: 500, y: 80, title: "Fulfillment", description: "Ship order", icon: "" },
+        { id: 5, x: 350, y: 200, title: "Tracking", description: "Notify customer", icon: "" },
+        { id: 6, x: 200, y: 200, title: "Review", description: "Request feedback", icon: "" }
       ],
       connections: [
         { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 },
@@ -59,16 +59,17 @@ const AutomationPage = () => {
       name: 'Virtual Receptionist',
       problem: "Missed calls mean missed opportunities",
       nodes: [
-        { id: 1, x: 50, y: 80, title: "Call", description: "AI answers", icon: "📞" },
-        { id: 2, x: 200, y: 80, title: "Understand", description: "Parse request", icon: "🧠" },
-        { id: 3, x: 350, y: 80, title: "Route", description: "Find expert", icon: "🎯" },
-        { id: 4, x: 500, y: 80, title: "Schedule", description: "Book meeting", icon: "📅" },
-        { id: 5, x: 350, y: 200, title: "Confirm", description: "Send details", icon: "✅" },
-        { id: 6, x: 200, y: 200, title: "Log", description: "Record interaction", icon: "📝" }
+        { id: 1, x: 100, y: 60, title: "Call", description: "AI answers", icon: "" },
+        { id: 2, x: 300, y: 60, title: "Understand", description: "Parse request", icon: "" },
+        { id: 3, x: 500, y: 60, title: "Route", description: "Find expert", icon: "" },
+        { id: 4, x: 300, y: 140, title: "Schedule", description: "Book meeting", icon: "" },
+        { id: 5, x: 100, y: 220, title: "Confirm", description: "Send details", icon: "" },
+        { id: 6, x: 300, y: 220, title: "Log", description: "Record interaction", icon: "" },
+        { id: 7, x: 500, y: 220, title: "Follow-up", description: "Automated reminders", icon: "" }
       ],
       connections: [
         { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 },
-        { from: 4, to: 5 }, { from: 5, to: 6 }
+        { from: 4, to: 5 }, { from: 5, to: 6 }, { from: 6, to: 7 }
       ]
     },
     content: {
@@ -76,16 +77,18 @@ const AutomationPage = () => {
       name: 'Content Creation',
       problem: "Scaling content requires significant resources",
       nodes: [
-        { id: 1, x: 50, y: 80, title: "Topic", description: "Input idea", icon: "💡" },
-        { id: 2, x: 200, y: 80, title: "Research", description: "Gather data", icon: "🔍" },
-        { id: 3, x: 350, y: 80, title: "Draft", description: "Generate content", icon: "✍️" },
-        { id: 4, x: 500, y: 80, title: "Optimize", description: "SEO & style", icon: "🎯" },
-        { id: 5, x: 350, y: 200, title: "Publish", description: "Multi-channel", icon: "📤" },
-        { id: 6, x: 200, y: 200, title: "Analyze", description: "Track performance", icon: "📊" }
+        { id: 1, x: 80, y: 120, title: "Topic", description: "Input idea", icon: "" },
+        { id: 2, x: 240, y: 80, title: "Research", description: "Gather data", icon: "" },
+        { id: 3, x: 240, y: 160, title: "Draft", description: "Generate content", icon: "" },
+        { id: 4, x: 400, y: 120, title: "Optimize", description: "SEO & style", icon: "" },
+        { id: 5, x: 520, y: 80, title: "Publish", description: "Multi-channel", icon: "" },
+        { id: 6, x: 520, y: 160, title: "Analyze", description: "Track performance", icon: "" },
+        { id: 7, x: 400, y: 200, title: "Iterate", description: "Improve based on data", icon: "" },
+        { id: 8, x: 240, y: 240, title: "Archive", description: "Store successful content", icon: "" }
       ],
       connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 },
-        { from: 4, to: 5 }, { from: 5, to: 6 }
+        { from: 1, to: 2 }, { from: 1, to: 3 }, { from: 2, to: 4 }, { from: 3, to: 4 },
+        { from: 4, to: 5 }, { from: 4, to: 6 }, { from: 5, to: 7 }, { from: 6, to: 7 }, { from: 7, to: 8 }
       ]
     },
     crm: {
@@ -93,16 +96,14 @@ const AutomationPage = () => {
       name: 'CRM Automation',
       problem: "Manual follow-up causes delays and missed opportunities",
       nodes: [
-        { id: 1, x: 50, y: 80, title: "Lead", description: "New contact", icon: "👤" },
-        { id: 2, x: 200, y: 80, title: "Score", description: "AI qualification", icon: "🎯" },
-        { id: 3, x: 350, y: 80, title: "Respond", description: "Instant reply", icon: "⚡" },
-        { id: 4, x: 500, y: 80, title: "Route", description: "Assign rep", icon: "👥" },
-        { id: 5, x: 350, y: 200, title: "Nurture", description: "Email sequence", icon: "💌" },
-        { id: 6, x: 200, y: 200, title: "Convert", description: "Book demo", icon: "🎯" }
+        { id: 1, x: 50, y: 100, title: "Lead", description: "New contact", icon: "" },
+        { id: 2, x: 200, y: 60, title: "Score", description: "AI qualification", icon: "" },
+        { id: 3, x: 200, y: 140, title: "Segment", description: "Categorize lead", icon: "" },
+        { id: 4, x: 350, y: 100, title: "Respond", description: "Instant reply", icon: "" },
+        { id: 5, x: 500, y: 100, title: "Route", description: "Assign rep", icon: "" }
       ],
       connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 },
-        { from: 4, to: 5 }, { from: 5, to: 6 }
+        { from: 1, to: 2 }, { from: 1, to: 3 }, { from: 2, to: 4 }, { from: 3, to: 4 }, { from: 4, to: 5 }
       ]
     }
   };
@@ -168,9 +169,9 @@ const AutomationPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-5xl text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
             Transform Manual Tasks into{' '}
             <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
               Automatic Savings
@@ -241,32 +242,39 @@ const AutomationPage = () => {
           </div>
 
           {/* Workflow Selector */}
-          <div className="grid md:grid-cols-4 gap-4 mb-12">
-            {Object.values(workflows).map((workflow) => (
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {Object.values(workflows).map((workflow, index) => (
               <button
                 key={workflow.id}
                 onClick={() => switchWorkflow(workflow.id)}
-                className={`p-4 rounded-xl border transition-all duration-300 text-left ${
+                className={`px-6 py-4 rounded-xl border transition-all duration-300 text-left hover:transform hover:scale-105 ${
                   selectedWorkflow === workflow.id
-                    ? 'bg-[#1a1a1a] border-[#8b5cf6]'
+                    ? 'bg-gradient-to-r from-[#8b5cf6]/20 to-[#06b6d4]/20 border-[#8b5cf6] shadow-lg shadow-[#8b5cf6]/30'
                     : 'bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#8b5cf6]/50'
-                }`}
+                } ${index % 2 === 0 ? 'min-w-[200px]' : 'min-w-[180px]'}`}
               >
                 <h3 className="font-semibold mb-1 text-sm">{workflow.name}</h3>
-                <p className="text-xs text-gray-500">Click to view</p>
+                <p className="text-xs text-gray-500">
+                  {index % 3 === 0 ? 'View Process' : index % 3 === 1 ? 'See Workflow' : 'Explore Steps'}
+                </p>
               </button>
             ))}
           </div>
 
           {/* Problem Statement */}
-          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 mb-8">
-            <p className="text-gray-300">{currentWorkflow.problem}</p>
+          <div className={`border border-[#2a2a2a] rounded-xl p-6 mb-8 ${
+            selectedWorkflow === 'ecommerce' ? 'bg-gradient-to-r from-[#8b5cf6]/5 to-[#06b6d4]/5' :
+            selectedWorkflow === 'receptionist' ? 'bg-gradient-to-r from-[#10b981]/5 to-[#8b5cf6]/5' :
+            selectedWorkflow === 'content' ? 'bg-gradient-to-r from-[#06b6d4]/5 to-[#10b981]/5' :
+            'bg-gradient-to-r from-[#f59e0b]/5 to-[#8b5cf6]/5'
+          }`}>
+            <p className="text-gray-300 text-lg">{currentWorkflow.problem}</p>
           </div>
 
           {/* Workflow Visualization */}
           <div 
             ref={workflowRef}
-            className="relative bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 min-h-[350px]"
+            className="relative bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 min-h-[350px] overflow-hidden"
           >
             <svg 
               className="absolute inset-0 w-full h-full"
@@ -289,8 +297,8 @@ const AutomationPage = () => {
                     x2={toNode.x + 40}
                     y2={toNode.y + 15}
                     stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
-                    strokeWidth="2"
-                    className={`transition-all duration-500`}
+                    strokeWidth={isActive ? "3" : "2"}
+                    className={`transition-all duration-500 ${isActive ? 'drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]' : ''}`}
                     markerEnd="url(#arrowhead)"
                   />
                 );
@@ -316,27 +324,19 @@ const AutomationPage = () => {
                       y={node.y}
                       width="80"
                       height="30"
-                      rx="6"
+                      rx="8"
                       fill={isActive ? '#1a1a1a' : '#0a0a0a'}
                       stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
-                      strokeWidth="1"
-                      className={`transition-all duration-500 ${isPulsing ? 'animate-pulse' : ''}`}
+                      strokeWidth={isActive ? "2" : "1"}
+                      className={`transition-all duration-500 ${isPulsing ? 'animate-pulse' : ''} ${isActive ? 'drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]' : ''}`}
                     />
                     <text
-                      x={node.x + 20}
-                      y={node.y + 12}
-                      fontSize="16"
-                      fill="white"
-                    >
-                      {node.icon}
-                    </text>
-                    <text
                       x={node.x + 40}
-                      y={node.y + 22}
+                      y={node.y + 16}
                       textAnchor="middle"
                       fontSize="10"
                       fill={isActive ? 'white' : '#666'}
-                      fontWeight="500"
+                      fontWeight="600"
                     >
                       {node.title}
                     </text>
@@ -347,7 +347,7 @@ const AutomationPage = () => {
                       y={node.y + 45}
                       textAnchor="middle"
                       fontSize="8"
-                      fill="#666"
+                      fill={isActive ? '#ccc' : '#666'}
                     >
                       {node.description}
                     </text>
@@ -360,7 +360,7 @@ const AutomationPage = () => {
             {showReplay && (
               <button
                 onClick={playWorkflow}
-                className="absolute top-4 right-4 px-3 py-1.5 bg-[#8b5cf6] rounded-lg text-sm font-medium transition-all duration-300 hover:bg-[#8b5cf6]/80"
+                className="absolute top-4 right-4 px-4 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#8b5cf6]/50"
               >
                 ▶ Replay
               </button>
