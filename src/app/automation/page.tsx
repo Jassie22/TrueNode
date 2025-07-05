@@ -34,7 +34,9 @@ const AutomationPage = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
+  const [visibleStats, setVisibleStats] = useState(false);
   const workflowRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   const workflows: Record<string, WorkflowType> = {
     ecommerce: {
@@ -77,18 +79,18 @@ const AutomationPage = () => {
       name: 'Content Creation',
       problem: "Scaling content requires significant resources",
       nodes: [
-        { id: 1, x: 80, y: 120, title: "Topic", description: "Input idea", icon: "" },
-        { id: 2, x: 240, y: 80, title: "Research", description: "Gather data", icon: "" },
-        { id: 3, x: 240, y: 160, title: "Draft", description: "Generate content", icon: "" },
-        { id: 4, x: 400, y: 120, title: "Optimize", description: "SEO & style", icon: "" },
-        { id: 5, x: 520, y: 80, title: "Publish", description: "Multi-channel", icon: "" },
-        { id: 6, x: 520, y: 160, title: "Analyze", description: "Track performance", icon: "" },
-        { id: 7, x: 400, y: 200, title: "Iterate", description: "Improve based on data", icon: "" },
-        { id: 8, x: 240, y: 240, title: "Archive", description: "Store successful content", icon: "" }
+        { id: 1, x: 60, y: 120, title: "Topic", description: "Input idea", icon: "" },
+        { id: 2, x: 200, y: 80, title: "Research", description: "Gather data", icon: "" },
+        { id: 3, x: 200, y: 160, title: "Draft", description: "Generate content", icon: "" },
+        { id: 4, x: 350, y: 120, title: "Optimize", description: "SEO & style", icon: "" },
+        { id: 5, x: 480, y: 80, title: "Publish", description: "Multi-channel", icon: "" },
+        { id: 6, x: 480, y: 160, title: "Analyze", description: "Track performance", icon: "" },
+        { id: 7, x: 580, y: 80, title: "Iterate", description: "Improve based on data", icon: "" },
+        { id: 8, x: 580, y: 160, title: "Archive", description: "Store successful content", icon: "" }
       ],
       connections: [
         { from: 1, to: 2 }, { from: 1, to: 3 }, { from: 2, to: 4 }, { from: 3, to: 4 },
-        { from: 4, to: 5 }, { from: 4, to: 6 }, { from: 5, to: 7 }, { from: 6, to: 7 }, { from: 7, to: 8 }
+        { from: 4, to: 5 }, { from: 4, to: 6 }, { from: 5, to: 7 }, { from: 6, to: 8 }
       ]
     },
     crm: {
@@ -109,6 +111,34 @@ const AutomationPage = () => {
   };
 
   const currentWorkflow = workflows[selectedWorkflow];
+
+  // Counter animation hook
+  const useCounter = (end: number, duration: number = 2000, start: boolean = false) => {
+    const [count, setCount] = useState(0);
+    
+    useEffect(() => {
+      if (!start) return;
+      
+      let startTime: number;
+      const animate = (currentTime: number) => {
+        if (!startTime) startTime = currentTime;
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        setCount(Math.floor(progress * end));
+        
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        }
+      };
+      
+      requestAnimationFrame(animate);
+    }, [end, duration, start]);
+    
+    return count;
+  };
+
+  const stat1 = useCounter(67, 2000, visibleStats);
+  const stat2 = useCounter(89, 2500, visibleStats);
+  const stat3 = useCounter(3.2, 3000, visibleStats);
 
   const playWorkflow = () => {
     if (isAnimating) return;
@@ -164,62 +194,112 @@ const AutomationPage = () => {
     return () => observer.disconnect();
   }, [selectedWorkflow, hasPlayedOnce, isAnimating]);
 
+  // Intersection Observer for stats
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleStats(true);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
       
       {/* Hero Section */}
       <section className="pt-40 pb-20 px-6">
-        <div className="container mx-auto max-w-5xl text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
-            Transform Manual Tasks into{' '}
-            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Automatic Savings
-            </span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Reduce costs and improve efficiency with intelligent automation that works around the clock.
-          </p>
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
+              Transform Manual Tasks into{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Automatic Savings
+              </span>
+            </h1>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Reduce costs and improve efficiency with intelligent automation that works around the clock, freeing your team to focus on what matters most.
+            </p>
+          </div>
+          
+          {/* Hero CTA */}
+          <div className="text-center mb-16">
+            <Link
+              href="/booking"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300 mr-4"
+            >
+              Start Automating
+            </Link>
+            <Link
+              href="/#portfolio"
+              className="inline-block px-8 py-4 border border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/10 rounded-xl font-semibold text-lg transition-all duration-300"
+            >
+              View Examples
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Value Proposition */}
-      <section className="py-16 px-6">
-        <div className="container mx-auto max-w-5xl">
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Why Businesses{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Choose Automation
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Transform your operations with intelligent automation that delivers measurable results.
+            </p>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
             <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 h-full hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#8b5cf6]/20 to-[#8b5cf6]/10 flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Reclaim Time</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Automate repetitive tasks that consume valuable hours daily.</p>
+                <h3 className="text-2xl font-semibold mb-4">Reclaim Time</h3>
+                <p className="text-gray-400 leading-relaxed">Automate repetitive tasks that consume valuable hours daily, allowing your team to focus on strategic initiatives.</p>
               </div>
             </div>
             
             <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-[#10b981]/10 flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 h-full hover:border-[#10b981]/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#10b981]/20 to-[#10b981]/10 flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Reduce Errors</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Eliminate costly mistakes with consistent, automated processes.</p>
+                <h3 className="text-2xl font-semibold mb-4">Reduce Errors</h3>
+                <p className="text-gray-400 leading-relaxed">Eliminate costly mistakes with consistent, automated processes that work perfectly every time.</p>
               </div>
             </div>
             
             <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300">
-                <div className="w-12 h-12 rounded-lg bg-[#06b6d4]/10 flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-[#06b6d4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 h-full hover:border-[#06b6d4]/50 transition-all duration-300 hover:transform hover:scale-105">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#06b6d4]/20 to-[#06b6d4]/10 flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-[#06b6d4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">Scale Seamlessly</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Handle increased volume without proportional cost increases.</p>
+                <h3 className="text-2xl font-semibold mb-4">Scale Seamlessly</h3>
+                <p className="text-gray-400 leading-relaxed">Handle increased volume without proportional cost increases, growing your business efficiently.</p>
               </div>
             </div>
           </div>
@@ -227,34 +307,34 @@ const AutomationPage = () => {
       </section>
 
       {/* Workflow Demos */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Automation{' '}
+            <h2 className="text-4xl font-bold mb-4">
+              Interactive Automation{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
                 Workflows
               </span>
             </h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              See how automation streamlines common business processes.
+              See how automation streamlines common business processes in real-time.
             </p>
           </div>
 
           {/* Workflow Selector */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-6 mb-12">
             {Object.values(workflows).map((workflow, index) => (
               <button
                 key={workflow.id}
                 onClick={() => switchWorkflow(workflow.id)}
-                className={`px-6 py-4 rounded-xl border transition-all duration-300 text-left hover:transform hover:scale-105 ${
+                className={`px-8 py-4 rounded-xl border transition-all duration-300 text-left hover:transform hover:scale-105 ${
                   selectedWorkflow === workflow.id
-                    ? 'bg-gradient-to-r from-[#8b5cf6]/20 to-[#06b6d4]/20 border-[#8b5cf6] shadow-lg shadow-[#8b5cf6]/30'
-                    : 'bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#8b5cf6]/50'
-                } ${index % 2 === 0 ? 'min-w-[200px]' : 'min-w-[180px]'}`}
+                    ? 'bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] border-transparent text-white shadow-lg shadow-[#8b5cf6]/30'
+                    : 'bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#8b5cf6]/50 text-white'
+                } min-w-[200px]`}
               >
-                <h3 className="font-semibold mb-1 text-sm">{workflow.name}</h3>
-                <p className="text-xs text-gray-500">
+                <h3 className="font-semibold mb-2">{workflow.name}</h3>
+                <p className="text-sm opacity-75">
                   {index % 3 === 0 ? 'View Process' : index % 3 === 1 ? 'See Workflow' : 'Explore Steps'}
                 </p>
               </button>
@@ -262,19 +342,20 @@ const AutomationPage = () => {
           </div>
 
           {/* Problem Statement */}
-          <div className={`border border-[#2a2a2a] rounded-xl p-6 mb-8 ${
-            selectedWorkflow === 'ecommerce' ? 'bg-gradient-to-r from-[#8b5cf6]/5 to-[#06b6d4]/5' :
-            selectedWorkflow === 'receptionist' ? 'bg-gradient-to-r from-[#10b981]/5 to-[#8b5cf6]/5' :
-            selectedWorkflow === 'content' ? 'bg-gradient-to-r from-[#06b6d4]/5 to-[#10b981]/5' :
-            'bg-gradient-to-r from-[#f59e0b]/5 to-[#8b5cf6]/5'
-          }`}>
-            <p className="text-gray-300 text-lg">{currentWorkflow.problem}</p>
+          <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 mb-8">
+            <div className="flex items-start">
+              <div className="w-3 h-3 bg-[#f59e0b] rounded-full mt-2 mr-4 flex-shrink-0"></div>
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#f59e0b]">Challenge</h3>
+                <p className="text-gray-300 text-lg leading-relaxed">{currentWorkflow.problem}</p>
+              </div>
+            </div>
           </div>
 
           {/* Workflow Visualization */}
           <div 
             ref={workflowRef}
-            className="relative bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 min-h-[350px] overflow-hidden"
+            className="relative bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 min-h-[400px] overflow-hidden"
           >
             <svg 
               className="absolute inset-0 w-full h-full"
@@ -287,7 +368,7 @@ const AutomationPage = () => {
                 const toNode = currentWorkflow.nodes.find(n => n.id === connection.to);
                 if (!fromNode || !toNode) return null;
 
-                const isActive = animationStep > currentWorkflow.nodes.length + index;
+                const isActive = animationStep > toNode.id - 1;
                 
                 return (
                   <line
@@ -297,8 +378,8 @@ const AutomationPage = () => {
                     x2={toNode.x + 40}
                     y2={toNode.y + 15}
                     stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
-                    strokeWidth={isActive ? "3" : "2"}
-                    className={`transition-all duration-500 ${isActive ? 'drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]' : ''}`}
+                    strokeWidth={isActive ? "4" : "2"}
+                    className={`transition-all duration-500 ${isActive ? 'drop-shadow-[0_0_12px_rgba(139,92,246,0.8)]' : ''}`}
                     markerEnd="url(#arrowhead)"
                   />
                 );
@@ -306,9 +387,9 @@ const AutomationPage = () => {
               
               {/* Arrow marker */}
               <defs>
-                <marker id="arrowhead" markerWidth="8" markerHeight="6" 
-                        refX="7" refY="3" orient="auto">
-                  <polygon points="0 0, 8 3, 0 6" fill="#8b5cf6" />
+                <marker id="arrowhead" markerWidth="10" markerHeight="8" 
+                        refX="9" refY="4" orient="auto">
+                  <polygon points="0 0, 10 4, 0 8" fill="#8b5cf6" />
                 </marker>
               </defs>
               
@@ -324,17 +405,17 @@ const AutomationPage = () => {
                       y={node.y}
                       width="80"
                       height="30"
-                      rx="8"
+                      rx="12"
                       fill={isActive ? '#1a1a1a' : '#0a0a0a'}
                       stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
-                      strokeWidth={isActive ? "2" : "1"}
-                      className={`transition-all duration-500 ${isPulsing ? 'animate-pulse' : ''} ${isActive ? 'drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]' : ''}`}
+                      strokeWidth={isActive ? "3" : "1"}
+                      className={`transition-all duration-500 ${isPulsing ? 'animate-pulse' : ''} ${isActive ? 'drop-shadow-[0_0_15px_rgba(139,92,246,0.8)]' : ''}`}
                     />
                     <text
                       x={node.x + 40}
                       y={node.y + 16}
                       textAnchor="middle"
-                      fontSize="10"
+                      fontSize="11"
                       fill={isActive ? 'white' : '#666'}
                       fontWeight="600"
                     >
@@ -346,7 +427,7 @@ const AutomationPage = () => {
                       x={node.x + 40}
                       y={node.y + 45}
                       textAnchor="middle"
-                      fontSize="8"
+                      fontSize="9"
                       fill={isActive ? '#ccc' : '#666'}
                     >
                       {node.description}
@@ -360,9 +441,9 @@ const AutomationPage = () => {
             {showReplay && (
               <button
                 onClick={playWorkflow}
-                className="absolute top-4 right-4 px-4 py-2 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] rounded-lg text-sm font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#8b5cf6]/50"
+                className="absolute top-6 right-6 px-6 py-3 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-[#8b5cf6]/50 hover:scale-105"
               >
-                ▶ Replay
+                ▶ Replay Animation
               </button>
             )}
           </div>
@@ -370,47 +451,71 @@ const AutomationPage = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-6">
-        <div className="container mx-auto max-w-5xl">
+      <section className="py-20 px-6" ref={statsRef}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Proven{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Results
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              Industry benchmarks show the transformative power of intelligent automation.
+            </p>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-[#10b981] mb-2">67%</div>
-              <p className="text-gray-400 text-sm">Time Reduction</p>
+            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 text-center hover:border-[#10b981]/50 transition-all duration-300">
+              <div className="text-5xl font-bold text-[#10b981] mb-2">{stat1}%</div>
+              <p className="text-gray-400 text-lg">Average Time Reduction</p>
+              <p className="text-gray-500 text-sm mt-2">Based on industry studies</p>
             </div>
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-[#8b5cf6] mb-2">89%</div>
-              <p className="text-gray-400 text-sm">Fewer Errors</p>
+            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 text-center hover:border-[#8b5cf6]/50 transition-all duration-300">
+              <div className="text-5xl font-bold text-[#8b5cf6] mb-2">{stat2}%</div>
+              <p className="text-gray-400 text-lg">Fewer Human Errors</p>
+              <p className="text-gray-500 text-sm mt-2">Consistent automated processes</p>
             </div>
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center">
-              <div className="text-4xl font-bold text-[#06b6d4] mb-2">3.2x</div>
-              <p className="text-gray-400 text-sm">Faster Response</p>
+            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 text-center hover:border-[#06b6d4]/50 transition-all duration-300">
+              <div className="text-5xl font-bold text-[#06b6d4] mb-2">{stat3.toFixed(1)}x</div>
+              <p className="text-gray-400 text-lg">Faster Response Time</p>
+              <p className="text-gray-500 text-sm mt-2">Instant automated responses</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Measurable Business Impact
-          </h2>
+      <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Measurable Business{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Impact
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              See the tangible benefits automation brings to your operations.
+            </p>
+          </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: "Time Recovery", desc: "Reclaim 3-4 hours per employee daily" },
-              { title: "Error Prevention", desc: "Eliminate 95% of manual data entry mistakes" },
-              { title: "Response Speed", desc: "Instant automated responses capture opportunities" },
-              { title: "Scale Efficiency", desc: "Handle 10x volume without additional staff" },
-              { title: "Consistency", desc: "Ensure every customer gets the same experience" },
-              { title: "24/7 Operations", desc: "Automated systems work around the clock" }
+              { title: "Time Recovery", desc: "Reclaim 3-4 hours per employee daily", icon: "⏰" },
+              { title: "Error Prevention", desc: "Eliminate 95% of manual data entry mistakes", icon: "✅" },
+              { title: "Response Speed", desc: "Instant automated responses capture opportunities", icon: "⚡" },
+              { title: "Scale Efficiency", desc: "Handle 10x volume without additional staff", icon: "📈" },
+              { title: "Consistency", desc: "Ensure every customer gets the same experience", icon: "🎯" },
+              { title: "24/7 Operations", desc: "Automated systems work around the clock", icon: "🔄" }
             ].map((item, index) => (
               <div 
                 key={index}
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 hover:border-[#8b5cf6]/50 transition-all duration-300"
+                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-8 hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:scale-105 group"
               >
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-400 text-sm">{item.desc}</p>
+                <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
+                <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
+                <p className="text-gray-400 leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -421,16 +526,16 @@ const AutomationPage = () => {
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Calculate Your Potential Savings
+            Ready to Transform Your Business?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Let's analyze your processes and show you exactly how much automation could save.
+            Let's analyze your processes and show you exactly how automation can revolutionize your operations.
           </p>
           <Link 
             href="/booking"
-            className="inline-block px-8 py-4 bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 rounded-xl font-semibold text-lg transition-all duration-300"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300"
           >
-            Get Your Savings Analysis
+            Get Your Free Automation Analysis
           </Link>
         </div>
       </section>

@@ -13,6 +13,7 @@ const mainServices = [
     title: 'Website Development',
     description: 'Custom, responsive websites optimized for performance and user experience.',
     icon: '/images/icons/web-icon.svg',
+    exploreMoreLink: '/website',
     details: [
       'Responsive design that works on all devices',
       'Performance optimization for faster load times',
@@ -54,6 +55,7 @@ const mainServices = [
     title: 'App Development',
     description: 'Mobile and web applications tailored to your specific business requirements.',
     icon: '/images/icons/app-icon.svg',
+    exploreMoreLink: '/apps',
     details: [
       'Native iOS and Android mobile applications',
       'Progressive Web Apps (PWA) development',
@@ -65,9 +67,10 @@ const mainServices = [
   },
   {
     id: 3,
-    title: 'AI Integration',
+    title: 'AI Automation',
     description: 'Implementing cutting-edge AI tools to streamline your business processes.',
     icon: '/images/icons/ai-icon.svg',
+    exploreMoreLink: '/automation',
     details: [
       'Custom AI solutions for your business needs',
       'Chatbots and virtual assistants implementation',

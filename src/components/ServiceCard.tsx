@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import gsap from 'gsap';
 
 interface SubService {
@@ -19,6 +20,7 @@ interface Service {
   icon: string;
   details: string[];
   subServices: SubService[];
+  exploreMoreLink?: string;
 }
 
 interface ServiceCardProps {
@@ -309,6 +311,27 @@ const ServiceCard = ({
             </button>
           )}
         </div>
+        
+        {/* Explore More Button for first 3 services */}
+        {service.exploreMoreLink && (
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <Link
+              href={service.exploreMoreLink}
+              className="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-accent/20 to-accent-blue/20 hover:from-accent/30 hover:to-accent-blue/30 text-accent hover:text-accent-light border border-accent/30 hover:border-accent/50 rounded-lg transition-all duration-300 text-sm font-medium group"
+            >
+              Explore More
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 ml-2 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

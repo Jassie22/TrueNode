@@ -2,121 +2,83 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-interface WorkflowNode {
-  id: number;
-  x: number;
-  y: number;
-  title: string;
-  description: string;
-}
-
-interface WorkflowConnection {
-  from: number;
-  to: number;
-  isLoop?: boolean;
-  curve?: 'none' | 'up' | 'down' | 'left' | 'right';
-}
-
-interface WorkflowType {
-  id: string;
-  name: string;
-  problem: string;
-  nodes: WorkflowNode[];
-  connections: WorkflowConnection[];
-  viewBox: string;
-}
-
 const WebsitePage = () => {
-  const [selectedWorkflow, setSelectedWorkflow] = useState('ecommerce');
-  const [animationStep, setAnimationStep] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [showReplay, setShowReplay] = useState(false);
-  const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
-  const [visibleStats, setVisibleStats] = useState({ stat1: 0, stat2: 0, stat3: 0 });
-  const workflowRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState('business');
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [visibleStats, setVisibleStats] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
-  const workflows: Record<string, WorkflowType> = {
-    ecommerce: {
+  const websiteTypes = [
+    {
+      id: 'business',
+      name: 'Business Websites',
+      description: 'Professional websites that establish credibility and drive conversions',
+      features: ['Custom Design', 'SEO Optimized', 'Mobile Responsive', 'Fast Loading', 'Contact Forms'],
+      color: 'from-blue-500 to-purple-600',
+      image: '/images/business-website.jpg'
+    },
+    {
       id: 'ecommerce',
-      name: 'E-commerce Website',
-      problem: "Generic templates don't convert visitors into customers",
-      viewBox: "0 0 800 400",
-      nodes: [
-        { id: 1, x: 80, y: 100, title: "Business Analysis", description: "Target audience" },
-        { id: 2, x: 240, y: 100, title: "Custom Design", description: "Brand-focused UI" },
-        { id: 3, x: 400, y: 100, title: "Development", description: "Performance optimized" },
-        { id: 4, x: 560, y: 100, title: "Payment Integration", description: "Secure checkout" },
-        { id: 5, x: 560, y: 250, title: "Testing & Launch", description: "Quality assurance" },
-        { id: 6, x: 240, y: 250, title: "Analytics Setup", description: "Conversion tracking" }
-      ],
-      connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 },
-        { from: 4, to: 5 }, { from: 5, to: 6 }, { from: 6, to: 1, isLoop: true, curve: 'left' }
-      ]
+      name: 'E-commerce Stores',
+      description: 'Powerful online stores that convert visitors into customers',
+      features: ['Shopping Cart', 'Payment Integration', 'Inventory Management', 'User Accounts', 'Analytics'],
+      color: 'from-green-500 to-teal-600',
+      image: '/images/ecommerce-website.jpg'
     },
-    corporate: {
-      id: 'corporate',
-      name: 'Corporate Website',
-      problem: "Your website doesn't reflect your professional expertise",
-      viewBox: "0 0 700 300",
-      nodes: [
-        { id: 1, x: 80, y: 100, title: "Brand Strategy", description: "Professional positioning" },
-        { id: 2, x: 280, y: 100, title: "Content Creation", description: "Authority building" },
-        { id: 3, x: 480, y: 100, title: "Development", description: "Enterprise-grade" },
-        { id: 4, x: 280, y: 200, title: "SEO Optimization", description: "Search visibility" }
-      ],
-      connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4, curve: 'down' },
-        { from: 4, to: 2, isLoop: true, curve: 'up' }
-      ]
-    },
-    portfolio: {
+    {
       id: 'portfolio',
-      name: 'Portfolio Website',
-      problem: "Generic portfolios fail to showcase your unique value",
-      viewBox: "0 0 750 350",
-      nodes: [
-        { id: 1, x: 80, y: 100, title: "Work Analysis", description: "Project curation" },
-        { id: 2, x: 240, y: 100, title: "Visual Design", description: "Creative showcase" },
-        { id: 3, x: 400, y: 100, title: "Interactive Build", description: "Engaging experience" },
-        { id: 4, x: 560, y: 100, title: "Contact System", description: "Lead capture" },
-        { id: 5, x: 400, y: 220, title: "Performance", description: "Fast loading" },
-        { id: 6, x: 240, y: 220, title: "Mobile Optimization", description: "All devices" }
-      ],
-      connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 }, { from: 4, to: 5 },
-        { from: 2, to: 6, curve: 'down' }, { from: 6, to: 5 }, { from: 5, to: 3, isLoop: true, curve: 'up' }
-      ]
+      name: 'Portfolio Sites',
+      description: 'Stunning showcases that highlight your work and attract clients',
+      features: ['Gallery Layouts', 'Project Showcases', 'Client Testimonials', 'Contact Systems', 'Blog Integration'],
+      color: 'from-orange-500 to-pink-600',
+      image: '/images/portfolio-website.jpg'
     },
-    saas: {
-      id: 'saas',
-      name: 'SaaS Landing Page',
-      problem: "Complex features confuse potential customers",
-      viewBox: "0 0 900 450",
-      nodes: [
-        { id: 1, x: 80, y: 120, title: "Value Proposition", description: "Clear messaging" },
-        { id: 2, x: 240, y: 120, title: "Feature Simplification", description: "Benefit-focused" },
-        { id: 3, x: 400, y: 80, title: "Social Proof", description: "Trust building" },
-        { id: 4, x: 560, y: 80, title: "Trial Signup", description: "Conversion funnel" },
-        { id: 5, x: 720, y: 80, title: "Onboarding", description: "User activation" },
-        { id: 6, x: 400, y: 180, title: "Demo System", description: "Interactive preview" },
-        { id: 7, x: 240, y: 280, title: "Pricing Strategy", description: "Clear options" },
-        { id: 8, x: 560, y: 180, title: "FAQ Section", description: "Objection handling" },
-        { id: 9, x: 400, y: 280, title: "Analytics", description: "Conversion tracking" }
-      ],
-      connections: [
-        { from: 1, to: 2 }, { from: 2, to: 3 }, { from: 3, to: 4 }, { from: 4, to: 5 },
-        { from: 2, to: 6 }, { from: 6, to: 7 }, { from: 7, to: 9 }, { from: 9, to: 2, isLoop: true },
-        { from: 4, to: 8 }, { from: 8, to: 9, isLoop: true }
-      ]
+    {
+      id: 'landing',
+      name: 'Landing Pages',
+      description: 'High-converting pages designed for specific campaigns and goals',
+      features: ['A/B Testing', 'Lead Capture', 'Conversion Optimization', 'Analytics', 'Fast Performance'],
+      color: 'from-purple-500 to-blue-600',
+      image: '/images/landing-page.jpg'
     }
-  };
+  ];
 
-  const currentWorkflow = workflows[selectedWorkflow];
+  const conceptMockups = [
+    {
+      title: 'Local Restaurant Concept',
+      before: 'Generic template with poor mobile experience',
+      after: 'Custom design optimized for online orders',
+      beforeImage: '/images/before-restaurant.jpg',
+      afterImage: '/images/after-restaurant.jpg'
+    },
+    {
+      title: 'Professional Services Concept',
+      before: 'Basic template with limited functionality',
+      after: 'Professional design with lead generation focus',
+      beforeImage: '/images/before-services.jpg',
+      afterImage: '/images/after-services.jpg'
+    },
+    {
+      title: 'E-commerce Store Concept',
+      before: 'Standard template with basic features',
+      after: 'Custom store with enhanced user experience',
+      beforeImage: '/images/before-store.jpg',
+      afterImage: '/images/after-store.jpg'
+    }
+  ];
+
+  const technologies = [
+    { name: 'React', icon: '/tech-icons/react.svg', description: 'Modern, fast user interfaces' },
+    { name: 'Next.js', icon: '/tech-icons/nextjs.svg', description: 'Full-stack React framework' },
+    { name: 'TypeScript', icon: '/tech-icons/typescript.svg', description: 'Type-safe development' },
+    { name: 'Tailwind CSS', icon: '/tech-icons/tailwindcss.svg', description: 'Utility-first styling' },
+    { name: 'Node.js', icon: '/tech-icons/nodejs.svg', description: 'Server-side JavaScript' },
+    { name: 'MongoDB', icon: '/tech-icons/mongodb.svg', description: 'Flexible database solutions' }
+  ];
 
   // Counter animation hook
   const useCounter = (end: number, duration: number = 2000, start: boolean = false) => {
@@ -142,72 +104,25 @@ const WebsitePage = () => {
     return count;
   };
 
-  const stat1 = useCounter(340, 2000, visibleStats.stat1 > 0);
-  const stat2 = useCounter(85, 2500, visibleStats.stat2 > 0);
-  const stat3 = useCounter(47, 3000, visibleStats.stat3 > 0);
+  const stat1 = useCounter(24, 2000, visibleStats);
+  const stat2 = useCounter(7, 2500, visibleStats);
+  const stat3 = useCounter(98, 3000, visibleStats);
 
-  const playWorkflow = () => {
-    if (isAnimating) return;
-    
-    setIsAnimating(true);
-    setAnimationStep(0);
-    setShowReplay(false);
-    
-    const totalSteps = currentWorkflow.nodes.length + currentWorkflow.connections.length;
-    let step = 0;
-    
-    const interval = setInterval(() => {
-      step++;
-      setAnimationStep(step);
-      
-      if (step >= totalSteps) {
-        clearInterval(interval);
-        setIsAnimating(false);
-        setTimeout(() => setShowReplay(true), 800);
-      }
-    }, 800);
-  };
-
-  const switchWorkflow = (workflowId: string) => {
-    if (workflowId === selectedWorkflow) return;
-    
-    setSelectedWorkflow(workflowId);
-    setAnimationStep(0);
-    setIsAnimating(false);
-    setShowReplay(false);
-    setHasPlayedOnce(false);
-  };
-
-  // Intersection Observer for workflow animation
+  // Auto-rotate slides
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasPlayedOnce && !isAnimating) {
-            setTimeout(() => {
-              playWorkflow();
-              setHasPlayedOnce(true);
-            }, 500);
-          }
-        });
-      },
-      { threshold: 0.5, rootMargin: '0px' }
-    );
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % conceptMockups.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
-    if (workflowRef.current) {
-      observer.observe(workflowRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [selectedWorkflow, hasPlayedOnce, isAnimating]);
-
-  // Intersection Observer for stats animation
+  // Intersection Observer for stats
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setVisibleStats({ stat1: 340, stat2: 85, stat3: 47 });
+            setVisibleStats(true);
           }
         });
       },
@@ -221,312 +136,240 @@ const WebsitePage = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Helper function to generate curved path
-  const generatePath = (fromNode: WorkflowNode, toNode: WorkflowNode, curve?: string, isLoop?: boolean) => {
-    const startX = fromNode.x + 80;
-    const startY = fromNode.y + 25;
-    const endX = toNode.x + 80;
-    const endY = toNode.y + 25;
-    
-    if (!curve || curve === 'none') {
-      return `M ${startX} ${startY} L ${endX} ${endY}`;
-    }
-    
-    const midX = (startX + endX) / 2;
-    const midY = (startY + endY) / 2;
-    
-    let controlX = midX;
-    let controlY = midY;
-    
-    if (curve === 'up') {
-      controlY -= 60;
-    } else if (curve === 'down') {
-      controlY += 60;
-    } else if (curve === 'left') {
-      controlX -= 80;
-      controlY -= 30;
-    } else if (curve === 'right') {
-      controlX += 80;
-    }
-    
-    if (isLoop) {
-      controlY += 80;
-    }
-    
-    return `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
-  };
-
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-[#0a0a0a]">
-        <div className="container mx-auto max-w-5xl text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            Custom Websites Built for{' '}
-            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Your Business Goals
-            </span>
-          </h1>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Stop settling for templates. Get a website that converts visitors into customers and grows with your business.
-          </p>
-        </div>
-      </section>
-
-      {/* Value Proposition */}
-      <section className="py-16 px-6 bg-[#0a0a0a]">
-        <div className="container mx-auto max-w-5xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:translateY-[-4px] hover:shadow-lg hover:shadow-[#8b5cf6]/10">
-                <div className="w-12 h-12 rounded-lg bg-[#8b5cf6]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-6 h-6 text-[#8b5cf6]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Convert More Visitors</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Custom conversion optimization based on your specific audience and industry.</p>
-              </div>
-            </div>
-            
-            <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:translateY-[-4px] hover:shadow-lg hover:shadow-[#8b5cf6]/10">
-                <div className="w-12 h-12 rounded-lg bg-[#10b981]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-6 h-6 text-[#10b981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Lightning Fast</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Optimized for speed and SEO to rank higher and keep visitors engaged.</p>
-              </div>
-            </div>
-            
-            <div className="group">
-              <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 h-full hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:translateY-[-4px] hover:shadow-lg hover:shadow-[#8b5cf6]/10">
-                <div className="w-12 h-12 rounded-lg bg-[#06b6d4]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <svg className="w-6 h-6 text-[#06b6d4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Fully Customizable</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">Built specifically for your brand, industry, and business objectives.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Workflow Demos */}
-      <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
+      <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Development{' '}
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              Websites That{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-                Process
+                Work for You
               </span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              See how we build websites that actually solve your business problems.
+            </h1>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Custom websites designed to grow your business, not just look pretty. Every site is built with purpose, performance, and results in mind.
             </p>
           </div>
+          
+          {/* Hero CTA */}
+          <div className="text-center mb-16">
+            <Link
+              href="/booking"
+              className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300 mr-4"
+            >
+              Start Your Project
+            </Link>
+            <button className="inline-block px-8 py-4 border border-[#8b5cf6] text-[#8b5cf6] hover:bg-[#8b5cf6]/10 rounded-xl font-semibold text-lg transition-all duration-300">
+              View Portfolio
+            </button>
+          </div>
+        </div>
+      </section>
 
-          {/* Workflow Selector */}
-          <div className="grid md:grid-cols-4 gap-4 mb-12">
-            {Object.values(workflows).map((workflow) => (
+      {/* Website Types Section */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-4xl font-bold text-center mb-12">
+            Website Types We{' '}
+            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+              Specialize In
+            </span>
+          </h2>
+          
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {websiteTypes.map((type) => (
               <button
-                key={workflow.id}
-                onClick={() => switchWorkflow(workflow.id)}
-                className={`p-4 rounded-xl border transition-all duration-300 text-left w-full hover:transform hover:translateY-[-2px] ${
-                  selectedWorkflow === workflow.id
-                    ? 'bg-[#1a1a1a] border-[#8b5cf6] shadow-lg shadow-[#8b5cf6]/20'
-                    : 'bg-[#1a1a1a] border-[#2a2a2a] hover:border-[#8b5cf6]/50'
+                key={type.id}
+                onClick={() => setActiveTab(type.id)}
+                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                  activeTab === type.id
+                    ? 'bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] text-white'
+                    : 'bg-[#1a1a1a] text-gray-400 hover:bg-[#2a2a2a] hover:text-white'
                 }`}
               >
-                <h3 className="font-semibold mb-1 text-sm">{workflow.name}</h3>
-                <p className="text-xs text-gray-500">Click to view</p>
+                {type.name}
               </button>
             ))}
           </div>
 
-          {/* Problem Statement */}
-          <div className="bg-gradient-to-r from-[#8b5cf6]/20 to-[#06b6d4]/20 border border-[#8b5cf6]/30 rounded-xl p-8 mb-8">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-3 h-3 bg-[#8b5cf6] rounded-full"></div>
-              <span className="text-[#8b5cf6] font-medium text-sm uppercase tracking-wide">Problem</span>
-            </div>
-            <p className="text-white text-lg font-medium">{currentWorkflow.problem}</p>
-          </div>
-
-          {/* Workflow Visualization */}
-          <div 
-            ref={workflowRef}
-            className="relative bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-4 min-h-[500px]"
-          >
-            <svg 
-              className="w-full h-full"
-              viewBox={currentWorkflow.viewBox}
-              xmlns="http://www.w3.org/2000/svg"
+          {/* Active Tab Content */}
+          {websiteTypes.map((type) => (
+            <div
+              key={type.id}
+              className={`transition-all duration-500 ${
+                activeTab === type.id ? 'block' : 'hidden'
+              }`}
             >
-              {/* Render connections */}
-              {currentWorkflow.connections.map((connection, index) => {
-                const fromNode = currentWorkflow.nodes.find(n => n.id === connection.from);
-                const toNode = currentWorkflow.nodes.find(n => n.id === connection.to);
-                if (!fromNode || !toNode) return null;
-
-                const isActive = animationStep > currentWorkflow.nodes.length + index;
-                const path = generatePath(fromNode, toNode, connection.curve, connection.isLoop);
+              <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                  <h3 className="text-3xl font-bold mb-4">{type.name}</h3>
+                  <p className="text-gray-400 text-lg mb-6">{type.description}</p>
+                  
+                  <div className="grid grid-cols-1 gap-4">
+                    {type.features.map((feature, index) => (
+                      <div key={index} className="flex items-center">
+                        <div className="w-2 h-2 bg-[#8b5cf6] rounded-full mr-3"></div>
+                        <span className="text-gray-300">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 
-                return (
-                  <path
-                    key={`${connection.from}-${connection.to}-${index}`}
-                    d={path}
-                    stroke={isActive ? (connection.isLoop ? '#d946ef' : '#8b5cf6') : '#2a2a2a'}
-                    strokeWidth="3"
-                    fill="none"
-                    className={`transition-all duration-500 ${isActive ? 'drop-shadow-[0_0_6px_rgba(139,92,246,0.8)]' : ''}`}
-                    markerEnd="url(#arrowhead)"
-                  />
-                );
-              })}
-              
-              {/* Arrow marker */}
-              <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="8" 
-                        refX="9" refY="4" orient="auto">
-                  <polygon points="0 0, 10 4, 0 8" fill="#8b5cf6" />
-                </marker>
-              </defs>
-              
-              {/* Render nodes */}
-              {currentWorkflow.nodes.map((node, index) => {
-                const isActive = animationStep > index;
-                const isPulsing = animationStep === index + 1;
-                
-                return (
-                  <g key={node.id}>
-                    <rect
-                      x={node.x}
-                      y={node.y}
-                      width="160"
-                      height="50"
-                      rx="12"
-                      fill={isActive ? '#1a1a1a' : '#0a0a0a'}
-                      stroke={isActive ? '#8b5cf6' : '#2a2a2a'}
-                      strokeWidth="2"
-                      className={`transition-all duration-500 ${isPulsing ? 'animate-pulse' : ''} ${isActive ? 'drop-shadow-[0_0_12px_rgba(139,92,246,0.6)]' : ''}`}
-                    />
-                    <text
-                      x={node.x + 80}
-                      y={node.y + 22}
-                      textAnchor="middle"
-                      fontSize="14"
-                      fill={isActive ? 'white' : '#666'}
-                      fontWeight="700"
-                    >
-                      {node.title}
-                    </text>
-                    <text
-                      x={node.x + 80}
-                      y={node.y + 38}
-                      textAnchor="middle"
-                      fontSize="11"
-                      fill={isActive ? '#ccc' : '#555'}
-                      fontWeight="400"
-                    >
-                      {node.description}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
+                <div className="relative">
+                  <div className={`w-full h-64 rounded-xl bg-gradient-to-br ${type.color} p-1`}>
+                    <div className="w-full h-full bg-[#1a1a1a] rounded-xl flex items-center justify-center">
+                      <div className="text-center">
+                        <div className="text-6xl mb-4">🌐</div>
+                        <p className="text-gray-400">Preview Coming Soon</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-            {/* Replay Button */}
-            {showReplay && !isAnimating && (
-              <button
-                onClick={playWorkflow}
-                className="absolute top-6 right-6 px-4 py-2 bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-2"
+      {/* Concept Mockups Showcase */}
+      <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-4xl font-bold text-center mb-12">
+            Design{' '}
+            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+              Concepts
+            </span>
+          </h2>
+          <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">
+            Explore our design concepts showing how we transform standard templates into custom, high-performing websites.
+          </p>
+          
+          <div className="relative">
+            {conceptMockups.map((example, index) => (
+              <div
+                key={index}
+                className={`transition-all duration-500 ${
+                  index === currentSlide ? 'block' : 'hidden'
+                }`}
               >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-                Replay
-              </button>
-            )}
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="bg-[#1a1a1a] rounded-xl p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                      <h3 className="text-lg font-semibold">Standard Template</h3>
+                    </div>
+                    <p className="text-gray-400 mb-4">{example.before}</p>
+                    <div className="h-40 bg-gray-800 rounded-lg flex items-center justify-center">
+                      <span className="text-gray-500">Template Example</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-[#1a1a1a] rounded-xl p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                      <h3 className="text-lg font-semibold">Custom Design</h3>
+                    </div>
+                    <p className="text-gray-400 mb-4">{example.after}</p>
+                    <div className="h-40 bg-gradient-to-br from-[#8b5cf6]/20 to-[#06b6d4]/20 rounded-lg flex items-center justify-center">
+                      <span className="text-gray-300">Custom Concept</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center mt-8">
+                  <h3 className="text-2xl font-bold">{example.title}</h3>
+                </div>
+              </div>
+            ))}
+            
+            {/* Slide indicators */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {conceptMockups.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide ? 'bg-[#8b5cf6]' : 'bg-gray-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Technologies Section */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-4xl font-bold text-center mb-12">
+            Built with{' '}
+            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+              Modern Technology
+            </span>
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            {technologies.map((tech, index) => (
+              <div
+                key={index}
+                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center hover:border-[#8b5cf6]/50 transition-all duration-300"
+              >
+                <div className="flex justify-center mb-4">
+                  <Image
+                    src={tech.icon}
+                    alt={`${tech.name} icon`}
+                    width={48}
+                    height={48}
+                    className="w-12 h-12"
+                  />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{tech.name}</h3>
+                <p className="text-gray-400 text-sm">{tech.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-6 bg-[#0a0a0a]" ref={statsRef}>
-        <div className="container mx-auto max-w-5xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center hover:transform hover:translateY-[-4px] transition-all duration-300 hover:shadow-lg">
-              <div className="text-4xl font-bold mb-2 text-[#10b981]">
-                {stat1}%
-              </div>
-              <p className="text-gray-400 text-sm">Average Conversion Increase</p>
+      <section className="py-20 px-6" ref={statsRef}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-5xl font-bold text-[#8b5cf6] mb-2">{stat1}+</div>
+              <p className="text-gray-400">Hours of Experience</p>
             </div>
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center hover:transform hover:translateY-[-4px] transition-all duration-300 hover:shadow-lg">
-              <div className="text-4xl font-bold mb-2 text-[#8b5cf6]">
-                {stat2}+
-              </div>
-              <p className="text-gray-400 text-sm">PageSpeed Score</p>
+            <div>
+              <div className="text-5xl font-bold text-[#06b6d4] mb-2">{stat2}+</div>
+              <p className="text-gray-400">Years in Development</p>
             </div>
-            <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 text-center hover:transform hover:translateY-[-4px] transition-all duration-300 hover:shadow-lg">
-              <div className="text-4xl font-bold mb-2 text-[#06b6d4]">
-                {stat3}%
-              </div>
-              <p className="text-gray-400 text-sm">Faster Than Competitors</p>
+            <div>
+              <div className="text-5xl font-bold text-[#10b981] mb-2">{stat3}%</div>
+              <p className="text-gray-400">Performance Optimized</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits Grid */}
-      <section className="py-20 px-6 bg-[#0a0a0a]">
-        <div className="container mx-auto max-w-5xl">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Why Custom Beats Templates
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { title: "Industry-Specific Design", desc: "Built for your industry's conversion patterns and user expectations" },
-              { title: "Competitive Advantage", desc: "Stand out from competitors using the same generic templates" },
-              { title: "Performance Optimized", desc: "Code written specifically for your content and functionality needs" },
-              { title: "Scalable Architecture", desc: "Grows with your business without platform limitations" },
-              { title: "Brand Consistency", desc: "Every element reinforces your unique brand identity" },
-              { title: "Conversion Focused", desc: "Every design decision optimized for your specific goals" }
-            ].map((item, index) => (
-              <div 
-                key={index}
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-6 hover:border-[#8b5cf6]/50 transition-all duration-300 hover:transform hover:translateY-[-4px] hover:shadow-lg hover:shadow-[#8b5cf6]/10"
-              >
-                <h3 className="font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-400 text-sm">{item.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Call-to-Action */}
-      <section className="py-20 px-6 bg-[#0a0a0a]">
+      {/* CTA Section */}
+      <section className="py-20 px-6">
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">
-            Ready for a Website That Converts?
+            Ready to Transform Your Online Presence?
           </h2>
           <p className="text-xl text-gray-400 mb-8">
-            Let's discuss your specific business goals and build a website that delivers results.
+            Let's discuss your website goals and create something amazing together.
           </p>
-          <Link 
+          <Link
             href="/booking"
-            className="inline-block px-8 py-4 bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 rounded-xl font-semibold text-lg transition-all duration-300 hover:transform hover:translateY-[-2px] hover:shadow-lg hover:shadow-[#8b5cf6]/25"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300"
           >
-            Get Your Website Analysis
+            Get Your Free Consultation
           </Link>
         </div>
       </section>
