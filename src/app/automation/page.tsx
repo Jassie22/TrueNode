@@ -251,6 +251,46 @@ const AutomationPage = () => {
         </div>
       </section>
 
+      {/* Our Philosophy Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Our{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Philosophy
+              </span>
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">
+                Automation That Fits Your Business
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We believe small businesses shouldn't have to change their processes to fit generic automation tools. Every business has unique workflows and challenges.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our bespoke automation solutions are designed around your specific needs, accurately representing how your business actually operates while freeing up your time for growth.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#06b6d4]">
+                Partners in Your Growth Journey
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We work closely with you to understand your daily operations, identifying opportunities where automation can have the biggest impact on your efficiency and bottom line.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                As your business evolves, we enhance your automation systems, ensuring they continue to serve your growing needs and unlock new possibilities for success.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Value Proposition */}
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">

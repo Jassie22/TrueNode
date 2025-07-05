@@ -260,6 +260,46 @@ const AppsPage = () => {
         </div>
       </section>
 
+      {/* Our Philosophy Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Our{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Philosophy
+              </span>
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">
+                Apps That Unlock Potential
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We believe every small business has unique processes and customer needs that deserve custom solutions, not off-the-shelf apps that force you to adapt to their limitations.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our bespoke app development approach creates digital tools that authentically represent your business model and enhance the experience you provide to your customers.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#06b6d4]">
+                Evolving Digital Solutions
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We work closely with you to understand your workflows and challenges, tailoring apps that solve real problems and streamline your operations.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our partnership continues beyond launch – as your business grows and evolves, we enhance your apps with new features that support your expanding success.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Platform Selection */}
       <section className="py-20 px-6">
         <div className="container mx-auto max-w-6xl">
