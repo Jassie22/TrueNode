@@ -141,10 +141,10 @@ const EcommercePage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
               E-commerce That{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
                 Converts
@@ -169,6 +169,46 @@ const EcommercePage = () => {
             >
               View Examples
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Philosophy Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Our{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Philosophy
+              </span>
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">
+                Your Store, Your Success
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We believe small businesses deserve e-commerce solutions that reflect their unique brand and business model, not cookie-cutter templates that look like everyone else.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our bespoke approach creates online stores that authentically represent your business, working closely with you to build the perfect solution that converts visitors into loyal customers.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#06b6d4]">
+                Growing Together Online
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We don't just launch your store and disappear. We build lasting partnerships where your e-commerce platform evolves alongside your business growth.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                As your business expands, we help scale your online presence, adding new features and optimizations that support your continued success in the digital marketplace.
+              </p>
+            </div>
           </div>
         </div>
       </section>

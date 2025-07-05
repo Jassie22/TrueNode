@@ -141,10 +141,10 @@ const DataAnalysisPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
               Turn Data into{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
                 Decisions
@@ -169,6 +169,46 @@ const DataAnalysisPage = () => {
             >
               View Examples
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Philosophy Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Our{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Philosophy
+              </span>
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">
+                Data is Your Business's Hidden Potential
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We believe that every small business has untapped potential waiting to be discovered in their data. Our approach goes beyond generic analytics solutions.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                We create bespoke data analysis systems that authentically represent your unique business model, working closely with you to uncover insights that drive real growth.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#06b6d4]">
+                Growing Together Through Data
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We don't just deliver reports and walk away. We develop lasting partnerships where our data solutions evolve with your business.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                As your business grows, our analytics adapt, providing deeper insights and more sophisticated analysis to fuel your continued success.
+              </p>
+            </div>
           </div>
         </div>
       </section>

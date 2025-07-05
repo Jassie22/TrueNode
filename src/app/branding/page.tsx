@@ -141,10 +141,10 @@ const BrandingPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-40 pb-20 px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 mt-8">
               Build Brands That{' '}
               <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
                 Resonate
@@ -169,6 +169,46 @@ const BrandingPage = () => {
             >
               View Portfolio
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Philosophy Section */}
+      <section className="py-16 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Our{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Philosophy
+              </span>
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">
+                Your Brand is Your Story
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We believe every small business has a unique story that deserves to be told authentically. Generic templates can't capture what makes your business special.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our bespoke branding approach ensures your visual identity accurately represents your values, mission, and the authentic experience you provide to your customers.
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="text-2xl font-semibold mb-4 text-[#06b6d4]">
+                Building Brands That Grow
+              </h3>
+              <p className="text-gray-400 text-lg leading-relaxed mb-6">
+                We work closely with you to understand your vision and create a brand foundation that can evolve as your business reaches new heights.
+              </p>
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Our relationship doesn't end at delivery – we help your brand grow and adapt, ensuring it continues to resonate as your business expands its reach and impact.
+              </p>
+            </div>
           </div>
         </div>
       </section>
