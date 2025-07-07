@@ -2,4 +2,9 @@ User-agent: *
 Allow: /
 Allow: /booking
 Allow: /automation
+Allow: /website
+Allow: /apps
+Allow: /data-analysis
+Allow: /branding
+Allow: /ecommerce
 Sitemap: https://www.truenode.co.uk/sitemap.xml 

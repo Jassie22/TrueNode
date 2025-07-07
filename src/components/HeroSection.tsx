@@ -182,9 +182,11 @@ const HeroSection = () => {
               });
             });
           } else { // Mobile: animate "Transform" as a block and ensure it is visible
-            firstLineContainer.classList.add('opacity-0', 'transform', 'translate-y-full');
-            masterTl.to(
-              firstLineContainer, 
+            // Don't add opacity-0 and translate-y-full classes to prevent initial gap
+            // firstLineContainer.classList.add('opacity-0', 'transform', 'translate-y-full');
+            masterTl.fromTo(
+              firstLineContainer,
+              { y: 20, opacity: 0.8 },
               { y: 0, opacity: 1, duration: 0.5, ease: "power4.out" },
               0.2
             );

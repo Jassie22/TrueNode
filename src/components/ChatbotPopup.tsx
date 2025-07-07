@@ -996,7 +996,7 @@ const ChatbotPopup = () => {
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-purple-600 text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative border border-purple-400/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 chat-bubble-popup backdrop-blur-sm"
+          className="bg-gradient-to-r from-[#903AE7] to-[#23B5D3] text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative border border-purple-400/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 chat-bubble-popup backdrop-blur-sm"
           onClick={() => setIsOpen(true)}
           style={{
             animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 4s ease-in-out 1s infinite',
@@ -1028,7 +1028,7 @@ const ChatbotPopup = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-accent hover:bg-accent-light text-white rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-10"
+          className="bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] text-white rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-10"
           aria-label={isOpen ? "Close chat" : "Open chat"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-7 md:h-7">
@@ -1056,7 +1056,7 @@ const ChatbotPopup = () => {
         }}
       >
         {/* Chat header with close button inside */}
-        <div className="bg-gradient-to-r from-accent/90 to-accent-light/90 backdrop-blur-md p-3 rounded-t-2xl flex items-center justify-between border-b border-white/10">
+        <div className="bg-gradient-to-r from-[#903AE7] to-[#23B5D3] backdrop-blur-md p-3 rounded-t-2xl flex items-center justify-between border-b border-white/10">
           <div className="flex items-center">
             <div>
               <h3 className="font-semibold text-white text-base tracking-wide">TrueNode AI</h3>
