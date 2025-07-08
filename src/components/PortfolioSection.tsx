@@ -494,6 +494,9 @@ const DesktopProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) =>
           fill
           className="object-contain bg-gray-900"
           sizes="(max-width: 768px) 100vw, 350px"
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         />
         
         {/* Title overlay */}
@@ -666,17 +669,28 @@ const MobileCarousel: React.FC<CarouselProps> = ({ projects }) => {
   
   const minSwipeDistance = 50;
   
-  // Preload all images when component mounts to prevent loading delays
+  // Lazy load images only when they're about to be viewed
   useEffect(() => {
-    const preloadImages = () => {
-      projects.forEach(project => {
-        const img = document.createElement('img');
-        img.src = project.image;
+    const preloadNearbyImages = () => {
+      // Only preload current, previous, and next images
+      const imagesToPreload = [
+        projects[activeIndex],
+        projects[activeIndex - 1 >= 0 ? activeIndex - 1 : projects.length - 1],
+        projects[activeIndex + 1 < projects.length ? activeIndex + 1 : 0]
+      ];
+      
+      imagesToPreload.forEach(project => {
+        if (project) {
+          const img = document.createElement('img');
+          img.src = project.image;
+        }
       });
     };
     
-    preloadImages();
-  }, [projects]);
+    // Small delay to allow page to load first
+    const timeoutId = setTimeout(preloadNearbyImages, 1000);
+    return () => clearTimeout(timeoutId);
+  }, [activeIndex, projects]);
   
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -804,6 +818,9 @@ const MobileProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => 
           fill
           className="object-contain bg-gray-900"
           sizes="100vw"
+          loading="lazy"
+          placeholder="blur"
+          blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
         />
         
         {/* Title overlay */}

@@ -93,6 +93,7 @@ const ChatbotPopup = () => {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(0);
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
   
   const popupRef = useRef<HTMLDivElement>(null);
   const chatBubbleRef = useRef<HTMLDivElement>(null);
@@ -185,37 +186,61 @@ const ChatbotPopup = () => {
     }
   }, [isOpen, hasInitialized]);
 
-  // Show chat bubble after 20 seconds, then hide it after 30 more seconds
+  // Check if page has loaded completely
   useEffect(() => {
+    const checkPageLoaded = () => {
+      if (document.readyState === 'complete') {
+        setIsPageLoaded(true);
+      }
+    };
+    
+    // Check immediately
+    checkPageLoaded();
+    
+    // If not loaded yet, listen for the load event
+    if (!isPageLoaded) {
+      window.addEventListener('load', checkPageLoaded);
+      document.addEventListener('readystatechange', checkPageLoaded);
+    }
+    
+    return () => {
+      window.removeEventListener('load', checkPageLoaded);
+      document.removeEventListener('readystatechange', checkPageLoaded);
+    };
+  }, [isPageLoaded]);
+
+  // Show chat bubble after page loads + 15 seconds, then hide it after 30 more seconds
+  useEffect(() => {
+    if (!isPageLoaded) return;
+    
     const showTimer = setTimeout(() => {
       setShowChatBubble(true);
-    }, 20000); // Show after 20 seconds instead of 30
+    }, 15000); // Show after 15 seconds after page load
     
     const hideTimer = setTimeout(() => {
       setShowChatBubble(false);
-    }, 50000); // Hide 30 seconds after showing (50 seconds total)
+    }, 45000); // Hide 30 seconds after showing (45 seconds total)
 
     return () => {
       clearTimeout(showTimer);
       clearTimeout(hideTimer);
     };
-  }, []);
+  }, [isPageLoaded]);
 
-  // Animation for popup open/close - simplified to prevent flickering
+  // Hide chat bubble when popup is opened
   useEffect(() => {
-    // No GSAP animations needed - using CSS transitions instead
     if (isOpen) {
-      // Hide chat bubble when popup is opened
       setShowChatBubble(false);
     }
   }, [isOpen]);
 
-  // Add quick option buttons data
+  // Add quick option buttons data - 6 options for 2x3 grid
   const quickOptions = [
     { id: 'website', text: 'Website for my business', prompt: 'I need a website for my small business' },
     { id: 'ecommerce', text: 'Online store', prompt: 'I want to sell products online' },
     { id: 'refresh', text: 'Website refresh', prompt: 'My current website needs updating' },
     { id: 'marketing', text: 'Digital marketing', prompt: 'Help with online marketing' },
+    { id: 'app', text: 'Mobile app', prompt: 'I need a mobile app for my business' },
     { id: 'budget', text: 'Budget-friendly options', prompt: 'What are your most affordable options?' }
   ];
 
@@ -247,6 +272,8 @@ const ChatbotPopup = () => {
         response = "We can modernize your existing website with a fresh design, improved functionality, and better mobile experience while preserving your brand identity.";
       } else if (prompt.toLowerCase().includes('marketing')) {
         response = "Our digital marketing services help small businesses get found online through SEO, social media, and targeted campaigns that bring in qualified leads.";
+      } else if (prompt.toLowerCase().includes('mobile') && prompt.toLowerCase().includes('app')) {
+        response = "We develop custom mobile apps for iOS and Android that help businesses connect with customers on the go, from booking systems to e-commerce solutions.";
       } else if (prompt.toLowerCase().includes('budget') || prompt.toLowerCase().includes('affordable')) {
         response = "We offer flexible pricing options to fit different budgets, including starter packages for small businesses just getting online.";
       } else {
@@ -996,12 +1023,8 @@ const ChatbotPopup = () => {
       {showChatBubble && !isOpen && (
         <div 
           ref={chatBubbleRef}
-          className="bg-gradient-to-r from-[#903AE7] to-[#23B5D3] text-white p-4 rounded-2xl mb-3 max-w-[280px] md:max-w-[300px] shadow-2xl cursor-pointer relative border border-purple-400/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 chat-bubble-popup backdrop-blur-sm"
+          className="chatbot-popup"
           onClick={() => setIsOpen(true)}
-          style={{
-            animation: 'slideInBounce 0.6s ease-out forwards, gentleBounce 4s ease-in-out 1s infinite',
-            boxShadow: '0 25px 50px -12px rgba(147, 51, 234, 0.25), 0 0 0 1px rgba(147, 51, 234, 0.1)'
-          }}
         >
           {/* Close button for chat bubble */}
           <button 
@@ -1009,7 +1032,7 @@ const ChatbotPopup = () => {
               e.stopPropagation(); // Prevent opening the chat
               setShowChatBubble(false);
             }}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-gray-400 hover:bg-gray-500 text-white rounded-full flex items-center justify-center shadow-md transition-colors"
+            className="chatbot-close"
             aria-label="Close chat bubble"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1018,8 +1041,8 @@ const ChatbotPopup = () => {
           </button>
 
           <div>
-            <p className="text-sm font-medium">Need help with your project?</p>
-            <p className="text-xs mt-1 opacity-80">Let's discuss how we can help you succeed online</p>
+            <h3>Need help with your project?</h3>
+            <p>Let's discuss how we can help you succeed online</p>
           </div>
         </div>
       )}
@@ -1028,7 +1051,7 @@ const ChatbotPopup = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-gradient-to-r from-[#903AE7] to-[#23B5D3] hover:from-[#A54BF9] hover:to-[#2ECCEB] text-white rounded-full w-14 h-14 md:w-16 md:h-16 flex items-center justify-center shadow-lg transition-all hover:shadow-xl hover:scale-105 relative z-10"
+          className="chat-trigger-button"
           aria-label={isOpen ? "Close chat" : "Open chat"}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-7 md:h-7">
@@ -1119,13 +1142,13 @@ const ChatbotPopup = () => {
           {/* Quick options below input */}
           {showQuickOptions && (
             <div className="p-3 border-t border-gray-100/10">
-              <p className="text-xs text-gray-400 mb-2">I'm interested in:</p>
-              <div className="flex flex-wrap gap-1.5 mb-2">
+              <p className="text-xs text-gray-400 mb-3">I'm interested in:</p>
+              <div className="grid grid-cols-2 gap-2 mb-3">
                 {quickOptions.map(option => (
                   <button
                     key={option.id}
                     onClick={() => handleQuickOptionClick(option.prompt)}
-                    className="px-2.5 py-1 rounded-full bg-gradient-to-r from-accent/10 to-accent-blue/10 text-white/80 text-xs border border-accent/20 hover:from-accent/20 hover:to-accent-blue/20 hover:border-accent/30 hover:text-white transition-all duration-300"
+                    className="px-3 py-2 rounded-lg bg-gradient-to-r from-accent/10 to-accent-blue/10 text-white/80 text-xs border border-accent/20 hover:from-accent/20 hover:to-accent-blue/20 hover:border-accent/30 hover:text-white transition-all duration-300 text-center flex items-center justify-center whitespace-nowrap overflow-hidden text-ellipsis"
                   >
                     {option.text}
                   </button>
@@ -1321,60 +1344,260 @@ const ChatbotPopup = () => {
   );
 };
 
-// Add CSS keyframes for animations and speech bubble styling
+// Add CSS keyframes for animations and glassmorphism styling
 const styles = `
-  @keyframes slideInBounce {
-    0% {
-      transform: translateX(20px) scale(0.8);
+  @keyframes smoothSlideIn {
+    from {
+      transform: translateX(20px) translateY(10px) scale(0.9);
       opacity: 0;
     }
-    60% {
-      transform: translateX(-5px) scale(1.05);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(0) scale(1);
+    to {
+      transform: translateX(0) translateY(0) scale(1);
       opacity: 1;
     }
   }
   
-  @keyframes gentleBounce {
+  @keyframes gentleFloat {
     0%, 100% {
-      transform: translateY(0);
+      transform: translateY(0px);
     }
     50% {
-      transform: translateY(-4px);
+      transform: translateY(-3px);
     }
   }
 
-  .chat-bubble-popup {
-    position: relative;
+  @keyframes slideInUp {
+    from { 
+      transform: translateY(20px) scale(0.95); 
+      opacity: 0; 
+    }
+    to { 
+      transform: translateY(0) scale(1); 
+      opacity: 1; 
+    }
   }
 
-  .chat-bubble-popup::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    right: 20px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #9333ea;
-    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  /* Glassmorphism Chat Button - Purple */
+  .chat-trigger-button {
+    /* Glassmorphism base with purple tint */
+    background: rgba(144, 58, 231, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(144, 58, 231, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(144, 58, 231, 0.4);
+    
+    /* Button shape & position */
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    
+    /* Center the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    /* Smooth transitions */
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+    
+    /* Icon styling */
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 24px;
+    
+    /* Floating animation */
+    animation: gentleFloat 3s ease-in-out infinite;
   }
 
-  .chat-bubble-popup::before {
+  .chat-trigger-button:hover {
+    background: rgba(144, 58, 231, 0.35);
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(144, 58, 231, 0.6);
+    border: 1px solid rgba(144, 58, 231, 0.4);
+  }
+
+  .chat-trigger-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 16px 0 rgba(144, 58, 231, 0.3);
+  }
+
+  /* Glassmorphism Popup Bubble - Purple Speech Bubble */
+  .chatbot-popup {
+    /* Glassmorphism base with purple tint */
+    background: rgba(144, 58, 231, 0.25);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(144, 58, 231, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(144, 58, 231, 0.4);
+    
+    /* Speech bubble shape & positioning */
+    border-radius: 25px;
+    padding: 20px 40px 20px 24px;
+    max-width: 280px;
+    position: fixed;
+    bottom: 90px;
+    right: 24px;
+    z-index: 1000;
+    cursor: pointer;
+    
+    /* Transform origin for animations */
+    transform-origin: bottom right;
+    
+    /* Text contrast for glassmorphism */
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    
+    /* Smooth animation */
+    animation: smoothSlideIn 0.4s ease-out forwards;
+    
+    /* Transition effects */
+    transition: all 0.2s ease-out;
+  }
+
+  .chatbot-popup:hover {
+    transform: scale(1.02) translateY(-2px);
+    box-shadow: 0 12px 40px 0 rgba(144, 58, 231, 0.6);
+    background: rgba(144, 58, 231, 0.35);
+  }
+
+  /* Speech bubble tail pointing to chat button */
+  .chatbot-popup::after {
     content: '';
     position: absolute;
-    bottom: -10px;
-    right: 18px;
+    bottom: -12px;
+    right: 32px;
     width: 0;
     height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid #7c3aed;
-    z-index: -1;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid rgba(144, 58, 231, 0.25);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    z-index: 2;
+  }
+
+  /* Secondary tail for depth */
+  .chatbot-popup::before {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    right: 30px;
+    width: 0;
+    height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 14px solid rgba(144, 58, 231, 0.15);
+    z-index: 1;
+  }
+
+
+
+  /* Header text */
+  .chatbot-popup h3 {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    margin-top: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Subtitle text */
+  .chatbot-popup p {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 0;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Close button - Clean and simple */
+  .chatbot-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .chatbot-close:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .chatbot-close:active {
+    transform: scale(0.95);
+  }
+
+  /* Mobile responsive glassmorphism - Purple */
+  @media (max-width: 768px) {
+    .chatbot-popup {
+      max-width: calc(100vw - 32px);
+      left: 16px;
+      right: 16px;
+      bottom: 80px;
+      padding: 16px 36px 16px 20px;
+      
+      /* Stronger backdrop on mobile with purple tint */
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      background: rgba(144, 58, 231, 0.35);
+    }
+    
+    /* Adjust close button for mobile */
+    .chatbot-close {
+      top: 10px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+    }
+    
+    /* Adjust tail position for mobile */
+    .chatbot-popup::after {
+      right: 28px;
+    }
+    
+    .chatbot-popup::before {
+      right: 26px;
+    }
+    
+    .chat-trigger-button {
+      bottom: 16px;
+      right: 16px;
+      width: 56px;
+      height: 56px;
+      font-size: 20px;
+    }
+  }
+
+  /* Fallback for browsers that don't support backdrop-filter */
+  @supports not (backdrop-filter: blur(20px)) {
+    .chat-trigger-button {
+      background: rgba(144, 58, 231, 0.9);
+    }
+    
+    .chatbot-popup {
+      background: rgba(144, 58, 231, 0.9);
+    }
+    
+    .chatbot-close {
+      background: rgba(255, 255, 255, 0.3);
+    }
   }
 `;
 

@@ -796,4 +796,20 @@ section::before {
 .tech-reel-animation > div {
   display: flex;
   min-width: max-content;
-} 
+}
+
+/* Loading Page Animations */
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-loading-fade-in {
+  animation: loading-fade-in 0.6s ease-out forwards;
+}

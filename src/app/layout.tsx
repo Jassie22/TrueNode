@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { GA_MEASUREMENT_ID } from '@/lib/gtag';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import LoadingWrapper from '@/components/LoadingWrapper';
 import { Suspense } from 'react';
 
 // Add window type declaration for gtag
@@ -216,7 +217,9 @@ export default function RootLayout({
           `}
         </Script>
         
-        {children}
+        <LoadingWrapper>
+          {children}
+        </LoadingWrapper>
 
         <Script id="scrolltrigger-refresh">
           {`
