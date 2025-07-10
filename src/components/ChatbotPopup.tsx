@@ -1437,7 +1437,7 @@ const styles = `
     padding: 20px 40px 20px 24px;
     max-width: 280px;
     position: fixed;
-    bottom: 90px;
+    bottom: 110px;
     right: 24px;
     z-index: 1000;
     cursor: pointer;
@@ -1550,7 +1550,7 @@ const styles = `
       max-width: calc(100vw - 32px);
       left: 16px;
       right: 16px;
-      bottom: 80px;
+      bottom: 100px;
       padding: 16px 36px 16px 20px;
       
       /* Stronger background on mobile - matching hover state of explore more button */

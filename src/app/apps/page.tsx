@@ -8,10 +8,6 @@ import Footer from '@/components/Footer';
 const AppsPage = () => {
   const [selectedPlatform, setSelectedPlatform] = useState('mobile');
   const [currentPhase, setCurrentPhase] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [visibleStats, setVisibleStats] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
-  const phaseRef = useRef<HTMLDivElement>(null);
 
   const platforms = [
     {
@@ -103,94 +99,14 @@ const AppsPage = () => {
     }
   ];
 
-  const appShowcase = [
-    {
-      name: 'Food Delivery App',
-      category: 'Mobile',
-      description: 'Real-time order tracking and seamless payments',
-      features: ['GPS Tracking', 'Payment Integration', 'Reviews'],
-      color: 'bg-gradient-to-br from-orange-400 to-red-500'
-    },
-    {
-      name: 'Fitness Tracker',
-      category: 'Mobile',
-      description: 'Personal fitness goals and progress tracking',
-      features: ['Activity Tracking', 'Progress Charts', 'Social Features'],
-      color: 'bg-gradient-to-br from-green-400 to-blue-500'
-    },
-    {
-      name: 'Business Dashboard',
-      category: 'Web App',
-      description: 'Real-time analytics and business intelligence',
-      features: ['Data Visualization', 'Real-time Updates', 'Export Tools'],
-      color: 'bg-gradient-to-br from-purple-400 to-pink-500'
-    },
-    {
-      name: 'Social Platform',
-      category: 'Web App',
-      description: 'Community engagement and content sharing',
-      features: ['User Profiles', 'Content Feed', 'Real-time Chat'],
-      color: 'bg-gradient-to-br from-blue-400 to-indigo-500'
-    }
-  ];
 
-  // Counter animation hook
-  const useCounter = (end: number, duration: number = 2000, start: boolean = false) => {
-    const [count, setCount] = useState(0);
-    
-    useEffect(() => {
-      if (!start) return;
-      
-      let startTime: number;
-      const animate = (currentTime: number) => {
-        if (!startTime) startTime = currentTime;
-        const progress = Math.min((currentTime - startTime) / duration, 1);
-        setCount(Math.floor(progress * end));
-        
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        }
-      };
-      
-      requestAnimationFrame(animate);
-    }, [end, duration, start]);
-    
-    return count;
-  };
 
-  const stat1 = useCounter(15, 2000, visibleStats);
-  const stat2 = useCounter(4.9, 2500, visibleStats);
-  const stat3 = useCounter(100, 3000, visibleStats);
-
-  // Auto-play development phases
+  // Auto-loop development phases
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setCurrentPhase((prev) => (prev + 1) % developmentPhases.length);
-      }, 3000);
-    }
+    const interval = setInterval(() => {
+      setCurrentPhase((prev) => (prev + 1) % developmentPhases.length);
+    }, 3000);
     return () => clearInterval(interval);
-  }, [isPlaying]);
-
-  // Intersection Observer for stats
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleStats(true);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
-
-    if (statsRef.current) {
-      observer.observe(statsRef.current);
-    }
-
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -380,12 +296,9 @@ const AppsPage = () => {
                 Process
               </span>
             </h2>
-            <button
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="px-6 py-3 bg-[#8b5cf6] hover:bg-[#8b5cf6]/80 rounded-lg font-semibold transition-all duration-300"
-            >
-              {isPlaying ? '⏸️ Pause' : '▶️ Play'} Process Demo
-            </button>
+            <p className="text-gray-400 text-lg">
+              Watch as we guide you through each phase of app development
+            </p>
           </div>
           
           <div className="grid md:grid-cols-4 gap-6">
@@ -424,69 +337,7 @@ const AppsPage = () => {
         </div>
       </section>
 
-      {/* App Showcase */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            App{' '}
-            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Concepts
-            </span>
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {appShowcase.map((app, index) => (
-              <div 
-                key={index}
-                className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl overflow-hidden hover:border-[#8b5cf6]/50 transition-all duration-300 group"
-              >
-                <div className={`h-32 ${app.color} flex items-center justify-center`}>
-                  <div className="text-white text-center">
-                    <div className="text-3xl mb-2">📱</div>
-                    <div className="text-sm font-semibold">{app.name}</div>
-                  </div>
-                </div>
-                
-                <div className="p-4">
-                  <div className="text-xs text-[#8b5cf6] mb-2">{app.category}</div>
-                  <p className="text-gray-400 text-sm mb-4">{app.description}</p>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {app.features.map((feature, featureIndex) => (
-                      <span
-                        key={featureIndex}
-                        className="text-xs bg-[#2a2a2a] text-gray-300 px-2 py-1 rounded"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Stats Section */}
-      <section className="py-20 px-6" ref={statsRef}>
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div>
-              <div className="text-5xl font-bold text-[#8b5cf6] mb-2">{stat1}+</div>
-              <p className="text-gray-400">Projects Planned</p>
-            </div>
-            <div>
-              <div className="text-5xl font-bold text-[#06b6d4] mb-2">{stat2.toFixed(1)}</div>
-              <p className="text-gray-400">Design Rating Goal</p>
-            </div>
-            <div>
-              <div className="text-5xl font-bold text-[#10b981] mb-2">{stat3}%</div>
-              <p className="text-gray-400">Quality Focused</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-20 px-6">

@@ -39,9 +39,9 @@ const DataAnalysisPage = () => {
     { name: 'Python', icon: '/tech-icons/python.svg', description: 'Data analysis and modeling' },
     { name: 'Tableau', icon: '/tech-icons/plotly.svg', description: 'Data visualization' },
     { name: 'SQL', icon: '/tech-icons/postgresql.svg', description: 'Database querying' },
-    { name: 'Power BI', icon: '/tech-icons/plotly.svg', description: 'Business intelligence' },
-    { name: 'R', icon: '/tech-icons/python.svg', description: 'Statistical analysis' },
-    { name: 'Excel', icon: '/tech-icons/plotly.svg', description: 'Data manipulation' }
+    { name: 'Power BI', icon: '/tech-icons/powerbi.svg', description: 'Business intelligence' },
+    { name: 'R', icon: '/tech-icons/r.svg', description: 'Statistical analysis' },
+    { name: 'Excel', icon: '/tech-icons/excel.svg', description: 'Data manipulation' }
   ];
 
   // Counter animation hook
@@ -239,14 +239,19 @@ const DataAnalysisPage = () => {
                 </div>
                 
                 <div className="lg:w-2/3">
-                  <div className="relative rounded-xl overflow-hidden border border-[#8b5cf6]/20 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5 p-1">
-                    <div className="rounded-xl overflow-hidden bg-[#1a1a1a]">
+                  <div className="relative rounded-xl overflow-hidden border border-[#8b5cf6]/20 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5 p-2">
+                    <div className="rounded-xl overflow-hidden bg-[#1a1a1a] w-full h-[300px] sm:h-[400px] lg:h-[450px]">
                       <iframe
                         src="/demos/business-dashboard.html"
-                        className="w-full h-[500px] lg:h-[600px]"
+                        className="w-full h-full"
                         title="Business Dashboard Demo"
                         frameBorder="0"
-                        style={{ transform: 'scale(1)', transformOrigin: 'top left', width: '100%', height: '100%' }}
+                        style={{ 
+                          transform: 'scale(0.6)', 
+                          transformOrigin: 'top left', 
+                          width: '166.67%', 
+                          height: '166.67%' 
+                        }}
                       />
                     </div>
                   </div>

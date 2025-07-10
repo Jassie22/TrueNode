@@ -48,7 +48,7 @@ const LoadingWrapper: React.FC<LoadingWrapperProps> = ({ children }) => {
   return (
     <>
       <LoadingPage isLoading={isInitialLoading} />
-      <div className={`transition-opacity duration-500 ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`${isInitialLoading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         {children}
       </div>
     </>
