@@ -279,6 +279,86 @@ const DataAnalysisPage = () => {
         </div>
       </section>
 
+      {/* Live Dashboard Demo */}
+      <section className="py-20 px-6 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-6">
+              See Our Work in{' '}
+              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+                Action
+              </span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              Experience a real business dashboard we created - featuring sales analytics, customer insights, 
+              financial metrics, and operational data all in one powerful interface.
+            </p>
+          </div>
+
+          <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-[#8b5cf6]/20 shadow-2xl">
+            <div className="flex flex-col lg:flex-row gap-6 mb-6">
+              <div className="lg:w-1/3">
+                <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">Interactive Business Dashboard</h3>
+                <p className="text-gray-400 mb-4">
+                  This comprehensive dashboard showcases real-time business metrics including:
+                </p>
+                <ul className="space-y-2 text-gray-300">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-[#2dd4bf] rounded-full mr-3"></div>
+                    Sales performance tracking
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-[#60a5fa] rounded-full mr-3"></div>
+                    Customer satisfaction metrics
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-[#a78bfa] rounded-full mr-3"></div>
+                    Social media analytics
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-[#f59e0b] rounded-full mr-3"></div>
+                    Geographic user distribution
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-[#10b981] rounded-full mr-3"></div>
+                    Deal pipeline management
+                  </li>
+                </ul>
+                
+                <div className="mt-6">
+                  <a
+                    href="/demos/business-dashboard.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block px-6 py-3 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold transition-all duration-300"
+                  >
+                    Open Full Dashboard
+                  </a>
+                </div>
+              </div>
+              
+              <div className="lg:w-2/3">
+                <div className="relative rounded-xl overflow-hidden border border-[#2a2a2a]">
+                  <iframe
+                    src="/demos/business-dashboard.html"
+                    className="w-full h-[500px] lg:h-[600px]"
+                    title="Business Dashboard Demo"
+                    frameBorder="0"
+                    style={{ transform: 'scale(0.9)', transformOrigin: 'top left', width: '111.11%', height: '111.11%' }}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <p className="text-sm text-gray-500">
+                ✨ Built with pandas, numpy, and plotly - exactly as specified in your requirements
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Case Studies */}
       <section className="py-20 px-6 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5">
         <div className="container mx-auto max-w-6xl">

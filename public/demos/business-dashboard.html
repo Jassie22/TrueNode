@@ -1,0 +1,737 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Business Dashboard</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background-color: #0a0e1a;
+                color: #ffffff;
+                padding: 8px;
+                margin: 0;
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .dashboard-container {
+                display: grid;
+                grid-template-columns: 240px 320px 1fr;
+                grid-template-rows: 260px 200px 1fr;
+                gap: 12px;
+                height: calc(100vh - 60px);
+                max-width: 100vw;
+                margin: 0 auto;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            .sales-section {
+                grid-column: 1;
+                grid-row: 1 / 3;
+                height: 100%;
+            }
+            
+            .nps-section {
+                grid-column: 1;
+                grid-row: 3;
+                height: 100%;
+            }
+            
+            .deals-section {
+                grid-column: 2;
+                grid-row: 1;
+                height: 100%;
+            }
+            
+            .feedback-section {
+                grid-column: 2;
+                grid-row: 2 / 4;
+                height: 100%;
+            }
+            
+            .social-website-section {
+                grid-column: 3;
+                grid-row: 1;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                height: 100%;
+            }
+            
+            .map-section {
+                grid-column: 3;
+                grid-row: 2 / 4;
+                height: 100%;
+            }
+            
+            .card {
+                background: #1a1f2e;
+                border-radius: 12px;
+                padding: 16px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(96, 165, 250, 0.2);
+                position: relative;
+                z-index: 1;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .card:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.15);
+                border-color: rgba(96, 165, 250, 0.4);
+            }
+            
+            .sales-card {
+                text-align: center;
+                justify-content: center;
+                background: #1a1f2e;
+                border: 1px solid rgba(96, 165, 250, 0.2);
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .sales-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(90deg, #2dd4bf, #60a5fa, #a78bfa);
+                z-index: 1;
+            }
+            
+            .sales-main {
+                font-size: 68px;
+                font-weight: 800;
+                background: linear-gradient(135deg, #ffffff 0%, #2dd4bf 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 8px;
+                line-height: 1;
+                position: relative;
+                z-index: 2;
+            }
+            
+            .sales-period {
+                font-size: 16px;
+                color: #7c8db0;
+                margin-bottom: 12px;
+                font-weight: 500;
+            }
+            
+            .sales-change {
+                font-size: 15px;
+                color: #34d399;
+                margin-bottom: 20px;
+                font-weight: 600;
+                text-shadow: 0 0 10px #34d39940;
+            }
+            
+            .sales-daily {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+                padding: 12px;
+                background: transparent;
+                border-radius: 8px;
+                border: none;
+            }
+            
+            .sales-item {
+                text-align: center;
+                width: 100%;
+                margin-bottom: 8px;
+            }
+            
+            .sales-today {
+                font-size: 34px;
+                font-weight: 700;
+                color: #2dd4bf;
+                margin-bottom: 4px;
+                text-shadow: 0 0 8px #2dd4bf40;
+            }
+            
+            .sales-yesterday {
+                font-size: 30px;
+                font-weight: 700;
+                color: #60a5fa;
+                margin-bottom: 4px;
+                text-shadow: 0 0 8px #60a5fa40;
+            }
+            
+            .sales-label {
+                font-size: 13px;
+                color: #7c8db0;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            
+            .nps-card {
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .nps-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: #ffffff;
+                margin-bottom: 8px;
+            }
+            
+            .deals-card {
+                padding: 12px;
+            }
+            
+            .feedback-card {
+                overflow-y: auto;
+            }
+            
+            .social-card, .website-card {
+                text-align: center;
+                justify-content: center;
+            }
+            
+            .map-card {
+                position: relative;
+            }
+            
+            .card-title {
+                font-size: 18px;
+                font-weight: 700;
+                color: #2dd4bf;
+                margin-bottom: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                position: relative;
+                padding-bottom: 8px;
+            }
+            
+            .card-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 30px;
+                height: 2px;
+                background: linear-gradient(90deg, #2dd4bf, #60a5fa);
+                border-radius: 1px;
+            }
+            
+            .deals-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            
+            .deals-table th {
+                background: #0a0e1a;
+                color: #7c8db0;
+                font-weight: 500;
+                font-size: 12px;
+                padding: 6px 10px;
+                text-align: left;
+                border-bottom: 1px solid #4a5568;
+            }
+            
+            .deals-table td {
+                padding: 6px 10px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 13px;
+            }
+            
+            .social-metrics {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 0;
+            }
+            
+            .social-item {
+                text-align: center;
+                flex: 1;
+            }
+            
+            .social-count {
+                font-size: 48px;
+                font-weight: 700;
+                color: #ffffff;
+                margin-bottom: 4px;
+                line-height: 1;
+            }
+            
+            .social-label {
+                font-size: 14px;
+                color: #7c8db0;
+                margin-bottom: 4px;
+                font-weight: 500;
+            }
+            
+            .social-growth {
+                font-size: 12px;
+                color: #34d399;
+                font-weight: 600;
+            }
+            
+            .website-metrics {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 0;
+            }
+            
+            .website-item {
+                text-align: center;
+                flex: 1;
+            }
+            
+            .website-count {
+                font-size: 48px;
+                font-weight: 700;
+                color: #ffffff;
+                margin-bottom: 4px;
+                line-height: 1;
+            }
+            
+            .website-label {
+                font-size: 14px;
+                color: #7c8db0;
+                margin-bottom: 4px;
+                font-weight: 500;
+            }
+            
+            .website-change {
+                font-size: 12px;
+                font-weight: 600;
+            }
+            
+            .positive { color: #34d399; }
+            .negative { color: #f87171; }
+            
+            .full-width {
+                grid-column: 1 / -1;
+            }
+            
+            .feedback-item {
+                display: flex;
+                align-items: flex-start;
+                margin-bottom: 8px;
+                padding: 8px;
+                background: #0a0e1a;
+                border-radius: 6px;
+            }
+            
+            .feedback-icon {
+                width: 20px;
+                height: 20px;
+                background: #60a5fa;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 8px;
+                font-size: 10px;
+                flex-shrink: 0;
+            }
+            
+            .feedback-content {
+                flex: 1;
+            }
+            
+            .feedback-text {
+                font-size: 12px;
+                color: #ffffff;
+                margin-bottom: 2px;
+            }
+            
+            .feedback-date {
+                font-size: 10px;
+                color: #7c8db0;
+            }
+            
+            .feedback-container {
+                height: 100%;
+                overflow-y: auto;
+                padding-right: 8px;
+                position: relative;
+                z-index: 1;
+            }
+            
+            .map-container {
+                height: calc(100% - 30px);
+                width: 100%;
+                position: relative;
+                z-index: 1;
+                flex: 1;
+            }
+            
+            .footer {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background: #0a0e1a;
+                padding: 4px 16px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 11px;
+                color: #7c8db0;
+                border-top: 1px solid #4a5568;
+                z-index: 10;
+                height: 32px;
+            }
+            
+            .footer-left {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .footer-dot {
+                width: 8px;
+                height: 8px;
+                background: #34d399;
+                border-radius: 50%;
+            }
+            
+            @media (max-width: 1200px) {
+                .dashboard-container {
+                    grid-template-columns: 200px 280px 1fr;
+                    gap: 6px;
+                    padding: 0 6px;
+                }
+            }
+            
+            @media (max-width: 900px) {
+                .dashboard-container {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto auto auto auto auto;
+                    gap: 6px;
+                }
+                
+                .sales-section, .nps-section, .deals-section, .feedback-section, .social-website-section, .map-section {
+                    grid-column: 1;
+                }
+                
+                .social-website-section {
+                    grid-template-columns: 1fr;
+                    grid-template-rows: auto auto;
+                }
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <!-- Sales Section -->
+            <div class="sales-section">
+                <div class="card sales-card">
+                    <div class="card-title">Sales</div>
+                    <div class="sales-main">$297k</div>
+                    <div class="sales-period">this month</div>
+                    <div class="sales-change">▲ $16k vs last month</div>
+                    
+                    <div class="sales-daily">
+                        <div class="sales-item">
+                            <div class="sales-today">$8.9k</div>
+                            <div class="sales-label">today</div>
+                        </div>
+                        <div class="sales-item">
+                            <div class="sales-yesterday">$18.4k</div>
+                            <div class="sales-label">yesterday</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- NPS Section -->
+            <div class="nps-section">
+                <div class="card nps-card">
+                    <div class="nps-title">NPS (past 30 days)</div>
+                    <div id="nps-gauge"></div>
+                </div>
+            </div>
+            
+            <!-- Deals Section -->
+            <div class="deals-section">
+                <div class="card deals-card">
+                    <div class="card-title">Biggest deals this month</div>
+                    <table class="deals-table">
+                        <thead>
+                            <tr>
+                                <th>Sales Rep</th>
+                                <th style="text-align: right;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Maya</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$9,703</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Dalisu</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$8,659</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Shaun</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$7,931</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Heather</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$7,911</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Dalisu</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$7,800</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Shaun</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$7,433</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Shaun</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$6,861</td>
+            </tr>
+        
+            <tr>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff;">Marsha</td>
+                <td style="padding: 8px 12px; border-bottom: 1px solid #4a5568; color: #ffffff; text-align: right;">$6,844</td>
+            </tr>
+        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Feedback Section -->
+            <div class="feedback-section">
+                <div class="card feedback-card">
+                    <div class="card-title">Recent feedback</div>
+                    <div class="feedback-container">
+                        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Great service, would recommend</div>
+                    <div class="feedback-date">1 day ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">OK</div>
+                    <div class="feedback-date">1 day ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">😐</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Outstanding experience</div>
+                    <div class="feedback-date">4 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👎</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Needs improvement</div>
+                    <div class="feedback-date">4 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Needs improvement</div>
+                    <div class="feedback-date">5 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Could be better</div>
+                    <div class="feedback-date">5 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Great service, would recommend</div>
+                    <div class="feedback-date">6 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Exactly what I needed</div>
+                    <div class="feedback-date">6 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">very good "thumbs up"</div>
+                    <div class="feedback-date">6 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Very Helpful!!</div>
+                    <div class="feedback-date">7 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Not satisfied with response</div>
+                    <div class="feedback-date">7 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">Good value for money</div>
+                    <div class="feedback-date">7 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">👍</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">OK</div>
+                    <div class="feedback-date">9 days ago</div>
+                </div>
+            </div>
+        
+            <div class="feedback-item">
+                <div class="feedback-icon">😐</div>
+                <div class="feedback-content">
+                    <div class="feedback-text">very good "thumbs up"</div>
+                    <div class="feedback-date">9 days ago</div>
+                </div>
+            </div>
+        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social/Website Section -->
+            <div class="social-website-section">
+                <!-- Social Followers -->
+                <div class="card social-card">
+                    <div class="card-title">Social followers</div>
+                    <div class="social-metrics">
+                        <div class="social-item">
+                            <div class="social-count">19.5k</div>
+                            <div class="social-label">LinkedIn</div>
+                            <div class="social-growth">▲ 21 v yday</div>
+                        </div>
+                        <div class="social-item">
+                            <div class="social-count">10.5k</div>
+                            <div class="social-label">Twitter</div>
+                            <div class="social-growth">▲ 2 v yday</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Website Metrics -->
+                <div class="card website-card">
+                    <div class="card-title">Website (past 7 days)</div>
+                    <div class="website-metrics">
+                        <div class="website-item">
+                            <div class="website-count">26.8k</div>
+                            <div class="website-label">Users</div>
+                            <div class="website-change positive">
+                                ▲ 2.1k vs last week
+                            </div>
+                        </div>
+                        <div class="website-item">
+                            <div class="website-count">118</div>
+                            <div class="website-label">Enquiries</div>
+                            <div class="website-change negative">
+                                ▼ 34 vs last week
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Section -->
+            <div class="map-section">
+                <div class="card map-card">
+                    <div class="card-title">Active users</div>
+                    <div class="map-container">
+                        <div id="geo-chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-left">
+                <div class="footer-dot"></div>
+                <span>Daily pulse dashboard</span>
+            </div>
+            <div class="footer-right">
+                <span id="current-time"></span>
+            </div>
+        </div>
+        
+        <script>
+            // Render charts
+            Plotly.newPlot('nps-gauge', [{"type": "indicator", "mode": "gauge+number", "value": 57.8, "domain": {"x": [0.1, 0.9], "y": [0.2, 0.8]}, "title": {"text": ""}, "number": {"font": {"size": 24, "color": "#ffffff"}}, "gauge": {"axis": {"range": [50, 100], "tickcolor": "#7c8db0", "tickfont": {"size": 11, "color": "#7c8db0"}}, "bar": {"color": "#16a34a", "thickness": 0.4}, "bgcolor": "#0a0e1a", "borderwidth": 2, "bordercolor": "#7c8db0", "steps": [{"range": [50, 57.8], "color": "rgba(124, 141, 176, 0.3)"}, {"range": [57.8, 100], "color": "rgba(34, 197, 94, 0.3)"}], "threshold": {"line": {"color": "#ffffff", "width": 4}, "thickness": 0.8, "value": 57.8}}}], {"paper_bgcolor": "#1a1f2e", "plot_bgcolor": "#1a1f2e", "font": {"color": "#ffffff", "size": 14}, "margin": {"l": 10, "r": 10, "t": 10, "b": 30}, "height": 180, "width": 200, "annotations": [{"text": "min 50", "x": 0.5, "y": 0.1, "xref": "paper", "yref": "paper", "showarrow": false, "font": {"size": 11, "color": "#7c8db0"}, "xanchor": "center"}]});
+            Plotly.newPlot('geo-chart', [{"type": "scattermapbox", "lat": [37.79291155636387, 34.04608761777863, 47.61494462195094, 45.49801533715807, 32.68917603688714, 40.71723116947248, 42.327641339946375, 39.91841380609418, 38.9118368418427, 33.74834619365998, 41.87168880834948, 32.79782368279252, 29.793524165041145, 30.259435138929568, 39.76218518700061, 44.99989883844462, 33.46999362409445, 25.75735737850108, 28.5405464233094, 36.17087453869949, 35.776387377609495, 40.75076542190143, 39.11934638965511, 41.49803753973777, 36.22265389775928], "lon": [-122.4212596558318, -118.23102677950452, -122.3623455118548, -122.68252249014505, -117.13377054315312, -73.9813049617191, -71.07372386800526, -75.15217309975294, -77.01397939711717, -84.40414884450149, -87.65522841554251, -96.77491010029114, -95.3746612239776, -97.74421840897044, -104.97918848783718, -93.312146684492, -112.09301724570932, -80.18126926632655, -81.3562764347859, -86.7450008066049, -78.64788347902497, -111.8924307442413, -94.580556616242, -81.68648402302581, -115.12193510743263], "mode": "markers", "marker": {"size": [28.5, 32.0, 21.0, 10.0, 14.0, 42.0, 18.0, 13.0, 19.0, 16.0, 24.0, 20.0, 18.5, 15.0, 12.0, 10.0, 11.0, 14.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0, 10.0], "color": "#00d4ff", "opacity": 0.8, "sizemode": "diameter", "sizemin": 8, "sizemax": 50, "line": {"width": 2, "color": "rgba(0, 229, 255, 0.3)"}}, "text": ["San Francisco, CA<br>2,850 users", "Los Angeles, CA<br>3,200 users", "Seattle, WA<br>2,100 users", "Portland, OR<br>950 users", "San Diego, CA<br>1,400 users", "New York, NY<br>4,200 users", "Boston, MA<br>1,800 users", "Philadelphia, PA<br>1,300 users", "Washington DC, DC<br>1,900 users", "Atlanta, GA<br>1,600 users", "Chicago, IL<br>2,400 users", "Dallas, TX<br>2,000 users", "Houston, TX<br>1,850 users", "Austin, TX<br>1,500 users", "Denver, CO<br>1,200 users", "Minneapolis, MN<br>900 users", "Phoenix, AZ<br>1,100 users", "Miami, FL<br>1,400 users", "Orlando, FL<br>800 users", "Nashville, TN<br>700 users", "Raleigh, NC<br>850 users", "Salt Lake City, UT<br>600 users", "Kansas City, MO<br>550 users", "Cleveland, OH<br>650 users", "Las Vegas, NV<br>750 users"], "hovertemplate": "%{text}<extra></extra>", "showlegend": false}], {"mapbox": {"style": "carto-darkmatter", "center": {"lat": 39.8283, "lon": -98.5795}, "zoom": 3.2}, "paper_bgcolor": "#1a1f2e", "plot_bgcolor": "#1a1f2e", "font": {"color": "#ffffff", "family": "Arial"}, "margin": {"l": 0, "r": 0, "t": 0, "b": 0}, "height": 450, "showlegend": false});
+            
+            // Update time in footer
+            function updateTime() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                document.getElementById('current-time').textContent = timeString;
+            }
+            
+            // Update time immediately and then every second
+            updateTime();
+            setInterval(updateTime, 1000);
+        </script>
+    </body>
+    </html>
+    
