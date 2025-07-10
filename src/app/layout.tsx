@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { GA_MEASUREMENT_ID } from '@/lib/gtag';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import LoadingWrapper from '@/components/LoadingWrapper';
+import PageTransition from '@/components/PageTransition';
 import { Suspense } from 'react';
 
 // Add window type declaration for gtag
@@ -218,7 +219,9 @@ export default function RootLayout({
         </Script>
         
         <LoadingWrapper>
-          {children}
+          <PageTransition>
+            {children}
+          </PageTransition>
         </LoadingWrapper>
 
         <Script id="scrolltrigger-refresh">

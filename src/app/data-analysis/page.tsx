@@ -7,45 +7,9 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const DataAnalysisPage = () => {
-  const [activeTab, setActiveTab] = useState('insights');
   const [currentSlide, setCurrentSlide] = useState(0);
   const [visibleStats, setVisibleStats] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
-
-  const analysisTypes = [
-    {
-      id: 'insights',
-      name: 'Business Insights',
-      description: 'Transform raw data into actionable business intelligence',
-      features: ['Performance Metrics', 'Trend Analysis', 'Predictive Analytics', 'Custom Dashboards', 'Real-time Monitoring'],
-      color: 'from-blue-500 to-purple-600',
-      icon: '📊'
-    },
-    {
-      id: 'customer',
-      name: 'Customer Analytics',
-      description: 'Understand your customers better with comprehensive data analysis',
-      features: ['Behavior Analysis', 'Segmentation', 'Lifetime Value', 'Churn Prediction', 'Purchase Patterns'],
-      color: 'from-green-500 to-teal-600',
-      icon: '👥'
-    },
-    {
-      id: 'financial',
-      name: 'Financial Analytics',
-      description: 'Optimize your financial performance with data-driven insights',
-      features: ['Revenue Analysis', 'Cost Optimization', 'Profit Margins', 'Budget Forecasting', 'ROI Tracking'],
-      color: 'from-orange-500 to-red-600',
-      icon: '💰'
-    },
-    {
-      id: 'operational',
-      name: 'Operational Analytics',
-      description: 'Streamline operations and improve efficiency through data analysis',
-      features: ['Process Optimization', 'Resource Allocation', 'Performance KPIs', 'Bottleneck Detection', 'Capacity Planning'],
-      color: 'from-purple-500 to-pink-600',
-      icon: '⚙️'
-    }
-  ];
 
   const caseStudies = [
     {
@@ -213,71 +177,7 @@ const DataAnalysisPage = () => {
         </div>
       </section>
 
-      {/* Analysis Types Section */}
-      <section className="py-20 px-6">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Analytics{' '}
-            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
-              Solutions
-            </span>
-          </h2>
-          
-          {/* Tab Navigation */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {analysisTypes.map((type) => (
-              <button
-                key={type.id}
-                onClick={() => setActiveTab(type.id)}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                  activeTab === type.id
-                    ? 'bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] text-white'
-                    : 'bg-[#1a1a1a] text-gray-400 hover:bg-[#2a2a2a] hover:text-white'
-                }`}
-              >
-                {type.name}
-              </button>
-            ))}
-          </div>
 
-          {/* Active Tab Content */}
-          {analysisTypes.map((type) => (
-            <div
-              key={type.id}
-              className={`transition-all duration-500 ${
-                activeTab === type.id ? 'block' : 'hidden'
-              }`}
-            >
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h3 className="text-3xl font-bold mb-4">{type.name}</h3>
-                  <p className="text-gray-400 text-lg mb-6">{type.description}</p>
-                  
-                  <div className="grid grid-cols-1 gap-4">
-                    {type.features.map((feature, index) => (
-                      <div key={index} className="flex items-center">
-                        <div className="w-2 h-2 bg-[#8b5cf6] rounded-full mr-3"></div>
-                        <span className="text-gray-300">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="relative">
-                  <div className={`w-full h-80 rounded-xl bg-gradient-to-br ${type.color} p-1`}>
-                    <div className="w-full h-full bg-[#1a1a1a] rounded-xl flex items-center justify-center">
-                      <div className="text-center">
-                        <div className="text-8xl mb-4">{type.icon}</div>
-                        <p className="text-gray-400">Interactive Dashboard</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Live Dashboard Demo */}
       <section className="py-20 px-6 bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]">
@@ -295,65 +195,69 @@ const DataAnalysisPage = () => {
             </p>
           </div>
 
-          <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-[#8b5cf6]/20 shadow-2xl">
-            <div className="flex flex-col lg:flex-row gap-6 mb-6">
-              <div className="lg:w-1/3">
-                <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">Interactive Business Dashboard</h3>
-                <p className="text-gray-400 mb-4">
-                  This comprehensive dashboard showcases real-time business metrics including:
-                </p>
-                <ul className="space-y-2 text-gray-300">
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-[#2dd4bf] rounded-full mr-3"></div>
-                    Sales performance tracking
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-[#60a5fa] rounded-full mr-3"></div>
-                    Customer satisfaction metrics
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-[#a78bfa] rounded-full mr-3"></div>
-                    Social media analytics
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-[#f59e0b] rounded-full mr-3"></div>
-                    Geographic user distribution
-                  </li>
-                  <li className="flex items-center">
-                    <div className="w-2 h-2 bg-[#10b981] rounded-full mr-3"></div>
-                    Deal pipeline management
-                  </li>
-                </ul>
+          <div className="bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5 rounded-2xl p-1 shadow-2xl">
+            <div className="bg-[#1a1a1a] rounded-2xl p-6 border border-[#8b5cf6]/20">
+              <div className="flex flex-col lg:flex-row gap-6 mb-6">
+                <div className="lg:w-1/3">
+                  <h3 className="text-2xl font-semibold mb-4 text-[#8b5cf6]">Interactive Business Dashboard</h3>
+                  <p className="text-gray-400 mb-4">
+                    This comprehensive dashboard showcases real-time business metrics including:
+                  </p>
+                  <ul className="space-y-2 text-gray-300">
+                    <li className="flex items-center">
+                      <div className="w-2 h-2 bg-[#2dd4bf] rounded-full mr-3"></div>
+                      Sales performance tracking
+                    </li>
+                    <li className="flex items-center">
+                      <div className="w-2 h-2 bg-[#60a5fa] rounded-full mr-3"></div>
+                      Customer satisfaction metrics
+                    </li>
+                    <li className="flex items-center">
+                      <div className="w-2 h-2 bg-[#a78bfa] rounded-full mr-3"></div>
+                      Social media analytics
+                    </li>
+                    <li className="flex items-center">
+                      <div className="w-2 h-2 bg-[#f59e0b] rounded-full mr-3"></div>
+                      Geographic user distribution
+                    </li>
+                    <li className="flex items-center">
+                      <div className="w-2 h-2 bg-[#10b981] rounded-full mr-3"></div>
+                      Deal pipeline management
+                    </li>
+                  </ul>
+                  
+                  <div className="mt-6">
+                    <a
+                      href="/demos/business-dashboard.html"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block px-6 py-3 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold transition-all duration-300"
+                    >
+                      Open Full Dashboard
+                    </a>
+                  </div>
+                </div>
                 
-                <div className="mt-6">
-                  <a
-                    href="/demos/business-dashboard.html"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block px-6 py-3 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold transition-all duration-300"
-                  >
-                    Open Full Dashboard
-                  </a>
+                <div className="lg:w-2/3">
+                  <div className="relative rounded-xl overflow-hidden border border-[#8b5cf6]/20 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5 p-1">
+                    <div className="rounded-xl overflow-hidden bg-[#1a1a1a]">
+                      <iframe
+                        src="/demos/business-dashboard.html"
+                        className="w-full h-[500px] lg:h-[600px]"
+                        title="Business Dashboard Demo"
+                        frameBorder="0"
+                        style={{ transform: 'scale(1)', transformOrigin: 'top left', width: '100%', height: '100%' }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               
-              <div className="lg:w-2/3">
-                <div className="relative rounded-xl overflow-hidden border border-[#2a2a2a]">
-                  <iframe
-                    src="/demos/business-dashboard.html"
-                    className="w-full h-[500px] lg:h-[600px]"
-                    title="Business Dashboard Demo"
-                    frameBorder="0"
-                    style={{ transform: 'scale(0.9)', transformOrigin: 'top left', width: '111.11%', height: '111.11%' }}
-                  />
-                </div>
+              <div className="text-center">
+                <p className="text-sm text-gray-500">
+                  ✨ Built with pandas, numpy, and plotly - exactly as specified in your requirements
+                </p>
               </div>
-            </div>
-            
-            <div className="text-center">
-              <p className="text-sm text-gray-500">
-                ✨ Built with pandas, numpy, and plotly - exactly as specified in your requirements
-              </p>
             </div>
           </div>
         </div>

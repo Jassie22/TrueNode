@@ -8,15 +8,25 @@ interface LoadingWrapperProps {
 }
 
 const LoadingWrapper: React.FC<LoadingWrapperProps> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   useEffect(() => {
+    // Only show initial loading on first visit
+    const hasVisited = sessionStorage.getItem('hasVisited');
+    
+    if (hasVisited) {
+      // If already visited this session, skip initial loading
+      setIsInitialLoading(false);
+      return;
+    }
+
     const checkPageLoaded = () => {
       if (document.readyState === 'complete') {
-        // Add a small delay to ensure smooth transition
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 800);
+        // Mark as visited for this session
+        sessionStorage.setItem('hasVisited', 'true');
+        
+        // Remove loading immediately when page loads
+        setIsInitialLoading(false);
       }
     };
 
@@ -24,7 +34,7 @@ const LoadingWrapper: React.FC<LoadingWrapperProps> = ({ children }) => {
     checkPageLoaded();
 
     // If not loaded yet, listen for the load event
-    if (isLoading) {
+    if (isInitialLoading) {
       window.addEventListener('load', checkPageLoaded);
       document.addEventListener('readystatechange', checkPageLoaded);
     }
@@ -33,12 +43,12 @@ const LoadingWrapper: React.FC<LoadingWrapperProps> = ({ children }) => {
       window.removeEventListener('load', checkPageLoaded);
       document.removeEventListener('readystatechange', checkPageLoaded);
     };
-  }, [isLoading]);
+  }, [isInitialLoading]);
 
   return (
     <>
-      <LoadingPage isLoading={isLoading} />
-      <div className={`transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <LoadingPage isLoading={isInitialLoading} />
+      <div className={`transition-opacity duration-500 ${isInitialLoading ? 'opacity-0' : 'opacity-100'}`}>
         {children}
       </div>
     </>
