@@ -240,19 +240,34 @@ const DataAnalysisPage = () => {
                 
                 <div className="lg:w-2/3">
                   <div className="relative rounded-xl overflow-hidden border border-[#8b5cf6]/20 bg-gradient-to-br from-[#8b5cf6]/5 to-[#06b6d4]/5 p-2">
-                    <div className="rounded-xl overflow-hidden bg-[#1a1a1a] w-full h-[300px] sm:h-[400px] lg:h-[450px]">
-                      <iframe
-                        src="/demos/business-dashboard.html"
-                        className="w-full h-full"
-                        title="Business Dashboard Demo"
-                        frameBorder="0"
-                        style={{ 
-                          transform: 'scale(0.6)', 
-                          transformOrigin: 'top left', 
-                          width: '166.67%', 
-                          height: '166.67%' 
-                        }}
-                      />
+                    <div className="rounded-xl overflow-hidden bg-[#1a1a1a] w-full h-[200px] sm:h-[280px] lg:h-[350px] relative">
+                      {/* Preview Label */}
+                      <div className="absolute top-2 left-2 z-10 bg-[#8b5cf6]/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-[#8b5cf6] font-semibold">
+                        Dashboard Preview
+                      </div>
+                      
+                      <div className="absolute inset-0 overflow-hidden">
+                        <iframe
+                          src="/demos/business-dashboard.html"
+                          className="border-0"
+                          title="Business Dashboard Demo"
+                          frameBorder="0"
+                          style={{ 
+                            transform: 'scale(0.25)', 
+                            transformOrigin: 'top left', 
+                            width: '400%', 
+                            height: '400%',
+                            position: 'absolute',
+                            top: '0',
+                            left: '0'
+                          }}
+                        />
+                      </div>
+                      
+                      {/* Click to expand indicator */}
+                      <div className="absolute bottom-2 right-2 z-10 bg-[#06b6d4]/20 backdrop-blur-sm rounded-lg px-3 py-1 text-xs text-[#06b6d4] font-semibold">
+                        Click "Open Full Dashboard" to interact
+                      </div>
                     </div>
                   </div>
                 </div>
