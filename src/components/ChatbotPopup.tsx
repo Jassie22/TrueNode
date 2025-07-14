@@ -1379,12 +1379,12 @@ const styles = `
 
   /* Service Button Style Chat Button - Exact Match */
   .chat-trigger-button {
-    /* Exact same colors as explore more button: from-accent/20 to-accent-blue/20 */
-    background: linear-gradient(to right, rgba(144, 58, 231, 0.2), rgba(27, 108, 242, 0.2));
-    /* border-accent/30 */
-    border: 1px solid rgba(144, 58, 231, 0.3);
-    /* text-accent */
-    color: #903ae7;
+    /* Purple to blue gradient for icon */
+    background: linear-gradient(to right, #903ae7, #1B6CF2);
+    /* Solid purple border */
+    border: 1px solid #903ae7;
+    /* White text for contrast against gradient */
+    color: white;
     
     /* Button shape & position */
     border-radius: 50%;
@@ -1412,12 +1412,12 @@ const styles = `
   }
 
   .chat-trigger-button:hover {
-    /* hover:from-accent/30 hover:to-accent-blue/30 */
-    background: linear-gradient(to right, rgba(144, 58, 231, 0.3), rgba(27, 108, 242, 0.3));
-    /* hover:text-accent-light */
-    color: #a55ef0;
-    /* hover:border-accent/50 */
-    border: 1px solid rgba(144, 58, 231, 0.5);
+    /* Lighter purple to blue gradient on hover */
+    background: linear-gradient(to right, #a55ef0, #1B6CF2);
+    /* Lighter purple border on hover */
+    border: 1px solid #a55ef0;
+    /* Keep white text */
+    color: white;
     transform: scale(1.05) translateY(-2px);
   }
 
@@ -1425,15 +1425,15 @@ const styles = `
     transform: scale(0.95);
   }
 
-  /* Service Button Style Popup Bubble - Exact Match */
+  /* Service Button Style Popup Bubble - Solid Purple */
   .chatbot-popup {
-    /* Exact same colors as explore more button: from-accent/20 to-accent-blue/20 */
-    background: linear-gradient(to right, rgba(144, 58, 231, 0.2), rgba(27, 108, 242, 0.2));
-    /* border-accent/30 */
-    border: 1px solid rgba(144, 58, 231, 0.3);
+    /* Solid purple background to match consultation button */
+    background: #903ae7;
+    /* Solid purple border */
+    border: 1px solid #903ae7;
     
-    /* Speech bubble shape & positioning */
-    border-radius: 8px;
+    /* Speech bubble shape & positioning - more rounded */
+    border-radius: 16px;
     padding: 20px 40px 20px 24px;
     max-width: 280px;
     position: fixed;
@@ -1445,8 +1445,8 @@ const styles = `
     /* Transform origin for animations */
     transform-origin: bottom right;
     
-    /* Text contrast - text-accent */
-    color: #903ae7;
+    /* White text for contrast against solid purple */
+    color: white;
     
     /* Smooth animation */
     animation: smoothSlideIn 0.4s ease-out forwards;
@@ -1457,13 +1457,13 @@ const styles = `
 
   .chatbot-popup:hover {
     transform: scale(1.02) translateY(-2px);
-    /* hover:from-accent/30 hover:to-accent-blue/30 */
-    background: linear-gradient(to right, rgba(144, 58, 231, 0.3), rgba(27, 108, 242, 0.3));
-    /* hover:border-accent/50 */
-    border: 1px solid rgba(144, 58, 231, 0.5);
+    /* Lighter purple on hover */
+    background: #a55ef0;
+    /* Lighter purple border on hover */
+    border: 1px solid #a55ef0;
   }
 
-  /* Speech bubble tail pointing to chat button - matches background gradient start */
+  /* Speech bubble tail pointing to chat button - matches solid purple background */
   .chatbot-popup::after {
     content: '';
     position: absolute;
@@ -1473,7 +1473,7 @@ const styles = `
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 8px solid rgba(144, 58, 231, 0.2);
+    border-top: 8px solid #903ae7;
     z-index: 2;
   }
 
@@ -1487,15 +1487,13 @@ const styles = `
     height: 0;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
-    border-top: 9px solid rgba(144, 58, 231, 0.15);
+    border-top: 9px solid #7a2fd0;
     z-index: 1;
   }
 
-
-
   /* Header text */
   .chatbot-popup h3 {
-    color: #903ae7;
+    color: white;
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
@@ -1504,8 +1502,8 @@ const styles = `
 
   /* Subtitle text */
   .chatbot-popup p {
-    color: #903ae7;
-    opacity: 0.85;
+    color: white;
+    opacity: 0.9;
     font-size: 14px;
     line-height: 1.4;
     margin-bottom: 0;
@@ -1516,8 +1514,8 @@ const styles = `
     position: absolute;
     top: 12px;
     right: 12px;
-    background: rgba(144, 58, 231, 0.1);
-    border: 1px solid rgba(144, 58, 231, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     width: 24px;
     height: 24px;
@@ -1526,17 +1524,17 @@ const styles = `
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #903ae7;
+    color: white;
     opacity: 0.8;
     font-size: 14px;
     font-weight: 500;
   }
 
   .chatbot-close:hover {
-    background: rgba(144, 58, 231, 0.2);
-    border: 1px solid rgba(144, 58, 231, 0.4);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     transform: scale(1.05);
-    color: #a55ef0;
+    color: white;
     opacity: 1;
   }
 
@@ -1553,9 +1551,11 @@ const styles = `
       bottom: 100px;
       padding: 16px 36px 16px 20px;
       
-      /* Stronger background on mobile - matching hover state of explore more button */
-      background: linear-gradient(to right, rgba(144, 58, 231, 0.3), rgba(27, 108, 242, 0.3));
-      border: 1px solid rgba(144, 58, 231, 0.5);
+      /* Solid purple background on mobile */
+      background: #903ae7;
+      border: 1px solid #903ae7;
+      /* More rounded on mobile too */
+      border-radius: 16px;
     }
     
     /* Adjust close button for mobile */
@@ -1570,10 +1570,12 @@ const styles = `
     /* Adjust tail position for mobile */
     .chatbot-popup::after {
       right: 28px;
+      border-top: 8px solid #903ae7;
     }
     
     .chatbot-popup::before {
       right: 26px;
+      border-top: 9px solid #7a2fd0;
     }
     
     .chat-trigger-button {
@@ -1586,20 +1588,20 @@ const styles = `
   }
 
   /* Fallback for older browsers */
-  @supports not (background: linear-gradient(to right, rgba(144, 58, 231, 0.2), rgba(27, 108, 242, 0.2))) {
+  @supports not (background: linear-gradient(to right, #903ae7, #1B6CF2)) {
     .chat-trigger-button {
-      background: rgba(144, 58, 231, 0.2);
-      color: #903ae7;
+      background: #903ae7;
+      color: white;
     }
     
     .chatbot-popup {
-      background: rgba(144, 58, 231, 0.2);
-      color: #903ae7;
+      background: #903ae7;
+      color: white;
     }
     
     .chatbot-close {
-      background: rgba(144, 58, 231, 0.1);
-      color: #903ae7;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
     }
   }
 `;
