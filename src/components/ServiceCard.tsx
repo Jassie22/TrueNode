@@ -317,7 +317,7 @@ const ServiceCard = ({
           <div className="mt-6 pt-4 border-t border-white/10">
             <Link
               href={service.exploreMoreLink}
-              className="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-accent/20 to-accent-blue/20 hover:from-accent/30 hover:to-accent-blue/30 text-accent hover:text-accent-light border border-accent/30 hover:border-accent/50 rounded-lg transition-all duration-300 text-sm font-medium group"
+              className="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-accent/20 to-accent-blue/20 hover:from-accent/30 hover:to-accent-blue/30 text-white hover:text-white/90 border border-accent/30 hover:border-accent/50 rounded-lg transition-all duration-300 text-sm font-medium group"
             >
               Explore More
               <svg
