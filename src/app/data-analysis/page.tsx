@@ -185,10 +185,10 @@ const DataAnalysisPage = () => {
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-6">
               See Our Work in{' '}
-              <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] bg-clip-text text-transparent">
                 Action
-              </span>
-            </h2>
+            </span>
+          </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
               Experience a real business dashboard we created - featuring sales analytics, customer insights, 
               financial metrics, and operational data all in one powerful interface.

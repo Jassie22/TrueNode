@@ -796,7 +796,7 @@ section::before {
 .tech-reel-animation > div {
   display: flex;
   min-width: max-content;
-}
+} 
 
 /* Loading Page Animations */
 @keyframes loading-fade-in {

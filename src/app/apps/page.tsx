@@ -104,8 +104,8 @@ const AppsPage = () => {
   // Auto-loop development phases
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentPhase((prev) => (prev + 1) % developmentPhases.length);
-    }, 3000);
+        setCurrentPhase((prev) => (prev + 1) % developmentPhases.length);
+      }, 3000);
     return () => clearInterval(interval);
   }, []);
 

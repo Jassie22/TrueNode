@@ -220,7 +220,7 @@ export default function RootLayout({
         
         <LoadingWrapper>
           <PageTransition>
-            {children}
+        {children}
           </PageTransition>
         </LoadingWrapper>
 
