@@ -9,28 +9,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'Missing required fields' }, { status: 400 });
     }
 
-    // Here you would typically send the data to your N8N webhook
-    // For now, we'll just log it and simulate a successful response.
-    console.log('Received SEO Analysis Request:', { name, businessName, phone, email, websiteUrl });
+    // The N8N webhook URL.
+    const n8nWebhookUrl = 'https://n8n.truenode.synology.me/webhook-test/lead-gen-seo';
     
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Asynchronously send data to the N8N webhook without waiting for its response.
+    fetch(n8nWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }).catch(error => {
+      // Log any errors that occur during the fetch operation.
+      // This ensures that a failure to communicate with N8N doesn't block the user's confirmation.
+      console.error('Failed to send data to N8N webhook:', error);
+    });
 
-    // The N8N webhook URL would be used here.
-    // const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL;
-    // if (!n8nWebhookUrl) {
-    //   throw new Error('N8N webhook URL is not configured.');
-    // }
-    // const response = await fetch(n8nWebhookUrl, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(body),
-    // });
-    // if (!response.ok) {
-    //   const errorData = await response.json();
-    //   throw new Error(errorData.message || 'Failed to send data to workflow.');
-    // }
-
+    // Immediately return a success message to the user.
     return NextResponse.json({ message: 'Success! Your SEO analysis is on its way to your inbox.' }, { status: 200 });
 
   } catch (error: any) {

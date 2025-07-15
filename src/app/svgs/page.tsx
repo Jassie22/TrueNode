@@ -1,237 +1,103 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
-// Import the same technologies array from TechnologyReel
-const technologies = [
-  { name: 'React', color: '#61DAFB', icon: '/tech-icons/react.svg' },
-  { name: 'Next.js', color: '#000000', icon: '/tech-icons/nextjs.svg' },
-  { name: 'React Native', color: '#61DAFB', icon: '/tech-icons/reactnative.svg' },
-  { name: 'Flutter', color: '#02569B', icon: '/tech-icons/flutter.svg' },
-  { name: 'Swift', color: '#FA7343', icon: '/tech-icons/swift.svg' },
-  { name: 'Kotlin', color: '#7F52FF', icon: '/tech-icons/kotlin.svg' },
-  { name: 'Node.js', color: '#539E43', icon: '/tech-icons/nodejs.svg' },
-  { name: 'Python', color: '#3776AB', icon: '/tech-icons/python.svg' },
-  { name: 'JavaScript', color: '#F7DF1E', icon: '/tech-icons/javascript.svg' },
-  { name: 'TypeScript', color: '#3178C6', icon: '/tech-icons/typescript.svg' },
-  { name: 'HTML5', color: '#E34F26', icon: '/tech-icons/html5.svg' },
-  { name: 'CSS3', color: '#1572B6', icon: '/tech-icons/css3.svg' },
-  { name: 'Vue.js', color: '#4FC08D', icon: '/tech-icons/vuejs.svg' },
-  { name: 'Angular', color: '#DD0031', icon: '/tech-icons/angular.svg' },
-  { name: 'Svelte', color: '#FF3E00', icon: '/tech-icons/svelte.svg' },
-  { name: 'Express.js', color: '#000000', icon: '/tech-icons/expressjs.svg' },
-  { name: 'GraphQL', color: '#E10098', icon: '/tech-icons/graphql.svg' },
-  { name: 'PostgreSQL', color: '#336791', icon: '/tech-icons/postgresql.svg' },
-  { name: 'MySQL', color: '#00618A', icon: '/tech-icons/mysql.svg' },
-  { name: 'MongoDB', color: '#47A248', icon: '/tech-icons/mongodb.svg' },
-  { name: 'Redis', color: '#DC382D', icon: '/tech-icons/redis.svg' },
-  { name: 'Supabase', color: '#3ECF8E', icon: '/tech-icons/supabase.svg' },
-  { name: 'Prisma', color: '#2D3748', icon: '/tech-icons/prisma.svg' },
-  { name: 'AWS', color: '#FF9900', icon: '/tech-icons/aws.svg' },
-  { name: 'Kubernetes', color: '#326CE5', icon: '/tech-icons/kubernetes.svg' },
-  { name: 'Docker', color: '#0db7ed', icon: '/tech-icons/docker.svg' },
-  { name: 'Tailwind CSS', color: '#38B2AC', icon: '/tech-icons/tailwindcss.svg' },
-  { name: 'Vite', color: '#41D1FF', icon: '/tech-icons/vite.svg' },
-  { name: 'Figma', color: '#F24E1E', icon: '/tech-icons/figma.svg' },
-  { name: 'Git', color: '#F05032', icon: '/tech-icons/git.svg' },
-  { name: 'GitHub', color: '#181717', icon: '/tech-icons/github.svg' },
-  { name: 'Vercel', color: '#000000', icon: '/tech-icons/vercel.svg' },
-  { name: 'Stripe', color: '#635BFF', icon: '/tech-icons/stripe.svg' },
-  { name: 'TensorFlow', color: '#FF6F00', icon: '/tech-icons/tensorflow.svg' },
-  { name: 'PyTorch', color: '#EE4C2C', icon: '/tech-icons/pytorch.svg' },
-  { name: 'OpenAI', color: '#412991', icon: '/tech-icons/openai.svg' },
-  { name: 'Hugging Face', color: '#FFD21E', icon: '/tech-icons/huggingface.svg' },
-  { name: 'LangChain', color: '#1C3C3C', icon: '/tech-icons/langchain.svg' },
-  { name: 'n8n', color: '#EA4B71', icon: '/tech-icons/n8n.svg' },
-  { name: 'Three.js', color: '#000000', icon: '/tech-icons/threejs.svg' },
-  { name: 'npm', color: '#CB3837', icon: '/tech-icons/npm.svg' },
-  { name: 'Plotly', color: '#3d4c73', icon: '/tech-icons/plotly.svg' }
+const svgs = [
+  // Tech Icons
+  { name: 'Angular', path: '/tech-icons/angular.svg' },
+  { name: 'AWS', path: '/tech-icons/aws.svg' },
+  { name: 'CSS3', path: '/tech-icons/css3.svg' },
+  { name: 'Docker', path: '/tech-icons/docker.svg' },
+  { name: 'Express.js', path: '/tech-icons/expressjs.svg' },
+  { name: 'Figma', path: '/tech-icons/figma.svg' },
+  { name: 'Flutter', path: '/tech-icons/flutter.svg' },
+  { name: 'Git', path: '/tech-icons/git.svg' },
+  { name: 'GitHub', path: '/tech-icons/github.svg' },
+  { name: 'GraphQL', path: '/tech-icons/graphql.svg' },
+  { name: 'HTML5', path: '/tech-icons/html5.svg' },
+  { name: 'Hugging Face', path: '/tech-icons/huggingface.svg' },
+  { name: 'JavaScript', path: '/tech-icons/javascript.svg' },
+  { name: 'Kotlin', path: '/tech-icons/kotlin.svg' },
+  { name: 'Kubernetes', path: '/tech-icons/kubernetes.svg' },
+  { name: 'LangChain', path: '/tech-icons/langchain.svg' },
+  { name: 'MongoDB', path: '/tech-icons/mongodb.svg' },
+  { name: 'MySQL', path: '/tech-icons/mysql.svg' },
+  { name: 'n8n', path: '/tech-icons/n8n.svg' },
+  { name: 'Next.js', path: '/tech-icons/nextjs.svg' },
+  { name: 'Node.js', path: '/tech-icons/nodejs.svg' },
+  { name: 'NPM', path: '/tech-icons/npm.svg' },
+  { name: 'OpenAI', path: '/tech-icons/openai.svg' },
+  { name: 'Plotly', path: '/tech-icons/plotly.svg' },
+  { name: 'PostgreSQL', path: '/tech-icons/postgresql.svg' },
+  { name: 'Prisma', path: '/tech-icons/prisma.svg' },
+  { name: 'Python', path: '/tech-icons/python.svg' },
+  { name: 'PyTorch', path: '/tech-icons/pytorch.svg' },
+  { name: 'React', path: '/tech-icons/react.svg' },
+  { name: 'React Native', path: '/tech-icons/reactnative.svg' },
+  { name: 'Redis', path: '/tech-icons/redis.svg' },
+  { name: 'Stripe', path: '/tech-icons/stripe.svg' },
+  { name: 'Supabase', path: '/tech-icons/supabase.svg' },
+  { name: 'Svelte', path: '/tech-icons/svelte.svg' },
+  { name: 'Swift', path: '/tech-icons/swift.svg' },
+  { name: 'Tailwind CSS', path: '/tech-icons/tailwindcss.svg' },
+  { name: 'TensorFlow', path: '/tech-icons/tensorflow.svg' },
+  { name: 'Three.js', path: '/tech-icons/threejs.svg' },
+  { name: 'TypeScript', path: '/tech-icons/typescript.svg' },
+  { name: 'Vercel', path: '/tech-icons/vercel.svg' },
+  { name: 'Vite', path: '/tech-icons/vite.svg' },
+  { name: 'Vue.js', path: '/tech-icons/vuejs.svg' },
+  { name: 'R', path: '/tech-icons/r.svg' },
+  { name: 'Power BI', path: '/tech-icons/powerbi.svg' },
+  { name: 'Excel', path: '/tech-icons/excel.svg' },
+
+  // Service Icons
+  { name: 'AI Icon', path: '/images/icons/ai-icon.svg' },
+  { name: 'App Icon', path: '/images/icons/app-icon.svg' },
+  { name: 'Branding Icon', path: '/images/icons/branding-icon.svg' },
+  { name: 'Data Icon', path: '/images/icons/data-icon.svg' },
+  { name: 'E-commerce Icon', path: '/images/icons/ecommerce-icon.svg' },
+  { name: 'Web Icon', path: '/images/icons/web-icon.svg' },
 ];
 
-export default function SVGViewerPage() {
-  const [selectedTech, setSelectedTech] = useState<typeof technologies[0] | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredTechnologies = technologies.filter(tech =>
-    tech.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+const SvgsPage = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Technology SVG Viewer
-            </h1>
-            <Link 
-              href="/"
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-            >
-              ← Back to Home
-            </Link>
-          </div>
-          <p className="text-gray-400 mb-4">
-            Browse all {technologies.length} technology icons used in the TechnologyReel component
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      <Navbar />
+      <main className="container mx-auto px-6 py-24">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 mt-8">
+            SVG Icon Library
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            A central repository of all the technology and service icons used throughout the TrueNode website.
           </p>
-          
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search technologies..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-blue-400">Total Icons</h3>
-            <p className="text-2xl font-bold">{technologies.length}</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-green-400">Filtered Results</h3>
-            <p className="text-2xl font-bold">{filteredTechnologies.length}</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-purple-400">Categories</h3>
-            <p className="text-sm text-gray-300">Web • Mobile • AI • DevOps</p>
-          </div>
-          <div className="bg-gray-800 p-4 rounded-lg">
-            <h3 className="text-lg font-semibold text-yellow-400">ViewBox</h3>
-            <p className="text-lg font-mono">0 0 128 128</p>
-          </div>
-        </div>
-
-        {/* Grid of SVG Icons */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-8">
-          {filteredTechnologies.map((tech, index) => (
-            <div
-              key={index}
-              onClick={() => setSelectedTech(tech)}
-              className="bg-gray-800 p-4 rounded-lg hover:bg-gray-700 transition-all duration-300 cursor-pointer group border border-gray-700 hover:border-gray-600"
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-8">
+          {svgs.map((svg) => (
+            <div 
+              key={svg.name} 
+              className="flex flex-col items-center justify-center text-center p-4 bg-[#1a1a1a] rounded-lg border border-gray-800 hover:border-[#8b5cf6]/50 transition-all duration-300"
             >
-              <div className="flex flex-col items-center space-y-2">
-                <div className="w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Image
-                    src={tech.icon}
-                    alt={`${tech.name} icon`}
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="text-center">
-                  <h3 className="text-sm font-medium text-white truncate w-full">
-                    {tech.name}
-                  </h3>
-                  <div className="flex items-center justify-center space-x-2 mt-1">
-                    <div
-                      className="w-3 h-3 rounded-full border border-gray-600"
-                      style={{ backgroundColor: tech.color }}
-                    />
-                    <span className="text-xs text-gray-400 font-mono">
-                      {tech.color}
-                    </span>
-                  </div>
-                </div>
+              <div className="relative w-16 h-16 mb-4 flex items-center justify-center">
+                <Image
+                  src={svg.path}
+                  alt={`${svg.name} icon`}
+                  width={48}
+                  height={48}
+                  className="w-12 h-12 object-contain"
+                />
               </div>
+              <span className="text-sm text-gray-300">{svg.name}</span>
             </div>
           ))}
         </div>
-
-        {/* Selected Tech Details */}
-        {selectedTech && (
-          <div className="bg-gray-800 p-6 rounded-lg border border-gray-700">
-            <div className="flex items-start justify-between mb-4">
-              <h2 className="text-2xl font-bold">{selectedTech.name} Details</h2>
-              <button
-                onClick={() => setSelectedTech(null)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Large Icon */}
-              <div className="flex flex-col items-center space-y-4">
-                <div className="w-32 h-32 flex items-center justify-center bg-gray-900 rounded-lg border border-gray-600">
-                  <Image
-                    src={selectedTech.icon}
-                    alt={`${selectedTech.name} icon`}
-                    width={128}
-                    height={128}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold">{selectedTech.name}</h3>
-                  <div className="flex items-center justify-center space-x-2 mt-2">
-                    <div
-                      className="w-4 h-4 rounded-full border border-gray-600"
-                      style={{ backgroundColor: selectedTech.color }}
-                    />
-                    <span className="text-gray-300 font-mono">{selectedTech.color}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Technical Details */}
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-lg font-semibold text-blue-400 mb-2">Technical Info</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">File Path:</span>
-                      <span className="font-mono text-green-400">{selectedTech.icon}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Brand Color:</span>
-                      <span className="font-mono">{selectedTech.color}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">ViewBox:</span>
-                      <span className="font-mono">0 0 128 128</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Format:</span>
-                      <span>SVG</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-lg font-semibold text-purple-400 mb-2">Usage</h4>
-                  <div className="bg-gray-900 p-3 rounded text-xs font-mono overflow-x-auto border border-gray-600">
-                    <div className="text-gray-400">// React/Next.js</div>
-                    <div className="text-blue-300">import Image from 'next/image';</div>
-                    <br />
-                    <div className="text-green-300">&lt;Image</div>
-                    <div className="text-green-300 ml-2">src="{selectedTech.icon}"</div>
-                    <div className="text-green-300 ml-2">alt="{selectedTech.name} icon"</div>
-                    <div className="text-green-300 ml-2">width={64}</div>
-                    <div className="text-green-300 ml-2">height={64}</div>
-                    <div className="text-green-300">/&gt;</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="mt-12 text-center text-gray-500 text-sm">
-          <p>All SVG icons are stored in <code className="bg-gray-800 px-2 py-1 rounded border border-gray-700">/public/tech-icons/</code></p>
-          <p className="mt-2">Icons are optimized with consistent viewBox dimensions and official brand colors</p>
-          <p className="mt-2 text-xs">Categories: Web Development • Mobile Development • AI/ML • DevOps • Databases • Cloud Services</p>
-        </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
-} 
+};
+
+export default SvgsPage; 

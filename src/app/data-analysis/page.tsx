@@ -418,6 +418,24 @@ const DataAnalysisPage = () => {
         </div>
       </section>
 
+      {/* SEO Analysis CTA */}
+      <section className="py-20 px-6">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+            Ready to Improve Your SEO?
+          </h2>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed mb-8">
+            Get a free, detailed analysis of your website's SEO performance and receive actionable steps to improve your ranking and visibility.
+          </p>
+          <Link
+            href="/seo-analysis"
+            className="inline-block px-10 py-4 bg-gradient-to-r from-[#8b5cf6] to-[#06b6d4] hover:from-[#8b5cf6]/80 hover:to-[#06b6d4]/80 rounded-xl font-semibold text-lg transition-all duration-300"
+          >
+            Get a Free SEO Analysis
+          </Link>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );
