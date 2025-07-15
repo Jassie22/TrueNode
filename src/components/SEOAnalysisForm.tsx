@@ -28,9 +28,14 @@ const SEOAnalysisForm = () => {
       return;
     }
 
-    // Basic URL validation
+    // Normalize and validate URL
+    let normalizedUrl = websiteUrl.trim();
+    if (!/^https?:\/\//i.test(normalizedUrl)) {
+      normalizedUrl = `https://` + normalizedUrl;
+    }
+
     try {
-      new URL(websiteUrl);
+      new URL(normalizedUrl);
     } catch (_) {
       setError('Please enter a valid website URL.');
       return;
@@ -49,7 +54,7 @@ const SEOAnalysisForm = () => {
           businessName,
           phone,
           email,
-          websiteUrl,
+          websiteUrl: normalizedUrl,
         }),
       });
 
