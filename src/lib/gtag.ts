@@ -1,5 +1,5 @@
 // Google Analytics Measurement ID (replace with your actual ID when you create the property)
-export const GA_MEASUREMENT_ID = 'G-C8LMM3M9LJ';
+export const GA_MEASUREMENT_ID = 'G-LC22BL4Q22';
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageView = (url: string) => {
